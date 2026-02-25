@@ -158,7 +158,7 @@ public partial class PageLoginProfile
 
     private void CopyProfileUuid(object sender, EventArgs e)
     {
-        ModBase.ClipboardSet(Conversions.ToString(((dynamic)sender).Tag.UUID));
+        ModBase.ClipboardSet(Conversions.ToString(((dynamic)sender).Tag.Uuid));
     }
 
     // 编辑验证服务器名称

@@ -35,10 +35,10 @@ public partial class MyExtraButton
 
     public MyExtraButton()
     {
+        Loaded += (_, _) => RefreshColor();
+        IsEnabledChanged += (_, _) => RefreshColor();
         InitializeComponent();
-
-        Loaded += (_, __) => RefreshColor();
-        IsEnabledChanged += (_, __) => RefreshColor();
+        PanClick.MouseLeave += (_, _) => Button_MouseLeave();
     }
 
     public double Progress
@@ -302,5 +302,10 @@ public partial class MyExtraButton
                     ModAnimation.AaCode(() => PanScale.Children.Remove(Shape), After: true)
                 }, "ExtraButton Ribble " + ModBase.GetUuid());
         });
+    }
+
+    private void PanClick_MouseEvent(object sender, MouseEventArgs e)
+    {
+        RefreshColor();
     }
 }

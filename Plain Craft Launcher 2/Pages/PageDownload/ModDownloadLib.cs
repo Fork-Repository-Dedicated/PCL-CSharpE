@@ -308,7 +308,7 @@ public static class ModDownloadLib
         }
 
         if (Entry["url"].ToString().Contains("unlisted-versions-of-minecraft"))
-            NewItem.Tags = "UVMC特供下载";
+            NewItem.Tags = "UVMC 特供下载";
         NewItem.Click += OnClick;
         // 建立菜单
         if (IsSaveOnly)

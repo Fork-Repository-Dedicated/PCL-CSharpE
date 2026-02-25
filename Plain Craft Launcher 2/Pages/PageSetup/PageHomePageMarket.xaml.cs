@@ -1,79 +1,56 @@
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Markup;
-using PCL;
 using PCL.Core.IO.Net.Http.Client;
+using System;
+using System.Windows;
+using System.Windows.Input;
 
-public class PageHomepageMarket : UserControl, IRefreshable
+namespace PCL
 {
-    public StackPanel PanMain { get; }
-    public StackPanel PanCustom { get; }
-    public MyLoading Load { get; }
-
-    public void Refresh()
+    public partial class PageHomePageMarket : MyPageRight, IRefreshable
     {
-        Dispatcher.BeginInvoke(new Func<Task>(RefreshAsync));
-    }
+        private ModLoader.LoaderTask<bool, string> Loader;
 
-    private void Page_Loaded(object sender, RoutedEventArgs e)
-    {
-        InitLoading();
-    }
-
-    private void InitLoading()
-    {
-        Load.Text = "正在加载主页市场";
-        Load.TextError = "加载失败，点击重试";
-        Load.State.LoadingState = MyLoading.MyLoadingState.Run;
-
-        Load.Click -= OnRetryClick;
-        Load.Click += OnRetryClick;
-
-        Refresh();
-    }
-
-    private void OnRetryClick(object sender, MouseButtonEventArgs e)
-    {
-        if (Load.State.LoadingState == MyLoading.MyLoadingState.Error) InitLoading();
-    }
-
-    private async Task RefreshAsync()
-    {
-        try
+        public PageHomePageMarket()
         {
-            const string HomepageMarketUri =
-                "https://pclhomeplazaoss.lingyunawa.top:26994/d/Homepages/Homepage.Market/Custom.xaml";
-
-            var response = await HttpRequestBuilder.Create(HomepageMarketUri).SendAsync(true);
-            var content = await response.AsStringAsync();
-
-            // 替换事件类型
-            content = content.Replace(@"EventType=""刷新主页""", @"EventType=""刷新主页市场""");
-
-            PanCustom.Children.Clear();
-            PanCustom.Children.Add(GetObjectFromXML($@"
-<StackPanel xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' 
-            xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' 
-            xmlns:local='clr-namespace:PCL;assembly=Plain Craft Launcher 2' 
-            xmlns:sys='clr-namespace:System;assembly=System.Runtime'>
-    {content}
-</StackPanel>"));
-
-            Load.State.LoadingState = MyLoading.MyLoadingState.Stop;
-            PanMain.Visibility = Visibility.Visible;
+            InitializeComponent();
+            Loaded += Page_Loaded;
         }
-        catch
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Load.Text = "加载失败，点击重试";
-            Load.State.LoadingState = MyLoading.MyLoadingState.Error;
-            PanMain.Visibility = Visibility.Visible;
+            Loader = new ModLoader.LoaderTask<bool, string>("HomepageMarket", HomepageMarketGet);
+            PageLoaderInit(Load, PanLoad, PanMain, PanCustom, Loader, _ => Refresh());
         }
-    }
 
-    // 假设这是你原本的 VB 方法
-    private UIElement GetObjectFromXML(string xaml)
-    {
-        return (UIElement)XamlReader.Parse(xaml);
+        public void Refresh()
+        {
+            Loader.Start();
+        }
+
+        private void HomepageMarketGet(ModLoader.LoaderTask<bool, string> Task)
+        {
+            try
+            {
+                const string HomepageMarketUri = "https://pclhomeplazaoss.lingyunawa.top:26994/d/Homepages/JingHai-Lingyun/Custom.xaml";
+                var content = HttpRequestBuilder.Create(HomepageMarketUri).SendAsync(true).Result.AsStringAsync().Result;
+                content = content.Replace("EventType=\"刷新主页\"", "EventType=\"刷新主页市场\"");
+
+                ModBase.RunInUi(() =>
+                {
+                    PanCustom.Children.Clear();
+                    var element = ModBase.GetObjectFromXML($"<StackPanel xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' xmlns:local='clr-namespace:PCL;assembly=Plain Craft Launcher 2' xmlns:sys='clr-namespace:System;assembly=System.Runtime'>{content}</StackPanel>") as UIElement;
+
+                    if (element != null)
+                    {
+                        PanCustom.Children.Add(element);
+                    }
+                });
+
+                Task.Output = content;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("加载主页市场失败", ex);
+            }
+        }
     }
 }

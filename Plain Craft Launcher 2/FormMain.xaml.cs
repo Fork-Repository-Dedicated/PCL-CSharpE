@@ -1925,7 +1925,7 @@ public partial class FormMain
                 }
                 case PageType.HomePageMarket: // 主页市场
                 {
-                    ModMain.FrmHomePageMarket = ModMain.FrmHomePageMarket ?? new PageHomepageMarket();
+                    ModMain.FrmHomePageMarket = ModMain.FrmHomePageMarket ?? new PageHomePageMarket();
                     PageChangeAnim(new MyPageLeft(), ModMain.FrmHomePageMarket);
                     break;
                 }

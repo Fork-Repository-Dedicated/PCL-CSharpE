@@ -416,7 +416,7 @@ public partial class PageSelectRight
     {
         var Version = (ModMinecraft.McInstance)sender.Tag;
         // 注册点击事件
-        sender.Click += (a, b) => Item_Click((dynamic)a, b);
+        sender.Click += (a, b) => Item_Click((MyListItem)a, b);
         // 图标按钮
         var BtnStar = new MyIconButton();
         if (Version.IsStar)

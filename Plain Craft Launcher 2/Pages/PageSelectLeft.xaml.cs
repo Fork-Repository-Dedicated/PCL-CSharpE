@@ -289,7 +289,7 @@ public partial class PageSelectLeft : IRefreshable
     private void MoveUp_Click(object sender, RoutedEventArgs e)
     {
         var folder =
-            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent).PlacementTarget)
+            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((MyMenuItem)sender).Parent).Parent).PlacementTarget)
             .Tag;
         var index = ModMinecraft.McFolderList.IndexOf(folder);
         if (index > 0)
@@ -303,7 +303,7 @@ public partial class PageSelectLeft : IRefreshable
     private void MoveDown_Click(object sender, RoutedEventArgs e)
     {
         var folder =
-            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent).PlacementTarget)
+            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((MyMenuItem)sender).Parent).Parent).PlacementTarget)
             .Tag;
         var index = ModMinecraft.McFolderList.IndexOf(folder);
         if (index < ModMinecraft.McFolderList.Count - 1)
@@ -326,7 +326,7 @@ public partial class PageSelectLeft : IRefreshable
     private void Restore_Click(object sender, RoutedEventArgs e)
     {
         var folder =
-            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent).PlacementTarget)
+            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((MyListItem)sender).Parent).Parent).PlacementTarget)
             .Tag;
         var index = ModMinecraft.McFolderList.IndexOf(folder);
         ModMinecraft.McFolderList[index].Type = ModMinecraft.McFolder.Types.Original;
@@ -502,7 +502,7 @@ public partial class PageSelectLeft : IRefreshable
         try
         {
             var Folder =
-                (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent)
+                (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((MyMenuItem)sender).Parent).Parent)
                     .PlacementTarget).Tag;
             switch (ModMain.MyMsgBox(
                         "是否需要清理 PCL 在该文件夹中的配置文件？" + "\r\n" + "这包括各个实例的独立设置（如自定义图标、第三方登录配置）等，对游戏本身没有影响。",

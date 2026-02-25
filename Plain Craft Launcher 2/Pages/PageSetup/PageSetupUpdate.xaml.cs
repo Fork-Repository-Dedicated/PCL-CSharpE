@@ -40,7 +40,7 @@ public partial class PageSetupUpdate
             if (await ModSecret.RemoteServer.IsLatestAsync(
                     Conversions.ToBoolean(ModSecret.IsCurrentVersionBeta) ? UpdateChannel.beta : UpdateChannel.stable,
                     ModBase.IsArm64System ? UpdateArch.arm64 : UpdateArch.x64,
-                    (dynamic)SemVer.Parse(ModBase.VersionBaseName),
+                    SemVer.Parse(ModBase.VersionBaseName),
                     ModBase.VersionCode))
             {
                 ModBase.Log("[Update] 已是最新版本");

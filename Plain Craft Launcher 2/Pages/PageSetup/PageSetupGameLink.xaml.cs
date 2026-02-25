@@ -116,7 +116,7 @@ public partial class PageSetupGameLink
         if (ModAnimation.AniControlEnabled == 0)
             try
             {
-                var selection = (LinkProtocolPreference)((dynamic)sender).SelectedIndex;
+                var selection = (LinkProtocolPreference)((MyComboBox)sender).SelectedIndex;
                 Config.Link.ProtocolPreference = selection;
             }
             catch (Exception ex)

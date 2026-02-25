@@ -2169,7 +2169,7 @@ public static class ModBase
     {
         try
         {
-            return Str is string && Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(Str, "&", false))
+            return Str is string && Str == "&"
                 ? 0d
                 : Conversion.Val(Str);
         }

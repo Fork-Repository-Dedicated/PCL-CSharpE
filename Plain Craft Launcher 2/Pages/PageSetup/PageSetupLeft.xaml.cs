@@ -67,7 +67,7 @@ public partial class PageSetupLeft
 
     public void Reset(object sender, EventArgs e)
     {
-        switch (ModBase.Val(((dynamic)sender).Tag))
+        switch (ModBase.Val(((MyIconButton)sender).Tag))
         {
             case (double)FormMain.PageSubType.SetupLaunch:
             {
@@ -158,7 +158,7 @@ public partial class PageSetupLeft
 
     public void Refresh(object sender, EventArgs e) // 由边栏按钮匿名调用
     {
-        switch (ModBase.Val(((dynamic)sender).Tag))
+        switch (ModBase.Val(((MyIconButton)sender).Tag))
         {
             case (double)FormMain.PageSubType.SetupFeedback:
             {

@@ -146,7 +146,7 @@ public partial class PageSpeedLeft
                             Tb.Text = Loader.Error.ToString();
                             Tb.MouseLeftButtonDown += (sender, _) =>
                             {
-                                ModBase.ClipboardSet(((dynamic)sender).Text, false);
+                                ModBase.ClipboardSet(((TextBlock)sender).Text, false);
                                 ModMain.Hint("已复制错误详情！", ModMain.HintType.Finish);
                             };
                             Card.Children.Add(Tb);

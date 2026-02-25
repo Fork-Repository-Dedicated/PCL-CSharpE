@@ -86,7 +86,7 @@ public partial class PageLoginProfile
     private void SelectProfile(object sender, MouseButtonEventArgs e)
     {
         ModProfile.SelectedProfile = (ModProfile.McProfile)((MyListItem)sender).Tag;
-        ModBase.Log($"[Profile] 选定档案: {((dynamic)sender).Tag.Username}, 以 {((dynamic)sender).Tag.Type} 方式验证");
+        ModBase.Log($"[Profile] 选定档案: {((ModProfile.McProfile)((MyListItem)sender).Tag).Username}, 以 {((dynamic)sender).Tag.Type} 方式验证");
         ModProfile.LastUsedProfile =
             ModProfile.ProfileList.IndexOf((ModProfile.McProfile)((dynamic)sender).Tag); // 获取当前档案的序号
         ModProfile.SaveProfile(); // 保存档案配置，确保切换后的档案被正确保存

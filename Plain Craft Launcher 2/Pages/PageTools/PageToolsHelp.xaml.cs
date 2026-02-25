@@ -9,9 +9,9 @@ public partial class PageToolsHelp : IRefreshable
 {
     public PageToolsHelp()
     {
-        InitializeComponent();
-        Loaded += PageOther_Loaded;
         Initialized += PageOther_Inited;
+        Loaded += PageOther_Loaded;
+        InitializeComponent();
     }
 
     public void Refresh()

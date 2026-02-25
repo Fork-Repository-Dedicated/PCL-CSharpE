@@ -141,7 +141,7 @@ public class MyPageRight : AdornerDecorator
             return;
         if (PageLoader.GetType().Name.StartsWithF("LoaderTask"))
         {
-            PageLoader.Start(((dynamic)PageLoader).StartGetInput(Input, PageLoaderInputInvoke), IsForceRestart);
+            PageLoader.Start(((dynamic)PageLoader).StartGetInputNoType(Input, PageLoaderInputInvoke), IsForceRestart);
         }
         else
         {

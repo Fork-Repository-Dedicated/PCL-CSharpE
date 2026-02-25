@@ -598,11 +598,9 @@ public static class ModLoader
                     State = ModBase.LoadState.Loading;
                     Progress = -1;
                 }
+                CancelToken = new CancellationTokenSource();
             }
-            else
-            {
-                return;
-            }
+            else return;
 
             // 如果线程是因为判断到 IsAborted 而提前中止，则代表已有新线程被重启，此时不应当改为 Aborted
             // 如果线程是在没有 IsAborted 时手动引发了 ThreadInterruptedException，则代表没有重启线程，这通常代表用户手动取消，应当改为 Aborted

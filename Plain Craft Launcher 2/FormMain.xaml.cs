@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -256,7 +256,7 @@ public partial class FormMain
                     const string hint = "当前运行的 PCL 社区版为 CI 自动构建版本。" + Constants.vbCrLf +
                                     "该版本包含最新的漏洞修复、优化和新特性，但性能和稳定性较差，不适合日常使用和制作整合包。" + Constants.vbCrLf +
                                     Constants.vbCrLf +
-                                    "除非社区开发者要求或您自己想要这么做，否则请下载最新稳定版使用。"
+                                    "除非社区开发者要求或您自己想要这么做，否则请下载最新稳定版使用。";
 #endif
 
                     ModMain.MyMsgBox(

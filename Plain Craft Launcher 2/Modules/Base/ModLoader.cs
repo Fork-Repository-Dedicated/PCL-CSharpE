@@ -497,7 +497,7 @@ public static class ModLoader
         /// </summary>
         public Task LastRunningTask;
 
-        private CancellationTokenSource CancelToken;
+        private CancellationTokenSource? CancelToken;
 
         // 执行事件
         protected internal Action<LoaderTask<InputType, OutputType>> LoadDelegate;
@@ -598,7 +598,6 @@ public static class ModLoader
                     State = ModBase.LoadState.Loading;
                     Progress = -1;
                 }
-                CancelToken = new CancellationTokenSource();
             }
             else return;
 
@@ -650,7 +649,7 @@ public static class ModLoader
                     Error = ex;
                     State = ModBase.LoadState.Failed;
                 }
-            }, CancelToken.Token); // 未中断，本次输出有效
+            }, (CancelToken ??= new CancellationTokenSource()).Token); // 未中断，本次输出有效
             LastRunningTask.Start(); // 不能使用 RunInNewThread，否则在函数返回前线程就会运行完，导致误判 IsAborted
         }
 
@@ -668,12 +667,9 @@ public static class ModLoader
 
         private void TriggerThreadAbort()
         {
-            if (LastRunningTask is null)
-                return;
-            if (ModBase.ModeDebug)
-                ModBase.Log($"[Loader] 加载线程 {Name} ({LastRunningTask.Id}) 已中断");
-            if (!LastRunningTask.IsCompleted)
-                CancelToken.Cancel();
+            if (LastRunningTask is null) return;
+            if (ModBase.ModeDebug) ModBase.Log($"[Loader] 加载线程 {Name} ({LastRunningTask.Id}) 已中断");
+            if (!LastRunningTask.IsCompleted) CancelToken?.Cancel();
             LastRunningTask = null;
             CancelToken = null;
         }

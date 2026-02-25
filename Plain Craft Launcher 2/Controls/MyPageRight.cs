@@ -64,7 +64,7 @@ public class MyPageRight : AdornerDecorator
     #region 加载器
 
     private ModLoader.LoaderBase PageLoader;
-    private Func<object> PageLoaderInputInvoke;
+    private Func<object>? PageLoaderInputInvoke;
     private MyLoading PageLoaderUi;
     private FrameworkElement PanLoader;
     private FrameworkElement PanContent;
@@ -82,8 +82,8 @@ public class MyPageRight : AdornerDecorator
     /// <param name="RealLoader">在工作线程执行的加载器。</param>
     /// <param name="FinishedInvoke">当加载器执行完成，在 UI 线程触发的 UI 初始化事件。</param>
     public void PageLoaderInit(MyLoading LoaderUi, FrameworkElement PanLoader, FrameworkElement PanContent,
-        FrameworkElement PanAlways, ModLoader.LoaderBase RealLoader, Action<ModLoader.LoaderBase> FinishedInvoke = null,
-        Func<object> InputInvoke = null, bool AutoRun = true)
+        FrameworkElement PanAlways, ModLoader.LoaderBase RealLoader, Action<ModLoader.LoaderBase>? FinishedInvoke = null,
+        Func<object>? InputInvoke = null, bool AutoRun = true)
     {
         // 初始化参数
         this.PanLoader = PanLoader;
@@ -112,16 +112,15 @@ public class MyPageRight : AdornerDecorator
         // 初次运行加载器
         if (PageLoaderAutoRun)
         {
-            if (PageLoader.GetType().Name.StartsWithF("LoaderTask"))
+            if (PageLoader is ModLoader.LoaderTask task)
             {
-                dynamic dynamicLoader = PageLoader;
-                PageLoader.Start(dynamicLoader.StartGetInput(false, PageLoaderInputInvoke));
+                task.Start(task.StartGetInputNoType(null, PageLoaderInputInvoke));
             }
             else
             {
                 object Input = null;
                 if (PageLoaderInputInvoke is not null)
-                    Input = PageLoaderInputInvoke;
+                    Input = PageLoaderInputInvoke();
                 PageLoader.Start(Input);
             }
         }

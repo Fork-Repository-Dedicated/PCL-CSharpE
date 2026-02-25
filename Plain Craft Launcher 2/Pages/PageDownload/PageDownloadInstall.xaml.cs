@@ -19,10 +19,10 @@ public partial class PageDownloadInstall
 
     public PageDownloadInstall()
     {
-        InitializeComponent();
         PanScroll = PanBack;
         Initialized += (_, _) => LoaderInit();
         Loaded += (_, _) => Init();
+        InitializeComponent();
         BtnBack.Click += (_, _) => ExitSelectPage();
         CardOptiFine.Swap += (_, _) => ReloadSelected();
         LoadOptiFine.StateChanged += (_, _, _) => ReloadSelected();

@@ -3,6 +3,7 @@ using PCL.Core.App;
 using PCL.Core.Utils;
 using System.Collections;
 using System.IO;
+using System.Windows.Input;
 using System.Windows.Shell;
 using YamlDotNet.Serialization;
 
@@ -400,7 +401,7 @@ public static class ModLoader
         }
 
         // 状态变化
-        public abstract void Start(object Input = null, bool IsForceRestart = false);
+        public abstract void Start(object? Input = null, bool IsForceRestart = false);
         public abstract void Abort();
 
         /// <summary>
@@ -478,15 +479,9 @@ public static class ModLoader
         }
     }
 
-    /// <summary>
-    ///     用于异步执行并监控单一函数的加载器。
-    /// </summary>
-    public class LoaderTask<InputType, OutputType> : LoaderBase
+    // 说实话，我真的觉得 C# 应该学学 VB 的隐式去泛型化，省掉一堆麻烦
+    public abstract class LoaderTask : LoaderBase
     {
-        // 输入输出
-        public InputType Input;
-        protected internal Func<object> InputDelegate;
-
         /// <summary>
         ///     上次完成加载时的时间。
         /// </summary>
@@ -495,34 +490,12 @@ public static class ModLoader
         /// <summary>
         ///     最后一次运行加载器的线程。可能为 Nothing，或线程已结束。
         /// </summary>
-        public Task LastRunningTask;
-
-        private CancellationTokenSource? CancelToken;
-
-        // 执行事件
-        protected internal Action<LoaderTask<InputType, OutputType>> LoadDelegate;
-        public OutputType Output = default;
+        public Task? LastRunningTask;
 
         /// <summary>
         ///     在输入相同时使用原有结果的超时，单位为毫秒。
         /// </summary>
         public int ReloadTimeout = -1;
-
-        // 线程设定
-        protected internal ThreadPriority ThreadPriority;
-
-        public LoaderTask()
-        {
-            // 仅仅是为了避免一些智障报错（继承类必须重写 New 的情况）
-        }
-
-        public LoaderTask(string Name, Action<LoaderTask<InputType, OutputType>> LoadDelegate,
-            Func<InputType> InputDelegate = null, ThreadPriority Priority = ThreadPriority.Normal)
-        {
-            this.Name = Name;
-            this.LoadDelegate = LoadDelegate;
-            this.InputDelegate = (dynamic)InputDelegate;
-        }
 
         // 状态指示
         /// <summary>
@@ -539,20 +512,56 @@ public static class ModLoader
                    State == ModBase.LoadState.Aborted;
         }
 
-        // 获取输入
-        public InputType
-            StartGetInput(InputType Input = default, Func<object> InputDelegate = null) // InputDelegate 参数存在匿名调用
+        public abstract bool ShouldStart(ref object Input, bool IsForceRestart = false, bool IgnoreReloadTimeout = false);
+
+        public abstract object? StartGetInputNoType(object? Input = null, Func<object>? InputDelegate = null);
+
+    }
+
+    /// <summary>
+    ///     用于异步执行并监控单一函数的加载器。
+    /// </summary>
+    public class LoaderTask<InputType, OutputType> : LoaderTask
+    {
+        // 输入输出
+        public InputType Input;
+        protected internal Func<object> InputDelegate;
+
+        // 执行事件
+        protected internal Action<LoaderTask<InputType, OutputType>> LoadDelegate;
+        public OutputType Output = default;
+
+        private CancellationTokenSource? CancelToken;
+
+        // 线程设定
+        protected internal ThreadPriority ThreadPriority;
+
+        public LoaderTask(string Name, Action<LoaderTask<InputType, OutputType>> LoadDelegate,
+            Func<InputType> InputDelegate = null, ThreadPriority Priority = ThreadPriority.Normal)
         {
-            if (InputDelegate is null)
-                InputDelegate = this.InputDelegate;
-            InputType NewInput = default; // 若 InputType 不能为 Nothing，则会导致 Input Is Nothing 永远失败，因此需要额外判断
+            this.Name = Name;
+            this.LoadDelegate = LoadDelegate;
+            this.InputDelegate = (dynamic)InputDelegate;
+        }
+
+        // 获取输入
+        public InputType?
+            StartGetInput(InputType? Input = default, Func<object>? InputDelegate = null) // InputDelegate 参数存在匿名调用
+        {
+            InputDelegate ??= this.InputDelegate;
+            InputType? NewInput = default; // 若 InputType 不能为 Nothing，则会导致 Input Is Nothing 永远失败，因此需要额外判断
             if ((Input is null || (NewInput is not null && Input.Equals(NewInput))) && InputDelegate is not null)
                 ModBase.RunInUiWait(() => Input = Conversions.ToGenericParameter<InputType>(InputDelegate()));
             return Input;
         }
 
+        public override object? StartGetInputNoType(object? Input = null, Func<object>? InputDelegate = null)
+        {
+            return StartGetInput((InputType?)Input, InputDelegate);
+        }
+
         // 代码执行
-        public bool ShouldStart(ref object Input, bool IsForceRestart = false, bool IgnoreReloadTimeout = false)
+        public override bool ShouldStart(ref object Input, bool IsForceRestart = false, bool IgnoreReloadTimeout = false)
         {
             // 获取输入
             try

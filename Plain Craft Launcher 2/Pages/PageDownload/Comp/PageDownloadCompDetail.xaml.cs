@@ -21,7 +21,7 @@ public partial class PageDownloadCompDetail
     private void Init()
     {
         ModAnimation.AniControlEnabled += 1;
-        _project = (ModComp.CompProject)ModMain.FrmMain.PageCurrent.Additional;
+        _project = (ModComp.CompProject)((object[])ModMain.FrmMain.PageCurrent.Additional)[0];
         PanBack.ScrollToHome();
         // 重启加载器
         if (_isFirstInit)

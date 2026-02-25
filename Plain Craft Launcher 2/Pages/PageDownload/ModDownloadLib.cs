@@ -275,32 +275,14 @@ public static class ModDownloadLib
     public static MyListItem McDownloadListItem(JObject Entry, MyListItem.ClickEventHandler OnClick, bool IsSaveOnly)
     {
         // 确定图标
-        string Logo;
-        switch ("type")
+        string Logo = Entry["type"].ToString() switch
         {
-            case "release":
-            {
-                Logo = ModBase.PathImage + "Blocks/Grass.png";
-                break;
-            }
-            case "snapshot":
-            case "pending":
-            {
-                Logo = ModBase.PathImage + "Blocks/CommandBlock.png";
-                break;
-            }
-            case "special":
-            {
-                Logo = ModBase.PathImage + "Blocks/GoldBlock.png";
-                break;
-            }
-
-            default:
-            {
-                Logo = ModBase.PathImage + "Blocks/CobbleStone.png";
-                break;
-            }
-        }
+            "release" => ModBase.PathImage + "Blocks/Grass.png",
+            "snapshot" => ModBase.PathImage + "Blocks/CommandBlock.png",
+            "pending" => ModBase.PathImage + "Blocks/CommandBlock.png",
+            "special" => ModBase.PathImage + "Blocks/GoldBlock.png",
+            _ => ModBase.PathImage + "Blocks/CobbleStone.png"
+        };
 
         // 建立控件
         var FormattedVersion = McFormatter.FormatVersion(Entry["id"].ToString()).Replace("_", " ");

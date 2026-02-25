@@ -556,7 +556,7 @@ public static class ModLoader
 
         public override object? StartGetInputNoType(object? Input = null, Func<object?>? InputDelegate = null)
         {
-            return StartGetInput((InputType?)Input, InputDelegate == null ? null : () => (InputType?)InputDelegate());
+            return StartGetInput(Input == null ? default : (InputType?)Input, InputDelegate == null ? null : () => (InputType?)InputDelegate());
         }
 
         // 代码执行

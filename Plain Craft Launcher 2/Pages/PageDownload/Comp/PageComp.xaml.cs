@@ -236,11 +236,11 @@ public partial class PageComp
 
     public PageComp()
     {
-        InitializeComponent();
         Loader = new ModLoader.LoaderTask<ModComp.CompProjectRequest, int>("社区资源获取：XXX", ModComp.CompProjectsGet,
             LoaderInput) { ReloadTimeout = 60 * 1000 };
         Loaded += PageCompControls_Inited;
         IsVisibleChanged += PageComp_IsVisibleChanged;
+        InitializeComponent();
         Load.StateChanged += Load_State;
         BtnPageFirst.Click += BtnPageFirst_Click;
         BtnPageLeft.Click += BtnPageLeft_Click;

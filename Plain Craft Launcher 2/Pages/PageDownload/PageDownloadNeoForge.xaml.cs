@@ -9,9 +9,9 @@ public partial class PageDownloadNeoForge
 {
     public PageDownloadNeoForge()
     {
-        InitializeComponent();
         Initialized += (_, _) => LoaderInit();
         Loaded += (_, _) => Init();
+        InitializeComponent();
     }
 
     private void LoaderInit()

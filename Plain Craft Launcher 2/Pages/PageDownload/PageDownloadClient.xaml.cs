@@ -10,9 +10,9 @@ public partial class PageDownloadClient
 {
     public PageDownloadClient()
     {
-        InitializeComponent();
         Initialized += (_, __) => LoaderInit();
         Loaded += (_, __) => Init();
+        InitializeComponent();
     }
 
     private void LoaderInit()

@@ -9,9 +9,9 @@ public partial class PageDownloadCleanroom
 {
     public PageDownloadCleanroom()
     {
-        InitializeComponent();
         Initialized += (_, _) => LoaderInit();
         Loaded += (_, _) => Init();
+        InitializeComponent();
         BtnWeb.Click += BtnWeb_Click;
     }
 

@@ -3,9 +3,7 @@ using PCL.Core.App;
 using PCL.Core.Utils;
 using System.Collections;
 using System.IO;
-using System.Windows.Input;
 using System.Windows.Shell;
-using YamlDotNet.Serialization;
 
 namespace PCL;
 
@@ -479,7 +477,7 @@ public static class ModLoader
         }
     }
 
-    // 说实话，我真的觉得 C# 应该学学 VB 的隐式去泛型化，省掉一堆麻烦
+    // 说实话，我真的觉得 C# 应该学学 VB 的那种近乎 Java 泛型擦除的兼容性，省掉一堆麻烦
     public abstract class LoaderTask : LoaderBase
     {
         /// <summary>
@@ -512,9 +510,10 @@ public static class ModLoader
                    State == ModBase.LoadState.Aborted;
         }
 
-        public abstract bool ShouldStart(ref object Input, bool IsForceRestart = false, bool IgnoreReloadTimeout = false);
+        public abstract bool ShouldStart(ref object? input, bool isForceRestart = false, bool ignoreReloadTimeout = false);
 
-        public abstract object? StartGetInputNoType(object? Input = null, Func<object>? InputDelegate = null);
+        // 装箱！装箱！装箱圣地！
+        public abstract object? StartGetInputNoType(object? input = null, Func<object>? inputDelegate = null);
 
     }
 
@@ -525,7 +524,7 @@ public static class ModLoader
     {
         // 输入输出
         public InputType Input;
-        protected internal Func<object> InputDelegate;
+        protected internal Func<InputType?>? InputDelegate;
 
         // 执行事件
         protected internal Action<LoaderTask<InputType, OutputType>> LoadDelegate;
@@ -537,31 +536,31 @@ public static class ModLoader
         protected internal ThreadPriority ThreadPriority;
 
         public LoaderTask(string Name, Action<LoaderTask<InputType, OutputType>> LoadDelegate,
-            Func<InputType> InputDelegate = null, ThreadPriority Priority = ThreadPriority.Normal)
+            Func<InputType?>? InputDelegate = null, ThreadPriority Priority = ThreadPriority.Normal)
         {
             this.Name = Name;
             this.LoadDelegate = LoadDelegate;
-            this.InputDelegate = (dynamic)InputDelegate;
+            this.InputDelegate = InputDelegate;
         }
 
         // 获取输入
-        public InputType?
-            StartGetInput(InputType? Input = default, Func<object>? InputDelegate = null) // InputDelegate 参数存在匿名调用
+        public InputType? StartGetInput(InputType? Input = default, Func<InputType?>? InputDelegate = null) // InputDelegate 参数存在匿名调用
         {
             InputDelegate ??= this.InputDelegate;
-            InputType? NewInput = default; // 若 InputType 不能为 Nothing，则会导致 Input Is Nothing 永远失败，因此需要额外判断
-            if ((Input is null || (NewInput is not null && Input.Equals(NewInput))) && InputDelegate is not null)
-                ModBase.RunInUiWait(() => Input = Conversions.ToGenericParameter<InputType>(InputDelegate()));
+            // 按照龙猫的逻辑，此处将 input 与默认值直接进行等价比较，若相等则认为 input 未传入具体值，而调用 inputDelegate 获取
+            // 这种逻辑未考虑值类型恰好传入 default 值 (如 double 传了 0.0) 的情况，这是一个陷阱，可能会产生 undefined behavior
+            if (EqualityComparer<InputType>.Default.Equals(Input, default) && InputDelegate is not null)
+                ModBase.RunInUiWait(() => Input = InputDelegate());
             return Input;
         }
 
-        public override object? StartGetInputNoType(object? Input = null, Func<object>? InputDelegate = null)
+        public override object? StartGetInputNoType(object? Input = null, Func<object?>? InputDelegate = null)
         {
-            return StartGetInput(Input is null ? default : (InputType?)Input, InputDelegate);
+            return StartGetInput((InputType?)Input, InputDelegate == null ? null : () => (InputType?)InputDelegate());
         }
 
         // 代码执行
-        public override bool ShouldStart(ref object Input, bool IsForceRestart = false, bool IgnoreReloadTimeout = false)
+        public override bool ShouldStart(ref object? Input, bool IsForceRestart = false, bool IgnoreReloadTimeout = false)
         {
             // 获取输入
             try

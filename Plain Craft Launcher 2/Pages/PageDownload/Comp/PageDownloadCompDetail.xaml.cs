@@ -466,7 +466,6 @@ public partial class PageDownloadCompDetail
 
     public PageDownloadCompDetail()
     {
-        InitializeComponent();
         _compFileLoader = new ModLoader.LoaderTask<int, List<ModComp.CompFile>>("Comp File", task =>
         {
             LoadTargetFromAdditional();
@@ -478,6 +477,7 @@ public partial class PageDownloadCompDetail
         Initialized += PageDownloadCompDetail_Inited;
         Loaded += (_, _) => LoadTargetFromAdditional();
         PageEnter += Init;
+        InitializeComponent();
         Load.StateChanged += Load_State;
         BtnIntroWeb.Click += BtnIntroWeb_Click;
         BtnIntroWiki.Click += BtnIntroWiki_Click;

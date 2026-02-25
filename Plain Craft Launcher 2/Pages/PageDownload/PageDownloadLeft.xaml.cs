@@ -212,8 +212,8 @@ public partial class PageDownloadLeft : IRefreshable
 
     public PageDownloadLeft()
     {
-        InitializeComponent();
         AnimatedControl = PanItem;
+        InitializeComponent();
         ItemInstall.Check += PageCheck;
         ItemMod.Check += PageCheck;
         ItemPack.Check += PageCheck;
@@ -238,8 +238,8 @@ public partial class PageDownloadLeft : IRefreshable
     /// </summary>
     private void PageCheck(object sender, ModBase.RouteEventArgs e)
     {
-        if (sender is MyListItem item && item.Tag is not null)
-            PageChange((FormMain.PageSubType)ModBase.Val(item.Tag));
+        if (sender is MyListItem { Tag: { } tag })
+            PageChange((FormMain.PageSubType)ModBase.Val(tag));
     }
 
     public object PageGet(FormMain.PageSubType ID)

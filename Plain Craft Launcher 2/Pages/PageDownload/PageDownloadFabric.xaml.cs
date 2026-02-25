@@ -6,9 +6,9 @@ public partial class PageDownloadFabric
 {
     public PageDownloadFabric()
     {
-        InitializeComponent();
         Initialized += (_, _) => LoaderInit();
         Loaded += (_, _) => Init();
+        InitializeComponent();
         BtnWeb.Click += BtnWeb_Click;
     }
 

@@ -65,10 +65,10 @@ public class MyPageRight : AdornerDecorator
 
     private ModLoader.LoaderBase PageLoader;
     private Func<object>? PageLoaderInputInvoke;
-    private MyLoading PageLoaderUi;
+    private MyLoading? PageLoaderUi;
     private FrameworkElement PanLoader;
     private FrameworkElement PanContent;
-    private FrameworkElement PanAlways;
+    private FrameworkElement? PanAlways;
     private bool PageLoaderAutoRun;
 
     // 初始化
@@ -82,7 +82,7 @@ public class MyPageRight : AdornerDecorator
     /// <param name="RealLoader">在工作线程执行的加载器。</param>
     /// <param name="FinishedInvoke">当加载器执行完成，在 UI 线程触发的 UI 初始化事件。</param>
     public void PageLoaderInit(MyLoading LoaderUi, FrameworkElement PanLoader, FrameworkElement PanContent,
-        FrameworkElement PanAlways, ModLoader.LoaderBase RealLoader, Action<ModLoader.LoaderBase>? FinishedInvoke = null,
+        FrameworkElement? PanAlways, ModLoader.LoaderBase RealLoader, Action<ModLoader.LoaderBase>? FinishedInvoke = null,
         Func<object>? InputInvoke = null, bool AutoRun = true)
     {
         // 初始化参数
@@ -107,8 +107,7 @@ public class MyPageRight : AdornerDecorator
         // 隐藏 UI
         PanLoader.Visibility = Visibility.Collapsed;
         PanContent.Visibility = Visibility.Collapsed;
-        if (PanAlways is not null)
-            PanAlways.Visibility = Visibility.Collapsed;
+        PanAlways?.Visibility = Visibility.Collapsed;
         // 初次运行加载器
         if (PageLoaderAutoRun)
         {
@@ -118,7 +117,7 @@ public class MyPageRight : AdornerDecorator
             }
             else
             {
-                object Input = null;
+                object? Input = null;
                 if (PageLoaderInputInvoke is not null)
                     Input = PageLoaderInputInvoke();
                 PageLoader.Start(Input);
@@ -295,7 +294,7 @@ public class MyPageRight : AdornerDecorator
         PageState = PageStates.Empty;
         ModAnimation.AniStop("PageRight PageChange " + PageUuid);
         // 由于动画会被强制中止，所以需要手动进行隐藏
-        if (PageLoader is null)
+        if (PageLoader is null && Child is not null)
         {
             Child.Visibility = Visibility.Collapsed;
         }

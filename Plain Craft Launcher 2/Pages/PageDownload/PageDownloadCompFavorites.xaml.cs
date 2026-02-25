@@ -4,7 +4,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.UI;
 
@@ -19,16 +18,18 @@ public partial class PageDownloadCompFavorites
     {
         Loader = new ModLoader.LoaderTask<List<string>, List<ModComp.CompProject>>("CompProject Favorites",
             CompFavoritesGet, LoaderInput);
-        InitializeComponent();
-        // 这是选择收藏夹旁边那个图标按钮
-        // 实在不想把布局写动态代码里，但是奈何龙猫的石山没办法在 XAML 里定义 Logo 属性为已有常量值
-        // 还有一个很扯淡的点，同样自定义的 MyButton 能在 XAML 直接设置 Click 事件
-        // 到 MyIconButton 就不行了，死活跑不了，也不知道是不是漏了什么依赖属性没写
-        Btn_ManageTargetFav.Logo = ModBase.Logo.IconButtonSetup;
-        Btn_ManageTargetFav.Click += (sender, e) => this.Manage_Click(sender, (dynamic)e);
         Initialized += PageDownloadCompFavorites_Inited;
         Loaded += PageDownloadCompFavorites_Loaded;
         KeyDown += Page_KeyDown;
+        InitializeComponent();
+        {
+            // 这是选择收藏夹旁边那个图标按钮
+            // 实在不想把布局写动态代码里，但是奈何龙猫的石山没办法在 XAML 里定义 Logo 属性为已有常量值
+            // 还有一个很扯淡的点，同样自定义的 MyButton 能在 XAML 直接设置 Click 事件
+            // 到 MyIconButton 就不行了，死活跑不了，也不知道是不是漏了什么依赖属性没写
+            Btn_ManageTargetFav.Logo = ModBase.Logo.IconButtonSetup;
+            Btn_ManageTargetFav.Click += Manage_Click;
+        }
         // Handles
         Load.StateChanged += Load_State;
         Btn_FavoritesCancel.Click += Btn_FavoritesCancel_Clicked;
@@ -713,7 +714,7 @@ public partial class PageDownloadCompFavorites
             Items_SetSelectAll(true);
     }
 
-    private void Manage_Click(object sender, MouseButtonEventArgs e)
+    private void Manage_Click(object sender, EventArgs _)
     {
         var Body = new ContextMenu();
         var NewItem = new MyMenuItem

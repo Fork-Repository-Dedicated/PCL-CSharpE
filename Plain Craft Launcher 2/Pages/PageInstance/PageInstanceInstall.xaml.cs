@@ -20,9 +20,9 @@ public partial class PageInstanceInstall
 
     public PageInstanceInstall()
     {
-        InitializeComponent();
         Initialized += (a, b) => LoaderInit();
         Loaded += (a, b) => Init();
+        InitializeComponent();
     }
 
     private void LoaderInit()

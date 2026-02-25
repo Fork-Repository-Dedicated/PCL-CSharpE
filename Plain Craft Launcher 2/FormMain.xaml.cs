@@ -687,7 +687,7 @@ public partial class FormMain
     private void FormDragMove(object sender, MouseButtonEventArgs e)
     {
         // On Error Resume Next
-        if (Conversions.ToBoolean(((dynamic)sender).IsMouseDirectlyOver))
+        if (Conversions.ToBoolean(((AnimatedBackgroundGrid)sender).IsMouseDirectlyOver))
             DragMove();
     }
 

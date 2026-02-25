@@ -144,7 +144,7 @@ public partial class PageToolsTest
                 loaderdownload = new ModNet.LoaderDownloadUnc("自定义下载文件：" + FileName + " ",
                     new Tuple<string, string>(Url, Folder + FileName));
             var loaderCombo = new ModLoader.LoaderCombo<int>("自定义下载 (" + uuid + ") ", new[] { loaderdownload })
-                { OnStateChanged = a => DownloadState((dynamic)a) };
+                { OnStateChanged = a => DownloadState((ModLoader.LoaderCombo<int>)a) };
             loaderCombo.Start();
             ModLoader.LoaderTaskbarAdd(loaderCombo);
             ModMain.FrmMain.BtnExtraDownload.ShowRefresh();

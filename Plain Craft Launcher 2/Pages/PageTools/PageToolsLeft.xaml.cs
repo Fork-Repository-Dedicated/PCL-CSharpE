@@ -36,7 +36,7 @@ public partial class PageToolsLeft
     {
         if (((dynamic)sender).Tag is null)
             return;
-        double id = ModBase.Val(((dynamic)sender).Tag);
+        double id = ModBase.Val(((MyIconButton)sender).Tag);
         switch (id)
         {
             case (double)FormMain.PageSubType.ToolsGameLink:

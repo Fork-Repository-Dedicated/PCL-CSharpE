@@ -166,7 +166,7 @@ public partial class PageSelectLeft : IRefreshable
                     Tag = folder
                 };
 
-                newItem.Changed += (a, b) => ModMain.FrmSelectLeft.Folder_Change((dynamic)a, b);
+                newItem.Changed += (a, b) => ModMain.FrmSelectLeft.Folder_Change((MyListItem)a, b);
 
                 // 拖拽
                 newItem.AllowDrop = true;

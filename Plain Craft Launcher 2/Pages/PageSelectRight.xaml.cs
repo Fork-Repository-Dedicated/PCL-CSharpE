@@ -43,7 +43,7 @@ public partial class PageSelectRight
         ModLoader.LoaderFolderRun(ModMinecraft.McInstanceListLoader, ModMinecraft.McFolderSelected,
             ModLoader.LoaderFolderRunType.RunOnUpdated, 1, @"versions\");
         PanBack.ScrollToHome();
-        PanVerSearchBox.TextChanged += (a, b) => this.PanVerSearchBox_TextChanged(a, (dynamic)b);
+        PanVerSearchBox.TextChanged += (a, b) => PanVerSearchBox_TextChanged(a, (TextChangedEventArgs)b);
 
         ReloadTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(NormalDelay) };
         ReloadTimer.Tick += ReloadTimer_Tick;
@@ -106,7 +106,7 @@ public partial class PageSelectRight
     private void LoaderInit()
     {
         PageLoaderInit(Load, PanLoad, PanAllBack, null, ModMinecraft.McInstanceListLoader,
-            a => this.McInstanceListUI((dynamic)a),
+            a => this.McInstanceListUI((ModLoader.LoaderTask<string, int>)a),
             AutoRun: false);
     }
 

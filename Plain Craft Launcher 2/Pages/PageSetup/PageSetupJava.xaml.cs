@@ -142,12 +142,11 @@ public partial class PageSetupJava
         ItemAuto.Check += (sender, e) => Config.Launch.SelectedJava = "";
         PanContent.Children.Add(ItemAuto);
         var CurrentSetJava = Config.Launch.SelectedJava;
-        foreach (var J in ModJava.Javas.GetSortedJavaList())
+        foreach (var entry in ModJava.Javas.GetSortedJavaList())
         {
-            var item = ItemBuilder(J);
+            var item = ItemBuilder(entry);
             PanContent.Children.Add(item);
-            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(((dynamic)J).Installation.JavaExePath,
-                    CurrentSetJava, false)))
+            if (entry.Installation.JavaExePath == CurrentSetJava)
                 item.SetChecked(true, false, false);
         }
 

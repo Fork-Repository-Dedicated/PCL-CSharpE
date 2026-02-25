@@ -174,7 +174,7 @@ public partial class FormMain
         BtnExtraLog.ShowCheck = BtnExtraLog_ShowCheck;
         BtnExtraApril.ShowRefresh();
         // 初始化尺寸改变
-        if (!(dynamic)Config.Preference.LockWindowSize)
+        if (!Config.Preference.LockWindowSize)
             AddResizer();
         else
             RemoveResizer();

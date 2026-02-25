@@ -38,7 +38,7 @@ public partial class PageLogLeft
         {
             if (ShownLogs.Count == 0)
             {
-                ModMain.FrmMain.PageChange((dynamic)ModMain.FrmMain.PageCurrentSub);
+                ModMain.FrmMain.PageChange((FormMain.PageType)ModMain.FrmMain.PageCurrentSub);
                 return;
             }
 
@@ -66,7 +66,7 @@ public partial class PageLogLeft
                 // Dim KillButton As New MyIconButton With {.Logo = Logo.IconButtonCross, .LogoScale = 0.85}
                 var RemoveButton = new MyIconButton { Logo = ModBase.Logo.IconButtonDelete, LogoScale = 1.1d };
                 // AddHandler KillButton.Click, AddressOf FrmLogLeft.Kill_Click
-                RemoveButton.Click += (a, b) => ModMain.FrmLogLeft.Remove_Click(a, (dynamic)b);
+                RemoveButton.Click += (a, b) => ModMain.FrmLogLeft.Remove_Click(a, (RoutedEventArgs)b);
                 NewItem.Buttons = new[] { RemoveButton };
                 if (Uuid == CurrentUuid)
                     NewItem.Checked = true;

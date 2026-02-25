@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.App;
 using PCL.Core.Utils;
 using System.Collections;
@@ -611,7 +611,7 @@ public static class ModLoader
 
             // 如果线程是因为判断到 IsAborted 而提前中止，则代表已有新线程被重启，此时不应当改为 Aborted
             // 如果线程是在没有 IsAborted 时手动引发了 ThreadInterruptedException，则代表没有重启线程，这通常代表用户手动取消，应当改为 Aborted
-            LastRunningTask = new Task(() =>
+            LastRunningTask = Task.Run(() =>
             {
                 try
                 {
@@ -658,7 +658,7 @@ public static class ModLoader
                     State = ModBase.LoadState.Failed;
                 }
             }, (CancelToken ??= new CancellationTokenSource()).Token); // 未中断，本次输出有效
-            LastRunningTask.Start(); // 不能使用 RunInNewThread，否则在函数返回前线程就会运行完，导致误判 IsAborted
+            // LastRunningTask.Start(); // 不能使用 RunInNewThread，否则在函数返回前线程就会运行完，导致误判 IsAborted
         }
 
         public override void Abort()

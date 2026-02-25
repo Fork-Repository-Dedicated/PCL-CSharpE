@@ -466,17 +466,15 @@ pause";
 
     public static void McDownloadMenuSave(object sender, RoutedEventArgs e)
     {
+        var element = (FrameworkElement)sender;
         MyListItem Version;
-        if (sender is MyListItem)
-            Version = (MyListItem)sender;
-        else if (((dynamic)sender).Parent is MyListItem)
-            Version = (MyListItem)((dynamic)sender).Parent;
-        else
-            Version = (MyListItem)((dynamic)sender).Parent.Parent;
+        if (element is MyListItem s1) Version = s1;
+        else if (element.Parent is MyListItem s2) Version = s2;
+        else Version = (MyListItem)((FrameworkElement)element.Parent).Parent;
         try
         {
             var Id = Version.Title;
-            string JsonUrl = ((dynamic)Version.Tag)("url").ToString();
+            var JsonUrl = ((JObject)Version.Tag)["url"]!.ToString();
             var VersionFolder = SystemDialogs.SelectFolder();
             if (!VersionFolder.Contains(@"\"))
                 return;

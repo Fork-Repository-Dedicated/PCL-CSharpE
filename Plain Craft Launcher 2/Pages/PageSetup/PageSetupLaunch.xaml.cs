@@ -43,6 +43,7 @@ public partial class PageSetupLaunch
         var timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 1) };
         timer.Tick += (_, __) => RefreshRam();
         timer.Start();
+        RectRamGame.SizeChanged += (s, e) => RefreshRamText();
     }
 
     public void Reload()

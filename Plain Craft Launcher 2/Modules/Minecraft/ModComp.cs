@@ -2041,7 +2041,7 @@ public static class ModComp
         {
             var result = new MyListItem();
             result.Title = TranslatedName;
-            result.Info = Description.Replace(Constants.vbCr, "").Replace(Constants.vbLf, "");
+            result.Info = Description.Replace("\r", "").Replace("\n", "");
             result.Logo = LogoUrl;
             result.Tags = Tags;
             result.Tag = this;

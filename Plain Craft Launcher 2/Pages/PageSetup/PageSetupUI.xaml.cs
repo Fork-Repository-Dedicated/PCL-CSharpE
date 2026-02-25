@@ -334,7 +334,7 @@ public partial class PageSetupUI
 
     private void BtnBackgroundClear_Click(object sender, MouseButtonEventArgs e)
     {
-        if (ModMain.MyMsgBox("即将删除背景内容文件夹中的所有文件。" + Constants.vbCrLf + "此操作不可撤销，是否确定？", "警告", Button2: "取消",
+        if (ModMain.MyMsgBox("即将删除背景内容文件夹中的所有文件。" + "\r\n" + "此操作不可撤销，是否确定？", "警告", Button2: "取消",
                 IsWarn: true) == 1)
         {
             ModBase.DeleteDirectory(ModBase.ExePath + @"PCL\Pictures");
@@ -371,8 +371,8 @@ public partial class PageSetupUI
 
                     if (videoEx.Message.Contains("0xC00D109B"))
                         ModBase.Log(
-                            "刷新背景内容失败，该视频文件可能并非 H.264（AVC） 格式。" + Constants.vbCrLf +
-                            "你可以尝试使用视频转码工具打开视频文件并设定目标格式为 H.264（AVC） ，然后转码该视频。" + Constants.vbCrLf + "文件：" +
+                            "刷新背景内容失败，该视频文件可能并非 H.264（AVC） 格式。" + "\r\n" +
+                            "你可以尝试使用视频转码工具打开视频文件并设定目标格式为 H.264（AVC） ，然后转码该视频。" + "\r\n" + "文件：" +
                             videoAddress, ModBase.LogLevel.Msgbox);
                     else
                         ModBase.Log(videoEx, "刷新背景内容失败（" + videoAddress + "）", ModBase.LogLevel.Msgbox);
@@ -475,7 +475,7 @@ public partial class PageSetupUI
         catch (Exception ex)
         {
             if (ex.Message.Contains("参数无效"))
-                ModBase.Log("改变标题栏图片失败，该图片文件可能并非标准格式。" + Constants.vbCrLf + "你可以尝试使用画图打开该文件并重新保存，这会让图片变为标准格式。",
+                ModBase.Log("改变标题栏图片失败，该图片文件可能并非标准格式。" + "\r\n" + "你可以尝试使用画图打开该文件并重新保存，这会让图片变为标准格式。",
                     ModBase.LogLevel.Msgbox);
             else
                 ModBase.Log(ex, "设置标题栏图片失败", ModBase.LogLevel.Msgbox);
@@ -500,7 +500,7 @@ public partial class PageSetupUI
             catch (Exception ex)
             {
                 if (ex.Message.Contains("参数无效"))
-                    ModBase.Log("调整标题栏图片失败，该图片文件可能并非标准格式。" + Constants.vbCrLf + "你可以尝试使用画图打开该文件并重新保存，这会让图片变为标准格式。",
+                    ModBase.Log("调整标题栏图片失败，该图片文件可能并非标准格式。" + "\r\n" + "你可以尝试使用画图打开该文件并重新保存，这会让图片变为标准格式。",
                         ModBase.LogLevel.Msgbox);
                 else
                     ModBase.Log(ex, "调整标题栏图片失败", ModBase.LogLevel.Msgbox);
@@ -591,7 +591,7 @@ public partial class PageSetupUI
 
     private void BtnMusicClear_Click(object sender, MouseButtonEventArgs e)
     {
-        if (ModMain.MyMsgBox("即将删除背景音乐文件夹中的所有文件。" + Constants.vbCrLf + "此操作不可撤销，是否确定？", "警告", Button2: "取消",
+        if (ModMain.MyMsgBox("即将删除背景音乐文件夹中的所有文件。" + "\r\n" + "此操作不可撤销，是否确定？", "警告", Button2: "取消",
                 IsWarn: true) == 1)
             ModBase.RunInThread(() =>
             {
@@ -669,9 +669,9 @@ public partial class PageSetupUI
     private void BtnCustomTutorial_Click(object sender, MouseButtonEventArgs e)
     {
         ModMain.MyMsgBox(
-            "1. 点击 生成教学文件 按钮，这会在 PCL 文件夹下生成 Custom.xaml 布局文件。" + Constants.vbCrLf + "2. 使用记事本等工具打开这个文件并进行修改，修改完记得保存。" +
-            Constants.vbCrLf + "3. 点击 刷新主页 按钮，查看主页现在长啥样了。" + Constants.vbCrLf + Constants.vbCrLf +
-            "你可以在生成教学文件后直接刷新主页，对照着进行修改，更有助于理解。" + Constants.vbCrLf + "直接将主页文件拖进 PCL 窗口也可以快捷加载。", "主页自定义教程");
+            "1. 点击 生成教学文件 按钮，这会在 PCL 文件夹下生成 Custom.xaml 布局文件。" + "\r\n" + "2. 使用记事本等工具打开这个文件并进行修改，修改完记得保存。" +
+            "\r\n" + "3. 点击 刷新主页 按钮，查看主页现在长啥样了。" + "\r\n" + "\r\n" +
+            "你可以在生成教学文件后直接刷新主页，对照着进行修改，更有助于理解。" + "\r\n" + "直接将主页文件拖进 PCL 窗口也可以快捷加载。", "主页自定义教程");
     }
 
     // 主题

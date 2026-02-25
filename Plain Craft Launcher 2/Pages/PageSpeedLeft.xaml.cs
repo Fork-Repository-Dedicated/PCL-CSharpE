@@ -339,7 +339,7 @@ public partial class PageSpeedLeft
                     catch (Exception ex)
                     {
                         ModBase.Log(ex, "新建任务管理卡片失败");
-                        ModBase.Log("出错的卡片内容：" + Constants.vbCrLf + CardXAML);
+                        ModBase.Log("出错的卡片内容：" + "\r\n" + CardXAML);
                         throw;
                     }
 

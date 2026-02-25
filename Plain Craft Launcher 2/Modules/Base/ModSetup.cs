@@ -372,7 +372,7 @@ public class ModSetup : IConfigScope
                         ? Visibility.Collapsed
                         : Visibility.Visible;
                 ModMain.FrmSetupUI.HintCustom.Text =
-                    $"从 PCL 文件夹下的 Custom.xaml 读取主页内容。{Constants.vbCrLf}你可以手动编辑该文件，向主页添加文本、图片、常用网站、快捷启动等功能。";
+                    $"从 PCL 文件夹下的 Custom.xaml 读取主页内容。{"\r\n"}你可以手动编辑该文件，向主页添加文本、图片、常用网站、快捷启动等功能。";
                 ModMain.FrmSetupUI.HintCustom.EventType = "";
                 ModMain.FrmSetupUI.HintCustom.EventData = "";
                 break;
@@ -388,7 +388,7 @@ public class ModSetup : IConfigScope
                         ? Visibility.Collapsed
                         : Visibility.Visible;
                 ModMain.FrmSetupUI.HintCustom.Text =
-                    $"从指定网址联网获取主页内容。服主也可以用于动态更新服务器公告。{Constants.vbCrLf}如果你制作了稳定运行的联网主页，可以点击这条提示投稿，若合格即可加入预设！";
+                    $"从指定网址联网获取主页内容。服主也可以用于动态更新服务器公告。{"\r\n"}如果你制作了稳定运行的联网主页，可以点击这条提示投稿，若合格即可加入预设！";
                 ModMain.FrmSetupUI.HintCustom.EventType = "打开网页";
                 ModMain.FrmSetupUI.HintCustom.EventData = "https://github.com/Meloong-Git/PCL/discussions/2528";
                 break;

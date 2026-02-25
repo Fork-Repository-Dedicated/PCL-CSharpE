@@ -87,13 +87,13 @@ public partial class MinecraftServer : Grid
         MotdRenderer.RenderCanvas();
 
         // 更新玩家信息
-        var playerText = $"{ret.Players.Online}/{ret.Players.Max}{Constants.vbCrLf}§{latencyColor}{ret.Latency}ms";
+        var playerText = $"{ret.Players.Online}/{ret.Players.Max}{"\r\n"}§{latencyColor}{ret.Latency}ms";
         ModStyle.MinecraftFormatter.SetColorfulTextLab(playerText, LabServerPlayer, false);
 
         // 玩家列表提示
         if (ret.Players.Samples.Any())
         {
-            LabServerPlayer.ToolTip = string.Join(Constants.vbCrLf, ret.Players.Samples.Select(x => x.Name));
+            LabServerPlayer.ToolTip = string.Join("\r\n", ret.Players.Samples.Select(x => x.Name));
             ToolTipService.SetPlacement(LabServerPlayer, PlacementMode.Mouse);
         }
     }

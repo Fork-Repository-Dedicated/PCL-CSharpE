@@ -514,7 +514,7 @@ public partial class PageDownloadCompFavorites
         try
         {
             if (1 != ModMain.MyMsgBox(
-                    $"批量下载功能仍旧处于测试状态。{Constants.vbCrLf}使用此功能下载模组不会自动下载前置项。{Constants.vbCrLf}请在下载前仔细思考自己的需求，并仔细检查自己的选择，避免下载错误导致时间和网络流量的浪费。",
+                    $"批量下载功能仍旧处于测试状态。{"\r\n"}使用此功能下载模组不会自动下载前置项。{"\r\n"}请在下载前仔细思考自己的需求，并仔细检查自己的选择，避免下载错误导致时间和网络流量的浪费。",
                     "确定使用此功能？", "继续", "算了", IsWarn: true))
                 return;
             var SupportedModLoader = new List<ModComp.CompLoaderType>();
@@ -829,9 +829,9 @@ public partial class PageDownloadCompFavorites
                 return;
             }
 
-            var content = $"确认删除 {CurrentFavTarget.Name} 收藏夹？" + Constants.vbCrLf + Constants.vbCrLf;
-            content += $"此收藏夹有 {CurrentFavTarget.Favs.Count} 个收藏项目" + Constants.vbCrLf;
-            content += "收藏夹 ID 为 " + CurrentFavTarget.Id + Constants.vbCrLf;
+            var content = $"确认删除 {CurrentFavTarget.Name} 收藏夹？" + "\r\n" + "\r\n";
+            content += $"此收藏夹有 {CurrentFavTarget.Favs.Count} 个收藏项目" + "\r\n";
+            content += "收藏夹 ID 为 " + CurrentFavTarget.Id + "\r\n";
             content += "此操作不可逆！";
             var res = ModMain.MyMsgBox(content, "删除确认", IsWarn: true, Button1: "否", Button2: "是", Button3: "否");
             if (res == 2)
@@ -859,12 +859,12 @@ public partial class PageDownloadCompFavorites
 
     private void HintGetFail_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        var Content = "由于在线资源被删除或者网络问题等因素导致以下资源未获取成功（以资源的 ID 展示）" + Constants.vbCrLf + Constants.vbCrLf;
+        var Content = "由于在线资源被删除或者网络问题等因素导致以下资源未获取成功（以资源的 ID 展示）" + "\r\n" + "\r\n";
         var FailIds = Loader.Input.Except(Loader.Output.Select(i => i.Id).ToList()).ToList();
         foreach (var Id in FailIds)
-            Content += $" - {Id}" + Constants.vbCrLf;
+            Content += $" - {Id}" + "\r\n";
         ModMain.MyMsgBox(Content, "部分收藏项目获取失败", Button2: "复制这些 ID", Button3: "移除这些收藏",
-            Button2Action: () => ModBase.ClipboardSet(FailIds.Join(Constants.vbCrLf)), Button3Action: () =>
+            Button2Action: () => ModBase.ClipboardSet(FailIds.Join("\r\n")), Button3Action: () =>
             {
                 foreach (var Id in FailIds)
                     CurrentFavTarget.Favs.Remove(Id);

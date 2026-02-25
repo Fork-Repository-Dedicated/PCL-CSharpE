@@ -38,7 +38,7 @@ public static class ModMinecraft
             if (version is null)
                 return;
             var time = (DateTime)version["releaseTime"];
-            var msgBoxText = $"新版本：{versionName}{Constants.vbCrLf}" + ((DateTime.Now - time).TotalDays > 1d
+            var msgBoxText = $"新版本：{versionName}{"\r\n"}" + ((DateTime.Now - time).TotalDays > 1d
                 ? "更新时间：" + time
                 : "更新于：" + TimeUtils.GetTimeSpanString(time - DateTime.Now, false));
             var msgResult = ModMain.MyMsgBox(msgBoxText, "Minecraft 更新提示", "确定", "下载",
@@ -276,7 +276,7 @@ public static class ModMinecraft
                 catch (Exception ex)
                 {
                     ModMain.MyMsgBox(
-                        "失效的 Minecraft 文件夹：" + Constants.vbCrLf + path + Constants.vbCrLf + Constants.vbCrLf +
+                        "失效的 Minecraft 文件夹：" + "\r\n" + path + "\r\n" + "\r\n" +
                         ex.Message, "Minecraft 文件夹失效", IsWarn: true);
                     ModBase.Log(ex, $"无法访问 Minecraft 文件夹 {path}");
                 }

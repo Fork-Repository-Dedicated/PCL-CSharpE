@@ -37,7 +37,7 @@ public partial class MyLocalCompItem
         }
 
         return
-            $"当前版本：{CurrentName}（{TimeUtils.GetTimeSpanString(Entry.CompFile.ReleaseDate - DateTime.Now, false)}）{Constants.vbCrLf}最新版本：{NewestName}（{TimeUtils.GetTimeSpanString(Entry.UpdateFile.ReleaseDate - DateTime.Now, false)}）";
+            $"当前版本：{CurrentName}（{TimeUtils.GetTimeSpanString(Entry.CompFile.ReleaseDate - DateTime.Now, false)}）{"\r\n"}最新版本：{NewestName}（{TimeUtils.GetTimeSpanString(Entry.UpdateFile.ReleaseDate - DateTime.Now, false)}）";
     }
 
     public void Refresh()
@@ -48,7 +48,7 @@ public partial class MyLocalCompItem
             if (Entry.CanUpdate)
             {
                 BtnUpdate.Visibility = Visibility.Visible;
-                BtnUpdate.ToolTip = $"{GetUpdateCompareDescription()}{Constants.vbCrLf}点击以更新，右键查看更新日志。";
+                BtnUpdate.ToolTip = $"{GetUpdateCompareDescription()}{"\r\n"}点击以更新，右键查看更新日志。";
             }
             else
             {
@@ -133,9 +133,9 @@ public partial class MyLocalCompItem
             }
 
             if (Entry.Comp is not null)
-                NewDescription += ": " + Entry.Comp.Description.Replace(Constants.vbCr, "").Replace(Constants.vbLf, "");
+                NewDescription += ": " + Entry.Comp.Description.Replace("\r", "").Replace("\n", "");
             else if (Entry.Description is not null)
-                NewDescription += ": " + Entry.Description.Replace(Constants.vbCr, "").Replace(Constants.vbLf, "");
+                NewDescription += ": " + Entry.Description.Replace("\r", "").Replace("\n", "");
             else if (!Entry.IsFileAvailable) NewDescription += ": " + "存在错误，无法获取信息";
             Description = NewDescription;
             if (Checked)
@@ -299,7 +299,7 @@ public partial class MyLocalCompItem
     private void BtnUpdate_Click(object sender, EventArgs e)
     {
         switch (ModMain.MyMsgBox(
-                    $"是否要更新 {Entry.Name}？{Constants.vbCrLf}{Constants.vbCrLf}{GetUpdateCompareDescription()}", "更新确认",
+                    $"是否要更新 {Entry.Name}？{"\r\n"}{"\r\n"}{GetUpdateCompareDescription()}", "更新确认",
                     "更新", "查看更新日志", "取消"))
         {
             case 1: // 更新

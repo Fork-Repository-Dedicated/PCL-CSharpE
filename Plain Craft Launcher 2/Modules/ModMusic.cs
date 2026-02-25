@@ -229,19 +229,19 @@ public static class ModMusic
                         ModMain.FrmMain.BtnExtraMusic.Logo = ModBase.Logo.IconPlay;
                         ModMain.FrmMain.BtnExtraMusic.LogoScale = 0.8d;
                         tipText = $"已暂停：{fileName}";
-                        tipText += Constants.vbCrLf + (isSingle ? "左键恢复播放，右键重新从头播放。" : "左键恢复播放，右键播放下一曲。");
+                        tipText += "\r\n" + (isSingle ? "左键恢复播放，右键重新从头播放。" : "左键恢复播放，右键播放下一曲。");
                     }
                     else
                     {
                         ModMain.FrmMain.BtnExtraMusic.Logo = ModBase.Logo.IconMusic;
                         ModMain.FrmMain.BtnExtraMusic.LogoScale = 1d;
                         tipText = $"正在播放：{fileName}";
-                        tipText += Constants.vbCrLf + (isSingle ? "左键暂停，右键重新从头播放。" : "左键暂停，右键播放下一曲。");
+                        tipText += "\r\n" + (isSingle ? "左键暂停，右键重新从头播放。" : "左键暂停，右键播放下一曲。");
                     }
 
                     ModMain.FrmMain.BtnExtraMusic.ToolTip = tipText;
                     ToolTipService.SetVerticalOffset(ModMain.FrmMain.BtnExtraMusic,
-                        tipText.Contains(Constants.vbLf) ? 10 : 16);
+                        tipText.Contains("\n") ? 10 : 16);
                 }
 
                 ModMain.FrmSetupUI?.MusicRefreshUI();

@@ -210,7 +210,7 @@ public partial class ServerCard
     private void BtnRemove_Click(object sender, RoutedEventArgs e)
     {
         if (ModMain.MyMsgBox(
-                "你确定要移除服务器 " + Server.Name + " 吗？" + Constants.vbCrLf + "'" + Server.Address +
+                "你确定要移除服务器 " + Server.Name + " 吗？" + "\r\n" + "'" + Server.Address +
                 "' 将从您的列表中移除，包括游戏内列表，且无法恢复。", "移除服务器确认", "确认", "取消") == 1) RemoveServer?.Invoke(this, EventArgs.Empty);
     }
 

@@ -509,7 +509,7 @@ public partial class PageInstanceExport : IRefreshable
             ConfigLines.Add(Sperator);
             ConfigLines.AddRange(GetExtraFileLines());
             // 结束
-            ModBase.WriteFile(ConfigPath, ConfigLines.Join(Constants.vbCrLf));
+            ModBase.WriteFile(ConfigPath, ConfigLines.Join("\r\n"));
             ModMain.Hint("已保存配置文件：" + ConfigPath, ModMain.HintType.Finish);
             ModBase.OpenExplorer(ConfigPath);
         }
@@ -543,7 +543,7 @@ public partial class PageInstanceExport : IRefreshable
 
             // === 解析INI段 ===
             var Ini = new Dictionary<string, string>();
-            foreach (var LineRaw in Segments[0].Split(Constants.vbCrLf.ToCharArray()))
+            foreach (var LineRaw in Segments[0].Split("\r\n".ToCharArray()))
             {
                 var Line = LineRaw;
                 Line = Line.Trim();
@@ -567,13 +567,13 @@ public partial class PageInstanceExport : IRefreshable
             ConfigPackPath = Ini.GetOrDefault("PackPath");
 
             // === 解析导出内容段 ===
-            RulesOverrides = Segments[1].Replace(Constants.vbCr, Constants.vbLf)
-                .Replace(Constants.vbLf + Constants.vbLf, Constants.vbLf).Split(Constants.vbLf).ToList();
+            RulesOverrides = Segments[1].Replace("\r", "\n")
+                .Replace("\n" + "\n", "\n").Split("\n").ToList();
 
             // === 解析追加内容段 ===
             if (Segments.Length > 2)
-                ExtraFiles = Segments[2].Replace(Constants.vbCr, Constants.vbLf)
-                    .Replace(Constants.vbLf + Constants.vbLf, Constants.vbLf).Split(Constants.vbLf).ToList();
+                ExtraFiles = Segments[2].Replace("\r", "\n")
+                    .Replace("\n" + "\n", "\n").Split("\n").ToList();
             else
                 ExtraFiles = null;
 
@@ -697,7 +697,7 @@ public partial class PageInstanceExport : IRefreshable
             catch (Exception ex)
             {
                 ModBase.Log(ex, $"无法使用配置文件中指定的导出路径（{ConfigPackPath}）");
-                if (ModMain.MyMsgBox($"指定的路径：{ConfigPackPath}{Constants.vbCrLf}{Constants.vbCrLf}{ex}",
+                if (ModMain.MyMsgBox($"指定的路径：{ConfigPackPath}{"\r\n"}{"\r\n"}{ex}",
                         "无法使用配置文件中指定的导出路径", "确定", "取消") == 2)
                     return;
             }
@@ -981,15 +981,15 @@ public partial class PageInstanceExport : IRefreshable
                 if (FailedExceptions.Count == 1)
                 {
                     if (ModMain.MyMsgBox(
-                            "联网获取部分文件信息失败，是否继续导出？" + Constants.vbCrLf + Constants.vbCrLf + "若继续，无法获取信息的文件将被直接打包。" +
-                            Constants.vbCrLf + "由于二次分发可能违反使用协议，请尽量不要公开发布导出的整合包！", "部分文件信息获取失败", "继续", "取消") == 2)
+                            "联网获取部分文件信息失败，是否继续导出？" + "\r\n" + "\r\n" + "若继续，无法获取信息的文件将被直接打包。" +
+                            "\r\n" + "由于二次分发可能违反使用协议，请尽量不要公开发布导出的整合包！", "部分文件信息获取失败", "继续", "取消") == 2)
                         throw FailedExceptions.First();
                 }
                 else if (FailedExceptions.Count > 1)
                 {
                     if (ModMain.MyMsgBox(
-                            "联网获取文件信息失败，是否继续导出？" + Constants.vbCrLf + Constants.vbCrLf + "若继续，所有文件都将被直接打包。" +
-                            Constants.vbCrLf + "由于二次分发可能违反使用协议，请尽量不要公开发布导出的整合包！", "文件信息获取失败", "继续", "取消") == 2)
+                            "联网获取文件信息失败，是否继续导出？" + "\r\n" + "\r\n" + "若继续，所有文件都将被直接打包。" +
+                            "\r\n" + "由于二次分发可能违反使用协议，请尽量不要公开发布导出的整合包！", "文件信息获取失败", "继续", "取消") == 2)
                         throw FailedExceptions.First();
                 }
             })

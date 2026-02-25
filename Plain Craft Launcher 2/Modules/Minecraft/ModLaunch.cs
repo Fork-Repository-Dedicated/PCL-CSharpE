@@ -62,7 +62,7 @@ public static class ModLaunch
                                   !ModMinecraft.McInstanceSelected.PathInstance.IsASCII()))
         {
             var userChoice = ModMain.MyMsgBox(
-                $"欲启动实例 \"{ModMinecraft.McInstanceSelected.Name}\" 的路径中存在可能影响游戏正常运行的字符（非 ASCII 字符），是否仍旧启动游戏？{Constants.vbCrLf}{Constants.vbCrLf}如果不清楚具体作用，你可以先选择 \"继续\"，发现游戏在启动后很快出现崩溃的情况后再尝试修改游戏路径等操作",
+                $"欲启动实例 \"{ModMinecraft.McInstanceSelected.Name}\" 的路径中存在可能影响游戏正常运行的字符（非 ASCII 字符），是否仍旧启动游戏？{"\r\n"}{"\r\n"}如果不清楚具体作用，你可以先选择 \"继续\"，发现游戏在启动后很快出现崩溃的情况后再尝试修改游戏路径等操作",
                 "游戏路径检查", "继续", "返回处理", "不再提示");
             if (userChoice == 2) throw new Exception("$$");
             if (userChoice == 3) States.Hint.NonAsciiGamePath = true;
@@ -169,7 +169,7 @@ public static class ModLaunch
             if (RegionUtils.IsRestrictedFeatAllowed)
             {
                 if (ModMain.MyMsgBox(
-                        $"看起来你似乎没买正版...{Constants.vbCrLf}如果觉得 Minecraft 还不错，可以购买正版支持一下，毕竟开发游戏也真的很不容易...不要一直白嫖啦。{Constants.vbCrLf}{Constants.vbCrLf}在验证一个正版账号之后，就不会出现这个提示了！",
+                        $"看起来你似乎没买正版...{"\r\n"}如果觉得 Minecraft 还不错，可以购买正版支持一下，毕竟开发游戏也真的很不容易...不要一直白嫖啦。{"\r\n"}{"\r\n"}在验证一个正版账号之后，就不会出现这个提示了！",
                         "考虑一下正版？", "支持正版游戏！", "下次一定") ==
                     1)
                     ModBase.OpenWebsite(
@@ -297,7 +297,7 @@ public static class ModLaunch
     {
         Text = ModMinecraft.FilterUserName(ModMinecraft.FilterAccessToken(Text, '*'), '*');
         ModBase.RunInUi(() =>
-            ModMain.FrmLaunchRight.LabLog.Text += Constants.vbCrLf + "[" + TimeUtils.GetTimeNow() + "] " + Text);
+            ModMain.FrmLaunchRight.LabLog.Text += "\r\n" + "[" + TimeUtils.GetTimeNow() + "] " + Text);
         ModBase.Log("[Launch] " + Text);
     }
 
@@ -934,7 +934,7 @@ public static class ModLaunch
         if (Converter.Result is ModBase.RestartException)
         {
             if (ModMain.MyMsgBox(
-                    $"请在登录时选择 {ModBase.vbLQ}其他登录方法{ModBase.vbRQ}，然后选择 {ModBase.vbLQ}使用我的密码{ModBase.vbRQ}。{Constants.vbCrLf}如果没有该选项，请选择 {ModBase.vbLQ}设置密码{ModBase.vbRQ}，设置完毕后再登录。",
+                    $"请在登录时选择 {ModBase.vbLQ}其他登录方法{ModBase.vbRQ}，然后选择 {ModBase.vbLQ}使用我的密码{ModBase.vbRQ}。{"\r\n"}如果没有该选项，请选择 {ModBase.vbLQ}设置密码{ModBase.vbRQ}，设置完毕后再登录。",
                     "需要使用密码登录", "重新登录", "设置密码", "取消",
                     Button2Action: () => ModBase.OpenWebsite("https://account.live.com/password/Change")) ==
                 1) goto Retry;
@@ -985,7 +985,7 @@ public static class ModLaunch
                 if (!IsLaunching)
                     return;
                 if (ModMain.MyMsgBox(
-                        $"启动器在尝试刷新账号信息时遇到了网络错误。{Constants.vbCrLf}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
+                        $"启动器在尝试刷新账号信息时遇到了网络错误。{"\r\n"}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
                         "账号信息获取失败", "继续", "取消") == 1)
                     IsIgnore = true;
             });
@@ -1053,7 +1053,7 @@ public static class ModLaunch
                 if (!IsLaunching)
                     return;
                 if (ModMain.MyMsgBox(
-                        $"启动器在尝试刷新账号信息时(Step 2)遇到了网络错误。{Constants.vbCrLf}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
+                        $"启动器在尝试刷新账号信息时(Step 2)遇到了网络错误。{"\r\n"}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
                         "账号信息获取失败", "继续", "取消") == 1)
                     IsIgnore = true;
             });
@@ -1123,18 +1123,18 @@ public static class ModLaunch
 
                 if (result.Contains("2148916235"))
                 {
-                    ModMain.MyMsgBox($"你的网络所在的国家或地区无法登录微软账号。{Constants.vbCrLf}请使用加速器或 VPN。", "登录失败", "我知道了");
+                    ModMain.MyMsgBox($"你的网络所在的国家或地区无法登录微软账号。{"\r\n"}请使用加速器或 VPN。", "登录失败", "我知道了");
                     throw new Exception("$$");
                 }
 
                 if (result.Contains("2148916238"))
                 {
-                    if (ModMain.MyMsgBox("该账号年龄不足，你需要先修改出生日期，然后才能登录。" + Constants.vbCrLf + "该账号目前填写的年龄是否在 13 岁以上？",
+                    if (ModMain.MyMsgBox("该账号年龄不足，你需要先修改出生日期，然后才能登录。" + "\r\n" + "该账号目前填写的年龄是否在 13 岁以上？",
                             "登录提示", "13 岁以上", "12 岁以下", "我不知道") == 1)
                     {
                         ModBase.OpenWebsite("https://account.live.com/editprof.aspx");
                         ModMain.MyMsgBox(
-                            "请在打开的网页中修改账号的出生日期（至少改为 18 岁以上）。" + Constants.vbCrLf + "在修改成功后等待一分钟，然后再回到 PCL，就可以正常登录了！",
+                            "请在打开的网页中修改账号的出生日期（至少改为 18 岁以上）。" + "\r\n" + "在修改成功后等待一分钟，然后再回到 PCL，就可以正常登录了！",
                             "登录提示");
                     }
                     else
@@ -1142,7 +1142,7 @@ public static class ModLaunch
                         ModBase.OpenWebsite(
                             "https://support.microsoft.com/zh-cn/account-billing/如何更改-microsoft-帐户上的出生日期-837badbc-999e-54d2-2617-d19206b9540a");
                         ModMain.MyMsgBox(
-                            "请根据打开的网页的说明，修改账号的出生日期（至少改为 18 岁以上）。" + Constants.vbCrLf +
+                            "请根据打开的网页的说明，修改账号的出生日期（至少改为 18 岁以上）。" + "\r\n" +
                             "在修改成功后等待一分钟，然后再回到 PCL，就可以正常登录了！", "登录提示");
                     }
 
@@ -1156,7 +1156,7 @@ public static class ModLaunch
                     if (!IsLaunching)
                         return;
                     if (ModMain.MyMsgBox(
-                            $"启动器在尝试刷新账号信息时(Step 3)遇到了网络错误。{Constants.vbCrLf}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
+                            $"启动器在尝试刷新账号信息时(Step 3)遇到了网络错误。{"\r\n"}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
                             "账号信息获取失败", "继续", "取消") == 1)
                         IsIgnore = true;
                 });
@@ -1209,7 +1209,7 @@ public static class ModLaunch
             if (ex.StatusCode is { } arg1 && arg1 == HttpStatusCode.Forbidden)
             {
                 ModBase.Log(ex, "正版验证 Step 4 汇报 403");
-                throw new Exception("$当前 IP 的登录尝试异常。" + Constants.vbCrLf + "如果你使用了 VPN 或加速器，请把它们关掉或更换节点后再试！");
+                throw new Exception("$当前 IP 的登录尝试异常。" + "\r\n" + "如果你使用了 VPN 或加速器，请把它们关掉或更换节点后再试！");
             }
 
             ModProfile.ProfileLog("正版验证 Step 4/6 获取 MC AccessToken 失败：" + ex);
@@ -1219,7 +1219,7 @@ public static class ModLaunch
                 if (!IsLaunching)
                     return;
                 if (ModMain.MyMsgBox(
-                        $"启动器在尝试刷新账号信息时(Step 4)遇到了网络错误。{Constants.vbCrLf}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
+                        $"启动器在尝试刷新账号信息时(Step 4)遇到了网络错误。{"\r\n"}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
                         "账号信息获取失败", "继续", "取消") == 1)
                     IsIgnore = true;
             });
@@ -1336,7 +1336,7 @@ public static class ModLaunch
                 if (!IsLaunching)
                     return;
                 if (ModMain.MyMsgBox(
-                        $"启动器在尝试刷新账号信息时(Step 6)遇到了网络错误。{Constants.vbCrLf}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
+                        $"启动器在尝试刷新账号信息时(Step 6)遇到了网络错误。{"\r\n"}你可以选择取消，检查网络后再次启动，也可以选择忽略错误继续启动，但可能无法游玩部分服务器。",
                         "账号信息获取失败", "继续", "取消") == 1)
                     IsIgnore = true;
             });
@@ -1469,14 +1469,14 @@ public static class ModLaunch
         {
             ModProfile.ProfileLog("已触发超时登录失败");
             ModMain.MyMsgBox(
-                "$登录失败：连接登录服务器超时。" + Constants.vbCrLf +
-                "请检查你的网络状况是否良好，或尝试使用 VPN！" + Constants.vbCrLf + Constants.vbCrLf +
+                "$登录失败：连接登录服务器超时。" + "\r\n" +
+                "请检查你的网络状况是否良好，或尝试使用 VPN！" + "\r\n" + "\r\n" +
                 "详细信息：" + ex.InnerHttpException.WebResponse,
                 "第三方验证失败", IsWarn: true);
 
-            throw new Exception("$登录失败：连接登录服务器超时。" + Constants.vbCrLf +
-                                "请检查你的网络状况是否良好，或尝试使用 VPN！" + Constants.vbCrLf +
-                                Constants.vbCrLf + "详细信息：" + ex.InnerHttpException.WebResponse);
+            throw new Exception("$登录失败：连接登录服务器超时。" + "\r\n" +
+                                "请检查你的网络状况是否良好，或尝试使用 VPN！" + "\r\n" +
+                                "\r\n" + "详细信息：" + ex.InnerHttpException.WebResponse);
         }
     }
 
@@ -1487,7 +1487,7 @@ public static class ModLaunch
     {
         ModProfile.ProfileLog(logPrefix + "：" + ex);
         ModMain.MyMsgBox(logPrefix + ": " + ex, "第三方验证失败", IsWarn: true);
-        throw new Exception("$" + logPrefix + Constants.vbCrLf + Constants.vbCrLf + "详细信息：" + ex);
+        throw new Exception("$" + logPrefix + "\r\n" + "\r\n" + "详细信息：" + ex);
     }
 
     /// <summary>
@@ -1511,7 +1511,7 @@ public static class ModLaunch
         }
 
         if (message is null)
-            message = "第三方验证登录失败，请检查你的网络状况是否良好。" + Constants.vbCrLf + Constants.vbCrLf +
+            message = "第三方验证登录失败，请检查你的网络状况是否良好。" + "\r\n" + "\r\n" +
                       "详细信息：" + responseText;
 
         ModMain.MyMsgBox("刷新登录失败: " + ex, "第三方验证失败", IsWarn: true);
@@ -1956,25 +1956,25 @@ public static class ModLaunch
             {
                 if (ModMinecraft.McInstanceSelected.Info.HasForge)
                     ModMain.MyMsgBox(
-                        $"你需要先安装 LegacyJavaFixer Mod，或安装 Java 7 才能启动该版本。{Constants.vbCrLf}请自行搜索并安装 Java 7，安装后在 设置 → 启动选项 → 游戏 Java 中重新搜索或导入。",
+                        $"你需要先安装 LegacyJavaFixer Mod，或安装 Java 7 才能启动该版本。{"\r\n"}请自行搜索并安装 Java 7，安装后在 设置 → 启动选项 → 游戏 Java 中重新搜索或导入。",
                         "未找到 Java");
                 else
                     ModMain.MyMsgBox(
-                        $"你需要安装 Java 7 才能启动该版本。{Constants.vbCrLf}请自行搜索并安装 Java 7，安装后在 设置 → 启动选项 → 游戏 Java 中重新搜索或导入。",
+                        $"你需要安装 Java 7 才能启动该版本。{"\r\n"}请自行搜索并安装 Java 7，安装后在 设置 → 启动选项 → 游戏 Java 中重新搜索或导入。",
                         "未找到 Java");
                 throw new Exception("$$");
             }
             else if (minVer > new Version(1, 8, 0, 140) && maxVer < new Version(1, 8, 0, 321))
             {
                 ModMain.MyMsgBox(
-                    $"你需要安装 Java 8u141 ~ 8u320 才能启动该版本。{Constants.vbCrLf}请自行搜索并安装，安装后在 设置 → 启动选项 → 游戏 Java 中重新搜索或导入。",
+                    $"你需要安装 Java 8u141 ~ 8u320 才能启动该版本。{"\r\n"}请自行搜索并安装，安装后在 设置 → 启动选项 → 游戏 Java 中重新搜索或导入。",
                     "未找到 Java");
                 throw new Exception("$$");
             }
             else if (minVer > new Version(1, 8, 0, 140))
             {
                 ModMain.MyMsgBox(
-                    $"你需要安装 Java 8u141 或更高版本的 Java 8 才能启动该版本。{Constants.vbCrLf}请自行搜索并安装，安装后在 设置 → 启动选项 → 游戏 Java 中重新搜索或导入。",
+                    $"你需要安装 Java 8u141 或更高版本的 Java 8 才能启动该版本。{"\r\n"}请自行搜索并安装，安装后在 设置 → 启动选项 → 游戏 Java 中重新搜索或导入。",
                     "未找到 Java");
                 throw new Exception("$$");
             }
@@ -2318,7 +2318,7 @@ public static class ModLaunch
             catch (ModNet.HttpWebException ex)
             {
                 throw new Exception(
-                    $"无法连接到第三方登录服务器（{Server ?? null}）{Constants.vbCrLf}详细信息：" + ex.InnerHttpException.WebResponse, ex);
+                    $"无法连接到第三方登录服务器（{Server ?? null}）{"\r\n"}详细信息：" + ex.InnerHttpException.WebResponse, ex);
             }
             catch (Exception ex)
             {
@@ -3150,13 +3150,13 @@ public static class ModLaunch
         try
         {
             var CmdString =
-                $"{(McLaunchJavaSelected.Installation.MajorVersion > 8 ? "chcp 65001>nul" + Constants.vbCrLf : "")}" +
-                "@echo off" + Constants.vbCrLf + $"title 启动 - {ModMinecraft.McInstanceSelected.Name}" +
-                Constants.vbCrLf + "echo 游戏正在启动，请稍候。" + Constants.vbCrLf +
-                $"cd /D \"{ModBase.ShortenPath(ModMinecraft.McInstanceSelected.PathIndie)}\"" + Constants.vbCrLf +
-                CustomCommandGlobal + Constants.vbCrLf + CustomCommandVersion + Constants.vbCrLf +
-                $"\"{McLaunchJavaSelected.Installation.JavaExePath}\" {McLaunchArgument}" + Constants.vbCrLf +
-                "echo 游戏已退出。" + Constants.vbCrLf + "pause";
+                $"{(McLaunchJavaSelected.Installation.MajorVersion > 8 ? "chcp 65001>nul" + "\r\n" : "")}" +
+                "@echo off" + "\r\n" + $"title 启动 - {ModMinecraft.McInstanceSelected.Name}" +
+                "\r\n" + "echo 游戏正在启动，请稍候。" + "\r\n" +
+                $"cd /D \"{ModBase.ShortenPath(ModMinecraft.McInstanceSelected.PathIndie)}\"" + "\r\n" +
+                CustomCommandGlobal + "\r\n" + CustomCommandVersion + "\r\n" +
+                $"\"{McLaunchJavaSelected.Installation.JavaExePath}\" {McLaunchArgument}" + "\r\n" +
+                "echo 游戏已退出。" + "\r\n" + "pause";
             ModBase.WriteFile(CurrentLaunchOptions.SaveBatch ?? ModBase.ExePath + @"PCL\LatestLaunch.bat",
                 ModMinecraft.FilterAccessToken(CmdString, 'F'),
                 Encoding: McLaunchJavaSelected.Installation.MajorVersion > 8 ? Encoding.UTF8 : Encoding.Default);

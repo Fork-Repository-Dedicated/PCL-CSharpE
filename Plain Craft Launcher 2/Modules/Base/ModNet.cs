@@ -920,8 +920,8 @@ public static class ModNet
                 sources.Add(new NetSource
                 {
                     FailCount = 0,
-                    Url = Conversions.ToString(ModSecret.SecretCdnSign(source.Replace(Constants.vbCr, "")
-                        .Replace(Constants.vbLf, "").Trim())),
+                    Url = Conversions.ToString(ModSecret.SecretCdnSign(source.Replace("\r", "")
+                        .Replace("\n", "").Trim())),
                     Id = count, IsFailed = false, Ex = null
                 });
                 count += 1;
@@ -2310,9 +2310,9 @@ public static class ModNet
                     if (File.State == NetState.Interrupted)
                     {
                         Error = new Exception(
-                            "文件下载失败：" + File.LocalPath + Constants.vbCrLf + File.Sources
+                            "文件下载失败：" + File.LocalPath + "\r\n" + File.Sources
                                 .Select(s => s.Ex is null ? s.Url : s.Ex.Message + "（" + s.Url + "）")
-                                .Join(Constants.vbCrLf), Error);
+                                .Join("\r\n"), Error);
                         break;
                     }
 
@@ -2328,7 +2328,7 @@ public static class ModNet
             var ErrOutput = new List<string>();
             foreach (var Ex in ExList)
                 ErrOutput.Add(Ex.Message);
-            ModBase.Log("[Download] " + ErrOutput.Distinct().ToArray().Join(Constants.vbCrLf));
+            ModBase.Log("[Download] " + ErrOutput.Distinct().ToArray().Join("\r\n"));
         }
 
         public override void Abort()

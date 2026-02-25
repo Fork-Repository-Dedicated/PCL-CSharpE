@@ -63,7 +63,7 @@ public static class ModDownloadLib
                 if (behaviour == ModNet.NetPreDownloadBehaviour.ExitWhileExistsOrDownloading)
                     return null;
                 if (ModMain.MyMsgBox(
-                        "实例 " + id + " 已存在，是否重新下载？" + Constants.vbCrLf + "这会覆盖实例的 Json 与 Jar 文件，但不会影响版本隔离的文件。", "实例已存在",
+                        "实例 " + id + " 已存在，是否重新下载？" + "\r\n" + "这会覆盖实例的 Json 与 Jar 文件，但不会影响版本隔离的文件。", "实例已存在",
                         "继续", "取消") == 1)
                 {
                     File.Delete(versionFolder + id + ".jar");
@@ -457,7 +457,7 @@ echo ------------------------------
 echo ----------------------
 echo 服务端已停止。
 pause";
-                ModBase.WriteFile(VersionFolder + "Launch Server.bat", Bat.Replace(Constants.vbLf, Constants.vbCrLf),
+                ModBase.WriteFile(VersionFolder + "Launch Server.bat", Bat.Replace("\n", "\r\n"),
                     Encoding: Encoding.Default.Equals(Encoding.UTF8) ? Encoding.UTF8 : Encoding.GetEncoding("GB18030"));
                 // 删除实例 JSON
                 File.Delete(VersionFolder + Id + ".json");
@@ -580,7 +580,7 @@ pause";
             if (File.Exists(VersionFolder + Id + ".json"))
             {
                 if (ModMain.MyMsgBox(
-                        "实例 " + Id + " 已存在，是否重新下载？" + Constants.vbCrLf + "这会覆盖实例的 Json 和 Jar 文件，但不会影响版本隔离的文件。", "实例已存在",
+                        "实例 " + Id + " 已存在，是否重新下载？" + "\r\n" + "这会覆盖实例的 Json 和 Jar 文件，但不会影响版本隔离的文件。", "实例已存在",
                         "继续", "取消") == 1)
                 {
                     File.Delete(VersionFolder + Id + ".jar");
@@ -1211,7 +1211,7 @@ pause";
             if (File.Exists(VersionFolder + VersionName + ".json"))
             {
                 if (ModMain.MyMsgBox(
-                        "实例 " + VersionName + " 已存在，是否重新下载？" + Constants.vbCrLf + "这会覆盖实例的 Json 和 Jar 文件，但不会影响版本隔离的文件。",
+                        "实例 " + VersionName + " 已存在，是否重新下载？" + "\r\n" + "这会覆盖实例的 Json 和 Jar 文件，但不会影响版本隔离的文件。",
                         "实例已存在", "继续", "取消") == 1)
                 {
                     File.Delete(VersionFolder + VersionName + ".jar");
@@ -1703,12 +1703,12 @@ pause";
                     // 检查是否安装成功：最后 5 行中是否有 true（true 可能在倒数数行，见 #832）
                     if (LastResults.Reverse().Take(5).Any(l => l == "true"))
                         return;
-                    ModBase.Log(LastResults.Join(Constants.vbCrLf));
+                    ModBase.Log(LastResults.Join("\r\n"));
                     var LastLines = "";
                     for (int i = Math.Max(0, LastResults.Count - 5), loopTo = LastResults.Count - 1;
                          i <= loopTo;
                          i++) // 最后 5 行
-                        LastLines += Constants.vbCrLf + LastResults.ElementAtOrDefault(i);
+                        LastLines += "\r\n" + LastResults.ElementAtOrDefault(i);
                     throw new Exception($"{LoaderName} 安装器出错，日志结束部分为：" + LastLines);
                 }
             }

@@ -77,9 +77,9 @@ public partial class PageSetupJava
             BtnInfo.ToolTip = "详细信息";
             BtnInfo.Click += (sender, e) =>
                 ModMain.MyMsgBox(
-                    $"类型: {VersionTypeDesc}" + Constants.vbCrLf + $"版本: {J.Installation.Version.ToString()}" +
-                    Constants.vbCrLf + $"架构: {J.Installation.Architecture.ToString()} ({DisplayBits})" +
-                    Constants.vbCrLf + $"品牌: {DisplayBrand}" + Constants.vbCrLf + $"位置: {J.Installation.JavaFolder}",
+                    $"类型: {VersionTypeDesc}" + "\r\n" + $"版本: {J.Installation.Version.ToString()}" +
+                    "\r\n" + $"架构: {J.Installation.Architecture.ToString()} ({DisplayBits})" +
+                    "\r\n" + $"品牌: {DisplayBrand}" + "\r\n" + $"位置: {J.Installation.JavaFolder}",
                     "Java 信息");
             var BtnEnableSwitch = new MyIconButton();
 

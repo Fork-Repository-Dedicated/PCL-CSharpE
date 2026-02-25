@@ -89,14 +89,14 @@ public partial class PageInstanceInstall
              Conversions.ToBoolean(
                  Operators.ConditionalCompareObjectEqual(Config.Launch.IndieSolutionV2, 2, false))))
             if (ModMain.MyMsgBox(
-                    "你尚未开启版本隔离，这会导致多个 MC 共用同一个 Mod 文件夹。" + Constants.vbCrLf +
-                    "因此在切换 MC 实例时，MC 会因为读取到与当前实例不符的 Mod 而崩溃。" + Constants.vbCrLf +
+                    "你尚未开启版本隔离，这会导致多个 MC 共用同一个 Mod 文件夹。" + "\r\n" +
+                    "因此在切换 MC 实例时，MC 会因为读取到与当前实例不符的 Mod 而崩溃。" + "\r\n" +
                     "PCL 推荐你在开始下载前，在 设置 → 版本隔离 中开启版本隔离选项！", "版本隔离提示", "取消下载", "继续") == 1)
                 return;
 
         if (BtnSelectStart.Text == "开始重置")
             if (ModMain.MyMsgBox(
-                    "你正在重置当前实例。" + Constants.vbCrLf + "PCL 将会重新联网下载该实例所需的文件，并重新安装 Mod 加载器（如有）。" + Constants.vbCrLf +
+                    "你正在重置当前实例。" + "\r\n" + "PCL 将会重新联网下载该实例所需的文件，并重新安装 Mod 加载器（如有）。" + "\r\n" +
                     "此操作不会丢失你的存档、Mod、资源包等。", "重置此实例", "继续", "取消") == 2)
                 return;
 

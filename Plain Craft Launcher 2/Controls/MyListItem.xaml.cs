@@ -453,7 +453,7 @@ public partial class MyListItem : IMyRadio
     public string Title
     {
         get => Conversions.ToString(GetValue(TitleProperty));
-        set => SetValue(TitleProperty, value.Replace(Constants.vbCr, "").Replace(Constants.vbLf, ""));
+        set => SetValue(TitleProperty, value.Replace("\r", "").Replace("\n", ""));
     }
 
     public static readonly DependencyProperty TitleProperty =
@@ -477,7 +477,7 @@ public partial class MyListItem : IMyRadio
         {
             if ((Info ?? "") == (value ?? ""))
                 return;
-            value = value.Replace(Constants.vbCr, "").Replace(Constants.vbLf, "");
+            value = value.Replace("\r", "").Replace("\n", "");
             SetValue(InfoProperty, value);
         }
     }

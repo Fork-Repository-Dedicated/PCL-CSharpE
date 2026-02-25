@@ -204,7 +204,7 @@ public static class ModWebServer
                 }
                 else if (!_status.success)
                 {
-                    ModBase.Log($"[OAuth] {_serviceName}: {_status.message}{Constants.vbCrLf}{_status.stacktrace}");
+                    ModBase.Log($"[OAuth] {_serviceName}: {_status.message}{"\r\n"}{_status.stacktrace}");
                     var pa = new Dictionary<string, string>();
                     pa["Port"] = Port.ToString();
                     _completeCallback(false, pa, _status.message);

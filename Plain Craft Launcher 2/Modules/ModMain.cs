@@ -291,8 +291,8 @@ public static class ModMain
                 // End If
                 var CurrentHint = HintWaiting[0];
                 // 去回车
-                CurrentHint.Text = CurrentHint.Text.Replace(Constants.vbCrLf, " ").Replace(Constants.vbCr, " ")
-                    .Replace(Constants.vbLf, " ");
+                CurrentHint.Text = CurrentHint.Text.Replace("\r\n", " ").Replace("\r", " ")
+                    .Replace("\n", " ");
                 // 超量提示直接忽略
                 if (FrmMain!.PanHint.Children.Count >= 20)
                     goto EndHint;
@@ -1105,7 +1105,7 @@ public static class ModMain
                                     // 加载忽略列表
                                     ModBase.Log("[Help] 发现 .helpignore 文件：" + File.FullName);
                                     foreach (var Line in ModBase.ReadFile(File.FullName)
-                                                 .Split(Constants.vbCrLf.ToCharArray()))
+                                                 .Split("\r\n".ToCharArray()))
                                     {
                                         var RealString = Line.BeforeFirst("#").Trim();
                                         if (string.IsNullOrWhiteSpace(RealString))

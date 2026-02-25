@@ -462,8 +462,8 @@ public static class ModWatcher
             // 预处理
             if (Text is null)
                 return;
-            Text = Text.Replace(Constants.vbCrLf, Constants.vbCr).Replace(Constants.vbLf, Constants.vbCr)
-                .Replace(Constants.vbCr, Constants.vbCrLf);
+            Text = Text.Replace("\r\n", "\r").Replace("\n", "\r")
+                .Replace("\r", "\r\n");
             // If Text.Contains("�����") Then Hint("检测到错误的日志编码：" & Text)
             // 加入预存储
             LatestLog.Enqueue(Text);

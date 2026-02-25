@@ -29,7 +29,7 @@ public static class ModEvent
                     Data[0] = Data[0].Replace(@"\", "/");
                     if (!Data[0].Contains("://") || Data[0].StartsWithF("file", true)) // 为了支持更多协议（#2200）
                     {
-                        ModMain.MyMsgBox("EventData 必须为一个网址。" + Constants.vbCrLf + "如果想要启动程序，请将 EventType 改为 打开文件。",
+                        ModMain.MyMsgBox("EventData 必须为一个网址。" + "\r\n" + "如果想要启动程序，请将 EventType 改为 打开文件。",
                             "事件执行失败");
                         return;
                     }
@@ -62,7 +62,7 @@ public static class ModEvent
                                 if (States.Hint.HomepageCommand)
                                     switch (ModMain.MyMsgBox(
                                                 "即将执行：" + Location + (Data.Length >= 2 ? " " + Data[1] : "") +
-                                                Constants.vbCrLf + "请在确认该操作没有安全隐患后继续。", "执行确认", "继续", "继续且今后不再要求确认",
+                                                "\r\n" + "请在确认该操作没有安全隐患后继续。", "执行确认", "继续", "继续且今后不再要求确认",
                                                 "取消"))
                                     {
                                         case 2:
@@ -164,8 +164,8 @@ public static class ModEvent
 
                 case "弹出窗口":
                 {
-                    ModMain.MyMsgBox(Data[1].Replace(@"\n", Constants.vbCrLf),
-                        Data[0].Replace(@"\n", Constants.vbCrLf));
+                    ModMain.MyMsgBox(Data[1].Replace(@"\n", "\r\n"),
+                        Data[0].Replace(@"\n", "\r\n"));
                     break;
                 }
 
@@ -189,7 +189,7 @@ public static class ModEvent
                     if (!(Data[0].StartsWithF("http://", true) || Data[0].StartsWithF("https://", true)))
                     {
                         ModMain.MyMsgBox(
-                            "EventData 必须为以 http:// 或 https:// 开头的网址。" + Constants.vbCrLf + "PCL 不支持其他乱七八糟的下载协议。",
+                            "EventData 必须为以 http:// 或 https:// 开头的网址。" + "\r\n" + "PCL 不支持其他乱七八糟的下载协议。",
                             "事件执行失败");
                         return;
                     }
@@ -226,7 +226,7 @@ public static class ModEvent
 
                 default:
                 {
-                    ModMain.MyMsgBox("未知的事件类型：" + Type + Constants.vbCrLf + "请检查事件类型填写是否正确，或者 PCL 是否为最新版本。", "事件执行失败");
+                    ModMain.MyMsgBox("未知的事件类型：" + Type + "\r\n" + "请检查事件类型填写是否正确，或者 PCL 是否为最新版本。", "事件执行失败");
                     break;
                 }
             }
@@ -258,8 +258,8 @@ public static class ModEvent
             catch (Exception ex)
             {
                 throw new Exception(
-                    "联网帮助页面须指向一个帮助 JSON 文件，并在同路径下包含相应 XAML 文件！" + Constants.vbCrLf + "例如：" + Constants.vbCrLf +
-                    " - https://www.baidu.com/test.json（填写这个路径）" + Constants.vbCrLf +
+                    "联网帮助页面须指向一个帮助 JSON 文件，并在同路径下包含相应 XAML 文件！" + "\r\n" + "例如：" + "\r\n" +
+                    " - https://www.baidu.com/test.json（填写这个路径）" + "\r\n" +
                     " - https://www.baidu.com/test.xaml（同时也需要包含这个文件）", ex);
             }
 
@@ -275,9 +275,9 @@ public static class ModEvent
             catch (Exception ex)
             {
                 throw new Exception(
-                    "下载指定的文件失败！" + Constants.vbCrLf + "注意，联网帮助页面须指向一个帮助 JSON 文件，并在同路径下包含相应 XAML 文件！" +
-                    Constants.vbCrLf + "例如：" + Constants.vbCrLf + " - https://www.baidu.com/test.json（填写这个路径）" +
-                    Constants.vbCrLf + " - https://www.baidu.com/test.xaml（同时也需要包含这个文件）", ex);
+                    "下载指定的文件失败！" + "\r\n" + "注意，联网帮助页面须指向一个帮助 JSON 文件，并在同路径下包含相应 XAML 文件！" +
+                    "\r\n" + "例如：" + "\r\n" + " - https://www.baidu.com/test.json（填写这个路径）" +
+                    "\r\n" + " - https://www.baidu.com/test.xaml（同时也需要包含这个文件）", ex);
             }
 
             RelativeUrl = LocalTemp;

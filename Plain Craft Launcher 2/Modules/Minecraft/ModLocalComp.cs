@@ -482,7 +482,7 @@ public static class ModLocalComp
             {
                 if (_Description is null && value is not null && value.Count() > 2)
                 {
-                    _Description = value.Trim(Conversions.ToChar(Constants.vbLf));
+                    _Description = value.Trim(Conversions.ToChar("\n"));
                     // 优化显示：若以 [a-zA-Z0-9] 结尾，加上小数点句号
                     if (_Description.ToLower().LastIndexOfAny("qwertyuiopasdfghjklzxcvbnm0123456789".ToCharArray()) ==
                         _Description.Count() - 1)
@@ -1424,7 +1424,7 @@ public static class ModLocalComp
                                         ValueLines.Add(ValueLine);
                                     }
 
-                                Value = string.Join("\n", ValueLines).Trim('\n').Replace("\n", Environment.NewLine);
+                                Value = string.Join("\n", ValueLines).Trim('\n').Replace("\n", "\r\n");
                             }
                             else if (RawValue.ToLower() == "true" || RawValue.ToLower() == "false")
                             {
@@ -1652,7 +1652,7 @@ public static class ModLocalComp
                         {
                             MetaString = MetaString.Substring(MetaString.IndexOfF("Implementation-Version:") +
                                                               "Implementation-Version:".Count());
-                            MetaString = MetaString.Substring(0, MetaString.IndexOfAny(Constants.vbCrLf.ToCharArray()))
+                            MetaString = MetaString.Substring(0, MetaString.IndexOfAny("\r\n".ToCharArray()))
                                 .Trim();
                             Version = MetaString;
                         }
@@ -2437,7 +2437,7 @@ public static class ModLocalComp
             {
                 if (!ModEntity.IsFileAvailable)
                 {
-                    Result.Add("无法读取的 Mod 文件。" + Environment.NewLine + " - " + ModEntity.Path);
+                    Result.Add("无法读取的 Mod 文件。" + "\r\n" + " - " + ModEntity.Path);
                     continue;
                 }
                 if (ModEntity.State == McMod.McModState.Fine && ModEntity.ModId != null)
@@ -2465,14 +2465,14 @@ public static class ModLocalComp
                     {
                         if ((int)CurrentDependencies[PossibleModId][2] == 1)
                         {
-                            Result.Add("重复添加了相同的 Mod，请尝试删除其中一个（ModID：" + PossibleModId + "）。" + Environment.NewLine +
-                                       " - " + ModEntity.FileName + Environment.NewLine +
+                            Result.Add("重复添加了相同的 Mod，请尝试删除其中一个（ModID：" + PossibleModId + "）。" + "\r\n" +
+                                       " - " + ModEntity.FileName + "\r\n" +
                                        " - " + CurrentDependencies[PossibleModId][1]);
                         }
                         else
                         {
-                            ModBase.Log("[Minecraft] 由于可能有多个 ModID，跳过疑似的重复项（ModID：" + PossibleModId + "）。" + Environment.NewLine +
-                                        " - " + ModEntity.FileName + Environment.NewLine +
+                            ModBase.Log("[Minecraft] 由于可能有多个 ModID，跳过疑似的重复项（ModID：" + PossibleModId + "）。" + "\r\n" +
+                                        " - " + ModEntity.FileName + "\r\n" +
                                         " - " + CurrentDependencies[PossibleModId][1], ModBase.LogLevel.Developer);
                         }
                     }
@@ -2551,7 +2551,7 @@ public static class ModLocalComp
                             // 检查前置 Mod 是否存在
                             if (!CurrentDependencies.ContainsKey(ReqId))
                             {
-                                Result.Add("缺少前置 Mod：" + ReqId + (VersionRequire == "" ? "" : "，其版本" + VersionRequire) + "。" + Environment.NewLine + " - " + ModEntity.FileName);
+                                Result.Add("缺少前置 Mod：" + ReqId + (VersionRequire == "" ? "" : "，其版本" + VersionRequire) + "。" + "\r\n" + " - " + ModEntity.FileName);
                                 continue;
                             }
 
@@ -2564,8 +2564,8 @@ public static class ModLocalComp
                             {
                                 if (ModBase.VersionSortInteger(ReqVersionHead, CurrentVersion) > (ReqVersionHeadCanEqual ? 0 : -1))
                                 {
-                                    Result.Add(ReqId.Substring(0, 1).ToUpper() + ReqId.Substring(1) + " 版本过低，其版本" + VersionRequire + "，而当前版本为 " + CurrentVersion + "。" + Environment.NewLine +
-                                               " - " + ModEntity.FileName + (ReqId != "minecraft" && ReqId != "forge" ? Environment.NewLine + " - 前置：" + ((object[])CurrentDependencies[ReqId])[1] : ""));
+                                    Result.Add(ReqId.Substring(0, 1).ToUpper() + ReqId.Substring(1) + " 版本过低，其版本" + VersionRequire + "，而当前版本为 " + CurrentVersion + "。" + "\r\n" +
+                                               " - " + ModEntity.FileName + (ReqId != "minecraft" && ReqId != "forge" ? "\r\n" + " - 前置：" + ((object[])CurrentDependencies[ReqId])[1] : ""));
                                     continue;
                                 }
                             }
@@ -2575,8 +2575,8 @@ public static class ModLocalComp
                             {
                                 if (ModBase.VersionSortInteger(CurrentVersion, ReqVersionTail) > (ReqVersionTailCanEqual ? 0 : -1))
                                 {
-                                    Result.Add(ReqId.Substring(0, 1).ToUpper() + ReqId.Substring(1) + " 版本过高，其版本" + VersionRequire + "，而当前版本为 " + CurrentVersion + "。" + Environment.NewLine +
-                                               " - " + ModEntity.FileName + (ReqId != "minecraft" && ReqId != "forge" ? Environment.NewLine + " - 前置：" + ((object[])CurrentDependencies[ReqId])[1] : ""));
+                                    Result.Add(ReqId.Substring(0, 1).ToUpper() + ReqId.Substring(1) + " 版本过高，其版本" + VersionRequire + "，而当前版本为 " + CurrentVersion + "。" + "\r\n" +
+                                               " - " + ModEntity.FileName + (ReqId != "minecraft" && ReqId != "forge" ? "\r\n" + " - 前置：" + ((object[])CurrentDependencies[ReqId])[1] : ""));
                                     continue;
                                 }
                             }
@@ -2585,7 +2585,7 @@ public static class ModLocalComp
                         {
                             if (!CurrentDependencies.ContainsKey(Dependency.Key))
                             {
-                                Result.Add("缺少前置 Mod：" + Dependency.Key + "。" + Environment.NewLine + " - " + ModEntity.FileName);
+                                Result.Add("缺少前置 Mod：" + Dependency.Key + "。" + "\r\n" + " - " + ModEntity.FileName);
                                 continue;
                             }
                         }
@@ -2593,7 +2593,7 @@ public static class ModLocalComp
                 }
                 catch (Exception ex)
                 {
-                    Result.Add("检查 Mod 时出错：" + ex.Message + Environment.NewLine + " - " + ModEntity.FileName);
+                    Result.Add("检查 Mod 时出错：" + ex.Message + "\r\n" + " - " + ModEntity.FileName);
                     ModBase.Log(ex, "检查 Mod 时出错");
                 }
             }
@@ -2601,7 +2601,7 @@ public static class ModLocalComp
             if (!Result.Any())
                 ModBase.Log("[Minecraft] Mod 检查未发现异常");
             else
-                ModBase.Log("[Minecraft] Mod 检查异常结果：" + Environment.NewLine + string.Join(Environment.NewLine, Result));
+                ModBase.Log("[Minecraft] Mod 检查异常结果：" + "\r\n" + string.Join("\r\n", Result));
 
             return Result;
         }

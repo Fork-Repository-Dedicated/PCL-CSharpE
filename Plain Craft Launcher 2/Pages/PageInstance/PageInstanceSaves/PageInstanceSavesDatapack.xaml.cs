@@ -207,7 +207,7 @@ public partial class PageInstanceSavesDatapack : IRefreshable
             {
                 // 根据组件类型设置 PanEmpty 的文本内容
                 TxtEmptyTitle.Text = "尚未安装数据包";
-                TxtEmptyDescription.Text = "你可以从已经下载好的文件安装数据包。" + Constants.vbCrLf + "数据包需要放置在存档的 datapacks 文件夹中才能生效。";
+                TxtEmptyDescription.Text = "你可以从已经下载好的文件安装数据包。" + "\r\n" + "数据包需要放置在存档的 datapacks 文件夹中才能生效。";
 
                 PanEmpty.Visibility = Visibility.Visible;
                 PanBack.Visibility = Visibility.Collapsed;
@@ -658,7 +658,7 @@ public partial class PageInstanceSavesDatapack : IRefreshable
     private void BtnManageInfoExport_Click(object sender, MouseButtonEventArgs e)
     {
         var Choice =
-            ModMain.MyMsgBox("TXT 格式：仅导出当前的数据包文件名称信息" + Constants.vbCrLf + "CSV 格式：导出详细的数据包信息，包括文件名、工程 ID、版本信息等详细信息",
+            ModMain.MyMsgBox("TXT 格式：仅导出当前的数据包文件名称信息" + "\r\n" + "CSV 格式：导出详细的数据包信息，包括文件名、工程 ID、版本信息等详细信息",
                 "选择导出模式", "TXT 格式", "CSV 格式", "取消");
 
         void ExportText(string Content, string FileName)
@@ -685,7 +685,7 @@ public partial class PageInstanceSavesDatapack : IRefreshable
                 var ExportContent = new List<string>();
                 foreach (var DatapackEntity in ModLocalComp.CompResourceListLoader.Output)
                     ExportContent.Add(DatapackEntity.FileName);
-                ExportText(ExportContent.Join(Constants.vbCrLf),
+                ExportText(ExportContent.Join("\r\n"),
                     ModBase.GetFolderNameFromPath(PageInstanceSavesLeft.CurrentSave) + "的数据包信息.txt");
                 break;
             }
@@ -697,7 +697,7 @@ public partial class PageInstanceSavesDatapack : IRefreshable
                 foreach (var DatapackEntity in ModLocalComp.CompResourceListLoader.Output)
                     ExportContent.Add(
                         $"{DatapackEntity.FileName},{DatapackEntity.Comp?.TranslatedName},{DatapackEntity.Version},{DatapackEntity.CompFile?.ReleaseDate},{DatapackEntity.Comp?.Id},{GetDatapackFileInfo(DatapackEntity.Path).Length},{DatapackEntity.Path}");
-                ExportText(ExportContent.Join(Constants.vbCrLf),
+                ExportText(ExportContent.Join("\r\n"),
                     ModBase.GetFolderNameFromPath(PageInstanceSavesLeft.CurrentSave) + "的数据包信息.csv");
                 break;
             }
@@ -1158,7 +1158,7 @@ public partial class PageInstanceSavesDatapack : IRefreshable
         if (Conversions.ToBoolean(!States.Hint.FunctionDatapackUpdate || DatapackList.Count() >= 15))
         {
             if (ModMain.MyMsgBox(
-                    $"新版本数据包可能不兼容旧存档或者其他数据包，这可能导致游戏崩溃或存档损坏！{Constants.vbCrLf}{Constants.vbCrLf}在更新前，请先备份存档。{Constants.vbCrLf}如果更新后出现问题，你也可以在回收站找回更新前的数据包。",
+                    $"新版本数据包可能不兼容旧存档或者其他数据包，这可能导致游戏崩溃或存档损坏！{"\r\n"}{"\r\n"}在更新前，请先备份存档。{"\r\n"}如果更新后出现问题，你也可以在回收站找回更新前的数据包。",
                     "数据包更新警告", "我已了解风险，继续更新", "取消", IsWarn: true) == 1)
                 States.Hint.FunctionDatapackUpdate = true;
             else
@@ -1453,7 +1453,7 @@ public partial class PageInstanceSavesDatapack : IRefreshable
             if (DatapackEntry.State == ModLocalComp.LocalCompFile.LocalFileStatus.Unavailable)
             {
                 ModMain.MyMsgBox(
-                    "无法读取此数据包的信息。" + Constants.vbCrLf + Constants.vbCrLf + "详细的错误信息：" +
+                    "无法读取此数据包的信息。" + "\r\n" + "\r\n" + "详细的错误信息：" +
                     DatapackEntry.FileUnavailableReason.Message, "数据包读取失败");
                 return;
             }
@@ -1477,7 +1477,7 @@ public partial class PageInstanceSavesDatapack : IRefreshable
                 var ContentLines = new List<string>();
 
                 if (DatapackEntry.Description is not null)
-                    ContentLines.Add(DatapackEntry.Description + Constants.vbCrLf);
+                    ContentLines.Add(DatapackEntry.Description + "\r\n");
                 if (DatapackEntry.Authors is not null)
                     ContentLines.Add("作者：" + DatapackEntry.Authors);
                 ContentLines.Add("文件：" + DatapackEntry.FileName + "（" +
@@ -1495,8 +1495,8 @@ public partial class PageInstanceSavesDatapack : IRefreshable
 
                 // 显示详情信息
                 if (DatapackEntry.Url is null)
-                    ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), DatapackEntry.Name, "返回");
-                else if (ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), DatapackEntry.Name, "打开官网", "返回") == 1)
+                    ModMain.MyMsgBox(ContentLines.Join("\r\n"), DatapackEntry.Name, "返回");
+                else if (ModMain.MyMsgBox(ContentLines.Join("\r\n"), DatapackEntry.Name, "打开官网", "返回") == 1)
                     ModBase.OpenWebsite(DatapackEntry.Url);
             }
         }

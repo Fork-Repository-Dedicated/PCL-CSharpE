@@ -153,7 +153,7 @@ public partial class PageInstanceSavesBackup : IRefreshable
                     try
                     {
                         if (ModMain.MyMsgBox(
-                                $"你确定要删除备份 {item.Name} 吗？{Constants.vbCrLf}描述：{item.Desc}{Constants.vbCrLf}创建时间：{item.Created}",
+                                $"你确定要删除备份 {item.Name} 吗？{"\r\n"}描述：{item.Desc}{"\r\n"}创建时间：{item.Created}",
                                 "删除确认", "确认", "取消") == 2) return;
                         using (var snap = new SnapLiteVersionControl(PageInstanceSavesLeft.CurrentSave))
                         {

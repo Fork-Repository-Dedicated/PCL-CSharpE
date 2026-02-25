@@ -508,14 +508,14 @@ public partial class PageInstanceCompResource : IRefreshable
                     {
                         // 根目录为空的提示
                         TxtEmptyTitle.Text = "尚未安装资源";
-                        TxtEmptyDescription.Text = "你可以从已经下载好的文件安装资源。" + Constants.vbCrLf +
+                        TxtEmptyDescription.Text = "你可以从已经下载好的文件安装资源。" + "\r\n" +
                                                    "如果你已经安装了资源，可能是版本隔离设置有误，请在设置中调整版本隔离选项。";
                     }
                 }
                 else
                 {
                     TxtEmptyTitle.Text = "尚未安装资源";
-                    TxtEmptyDescription.Text = "你可以下载新的资源，也可以从已经下载好的文件安装资源。" + Constants.vbCrLf +
+                    TxtEmptyDescription.Text = "你可以下载新的资源，也可以从已经下载好的文件安装资源。" + "\r\n" +
                                                "如果你已经安装了资源，可能是版本隔离设置有误，请在设置中调整版本隔离选项。";
                 }
 
@@ -1325,7 +1325,7 @@ public partial class PageInstanceCompResource : IRefreshable
     {
         var Choice =
             ModMain.MyMsgBox(
-                "TXT 格式：仅导出当前的资源文件名称信息，通常足够他人获取已安装的资源信息" + Constants.vbCrLf +
+                "TXT 格式：仅导出当前的资源文件名称信息，通常足够他人获取已安装的资源信息" + "\r\n" +
                 "CSV 格式：导出详细的资源信息，包括其文件名，工程的 ID，文件内版本信息等详细信息", "选择导出模式", "TXT 格式", "CSV 格式", "取消");
 
         void ExportText(string Content, string FileName)
@@ -1352,7 +1352,7 @@ public partial class PageInstanceCompResource : IRefreshable
                 var ExportContent = new List<string>();
                 foreach (var ModEntity in ModLocalComp.CompResourceListLoader.Output)
                     ExportContent.Add(ModEntity.FileName);
-                ExportText(ExportContent.Join(Constants.vbCrLf), PageInstanceLeft.Instance.Name + "已安装的资源信息.txt");
+                ExportText(ExportContent.Join("\r\n"), PageInstanceLeft.Instance.Name + "已安装的资源信息.txt");
                 break;
             }
 
@@ -1363,7 +1363,7 @@ public partial class PageInstanceCompResource : IRefreshable
                 foreach (var ModEntity in ModLocalComp.CompResourceListLoader.Output)
                     ExportContent.Add(
                         $"{ModEntity.FileName},{ModEntity.Comp?.TranslatedName},{ModEntity.Version},{ModEntity.CompFile?.ReleaseDate},{ModEntity.ModId},{ModEntity.Comp?.Id},{GetModFileInfo(ModEntity.Path).Length},{ModEntity.Path}");
-                ExportText(ExportContent.Join(Constants.vbCrLf), PageInstanceLeft.Instance.Name + "已安装的资源信息.csv");
+                ExportText(ExportContent.Join("\r\n"), PageInstanceLeft.Instance.Name + "已安装的资源信息.csv");
                 break;
             }
         }
@@ -1874,7 +1874,7 @@ public partial class PageInstanceCompResource : IRefreshable
                         if ((ModBase.GetFileMD5(ModEntity.Path) ?? "") != (ModBase.GetFileMD5(NewPath) ?? ""))
                         {
                             ModMain.MyMsgBox(
-                                $"目前同时存在启用和禁用的两个 Mod 文件：{Constants.vbCrLf} - {NewPath}{Constants.vbCrLf} - {ModEntity.Path}{Constants.vbCrLf}{Constants.vbCrLf}注意，这两个文件的内容并不相同。{Constants.vbCrLf}在手动删除或重命名其中一个文件后，才能继续操作。",
+                                $"目前同时存在启用和禁用的两个 Mod 文件：{"\r\n"} - {NewPath}{"\r\n"} - {ModEntity.Path}{"\r\n"}{"\r\n"}注意，这两个文件的内容并不相同。{"\r\n"}在手动删除或重命名其中一个文件后，才能继续操作。",
                                 "存在文件冲突");
                             continue;
                         }
@@ -1974,7 +1974,7 @@ public partial class PageInstanceCompResource : IRefreshable
                                   (!States.Hint.UpdateMod || ModList.Count() >= 15)))
         {
             if (ModMain.MyMsgBox(
-                    $"新版本 Mod 可能不兼容旧存档或者其他 Mod，这可能导致游戏崩溃，甚至永久损坏存档！{Constants.vbCrLf}如果你在游玩整合包，请千万不要自行更新 Mod！{Constants.vbCrLf}{Constants.vbCrLf}在更新前，请先备份存档，并检查 Mod 的更新日志。{Constants.vbCrLf}如果更新后出现问题，你也可以在回收站找回更新前的 Mod。",
+                    $"新版本 Mod 可能不兼容旧存档或者其他 Mod，这可能导致游戏崩溃，甚至永久损坏存档！{"\r\n"}如果你在游玩整合包，请千万不要自行更新 Mod！{"\r\n"}{"\r\n"}在更新前，请先备份存档，并检查 Mod 的更新日志。{"\r\n"}如果更新后出现问题，你也可以在回收站找回更新前的 Mod。",
                     "Mod 更新警告", "我已了解风险，继续更新", "取消", IsWarn: true) == 1)
                 States.Hint.UpdateMod = true;
             else
@@ -2329,7 +2329,7 @@ public partial class PageInstanceCompResource : IRefreshable
             if (ModEntry.State == ModLocalComp.LocalCompFile.LocalFileStatus.Unavailable)
             {
                 ModMain.MyMsgBox(
-                    "无法读取此资源的信息。" + Constants.vbCrLf + Constants.vbCrLf + "详细的错误信息：" +
+                    "无法读取此资源的信息。" + "\r\n" + "\r\n" + "详细的错误信息：" +
                     ModEntry.FileUnavailableReason.Message, "资源读取失败");
                 return;
             }
@@ -2418,15 +2418,15 @@ public partial class PageInstanceCompResource : IRefreshable
                         }
 
                         if (fileCount == 0)
-                            ContentLines.Add("空文件夹" + Constants.vbCrLf);
+                            ContentLines.Add("空文件夹" + "\r\n");
                         else if (fileCount == 1)
-                            ContentLines.Add("包含 1 个文件" + Constants.vbCrLf);
+                            ContentLines.Add("包含 1 个文件" + "\r\n");
                         else
-                            ContentLines.Add($"包含 {fileCount} 个文件" + Constants.vbCrLf);
+                            ContentLines.Add($"包含 {fileCount} 个文件" + "\r\n");
                     }
                     else
                     {
-                        ContentLines.Add("文件夹不存在" + Constants.vbCrLf);
+                        ContentLines.Add("文件夹不存在" + "\r\n");
                     }
 
                     ContentLines.Add("路径：" + folderPath);
@@ -2435,7 +2435,7 @@ public partial class PageInstanceCompResource : IRefreshable
                 {
                     // 处理普通文件详情
                     if (ModEntry.Description is not null)
-                        ContentLines.Add(ModEntry.Description + Constants.vbCrLf);
+                        ContentLines.Add(ModEntry.Description + "\r\n");
                     if (ModEntry.Authors is not null)
                         ContentLines.Add("作者：" + ModEntry.Authors);
                     ContentLines.Add("文件：" + ModEntry.FileName + "（" +
@@ -2469,7 +2469,7 @@ public partial class PageInstanceCompResource : IRefreshable
                 if (ModEntry.IsFolder)
                 {
                     // 文件夹只显示基本信息，不提供搜索功能
-                    ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), ModEntry.Name, "返回");
+                    ModMain.MyMsgBox(ContentLines.Join("\r\n"), ModEntry.Name, "返回");
                 }
                 else
                 {
@@ -2494,19 +2494,19 @@ public partial class PageInstanceCompResource : IRefreshable
                     {
                         // 投影原理图文件不显示百科搜索选项
                         if (ModEntry.Url is null)
-                            ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), ModEntry.Name, "返回");
-                        else if (ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), ModEntry.Name, "打开官网", "返回") ==
+                            ModMain.MyMsgBox(ContentLines.Join("\r\n"), ModEntry.Name, "返回");
+                        else if (ModMain.MyMsgBox(ContentLines.Join("\r\n"), ModEntry.Name, "打开官网", "返回") ==
                                  1) ModBase.OpenWebsite(ModEntry.Url);
                     }
                     // 其他资源类型保留百科搜索功能
                     else if (ModEntry.Url is null)
                     {
-                        if (ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), ModEntry.Name, "百科搜索", "返回") == 1)
+                        if (ModMain.MyMsgBox(ContentLines.Join("\r\n"), ModEntry.Name, "百科搜索", "返回") == 1)
                             ModBase.OpenWebsite("https://www.mcmod.cn/s?key=" + ModSearchName + "&site=all&filter=0");
                     }
                     else
                     {
-                        switch (ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), ModEntry.Name, "打开官网", "百科搜索",
+                        switch (ModMain.MyMsgBox(ContentLines.Join("\r\n"), ModEntry.Name, "打开官网", "百科搜索",
                                     "返回"))
                         {
                             case 1:
@@ -2594,7 +2594,7 @@ public partial class PageInstanceCompResource : IRefreshable
                     try
                     {
                         var ContentLines = new List<string>();
-                        if (ModEntry.Description is not null) ContentLines.Add(ModEntry.Description + Constants.vbCrLf);
+                        if (ModEntry.Description is not null) ContentLines.Add(ModEntry.Description + "\r\n");
                         if (ModEntry.Authors is not null) ContentLines.Add("作者：" + ModEntry.Authors);
                         ContentLines.Add("文件：" + ModEntry.FileName + "（" +
                                          ModBase.GetString(GetModFileInfo(ModEntry.Path).Length) + "）");
@@ -2788,8 +2788,8 @@ public partial class PageInstanceCompResource : IRefreshable
     {
         // 投影原理图文件不显示百科搜索选项
         if (ModEntry.Url is null)
-            ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), ModEntry.Name, "返回");
-        else if (ModMain.MyMsgBox(ContentLines.Join(Constants.vbCrLf), ModEntry.Name, "打开官网", "返回") == 1)
+            ModMain.MyMsgBox(ContentLines.Join("\r\n"), ModEntry.Name, "返回");
+        else if (ModMain.MyMsgBox(ContentLines.Join("\r\n"), ModEntry.Name, "打开官网", "返回") == 1)
             ModBase.OpenWebsite(ModEntry.Url);
     }
 

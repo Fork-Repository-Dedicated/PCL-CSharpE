@@ -72,7 +72,7 @@ public partial class MyMsgText
                         new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.Weak))
                 }, "MyMsgBox " + Uuid);
             // 记录日志
-            ModBase.Log("[Control] 普通弹窗：" + LabTitle.Text + Constants.vbCrLf + LabCaption.Text);
+            ModBase.Log("[Control] 普通弹窗：" + LabTitle.Text + "\r\n" + LabCaption.Text);
         }
 
         catch (Exception ex)

@@ -505,7 +505,7 @@ public partial class PageSelectLeft : IRefreshable
                 (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent)
                     .PlacementTarget).Tag;
             switch (ModMain.MyMsgBox(
-                        "是否需要清理 PCL 在该文件夹中的配置文件？" + Constants.vbCrLf + "这包括各个实例的独立设置（如自定义图标、第三方登录配置）等，对游戏本身没有影响。",
+                        "是否需要清理 PCL 在该文件夹中的配置文件？" + "\r\n" + "这包括各个实例的独立设置（如自定义图标、第三方登录配置）等，对游戏本身没有影响。",
                         "配置文件清理", "删除", "保留", "取消"))
             {
                 case 1:
@@ -574,12 +574,12 @@ public partial class PageSelectLeft : IRefreshable
                 ? "清空"
                 : "删除";
         if (ModMain.MyMsgBox(
-                "你确定要" + DeleteText + "这个文件夹吗？" + Constants.vbCrLf + "目标文件夹：" + Folder.Location + Constants.vbCrLf +
-                Constants.vbCrLf + "这会导致该文件夹中的所有存档与其他文件永久丢失，且不可恢复！", "删除警告", "取消", "确认", "取消") != 2)
+                "你确定要" + DeleteText + "这个文件夹吗？" + "\r\n" + "目标文件夹：" + Folder.Location + "\r\n" +
+                "\r\n" + "这会导致该文件夹中的所有存档与其他文件永久丢失，且不可恢复！", "删除警告", "取消", "确认", "取消") != 2)
             return;
         if (ModMain.MyMsgBox(
-                "如果你在该文件夹中存放了除 MC 以外的其他文件，这些文件也会被一同删除！" + Constants.vbCrLf + "继续删除会导致该文件夹中的所有文件永久丢失，请在仔细确认后再继续！" +
-                Constants.vbCrLf + "目标文件夹：" + Folder.Location + Constants.vbCrLf + Constants.vbCrLf + "这是最后一次警告！",
+                "如果你在该文件夹中存放了除 MC 以外的其他文件，这些文件也会被一同删除！" + "\r\n" + "继续删除会导致该文件夹中的所有文件永久丢失，请在仔细确认后再继续！" +
+                "\r\n" + "目标文件夹：" + Folder.Location + "\r\n" + "\r\n" + "这是最后一次警告！",
                 "删除警告", "确认" + DeleteText, "取消", IsWarn: true) != 1)
             return;
         // 移出列表

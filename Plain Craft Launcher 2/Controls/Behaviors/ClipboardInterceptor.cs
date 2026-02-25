@@ -121,8 +121,8 @@ public sealed class ClipboardInterceptor
             var pasteText = Clipboard.GetText();
 
             if (!tb.AcceptsReturn)
-                pasteText = pasteText.Replace(Constants.vbCrLf, " ").Replace(Constants.vbCr, " ")
-                    .Replace(Constants.vbLf, " ");
+                pasteText = pasteText.Replace("\r\n", " ").Replace("\r", " ")
+                    .Replace("\n", " ");
 
             var start = tb.SelectionStart;
 

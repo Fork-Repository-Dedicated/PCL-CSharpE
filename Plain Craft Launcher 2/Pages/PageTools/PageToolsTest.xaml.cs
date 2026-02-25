@@ -211,8 +211,8 @@ public partial class PageToolsTest
                                 false)))
                     {
                         if (ModMain.MyMsgBox(
-                                "即将清理游戏日志、错误报告、缓存等文件。" + Constants.vbCrLf + "虽然应该没人往这些地方放重要文件，但还是问一下，是否确认继续？" +
-                                Constants.vbCrLf + Constants.vbCrLf + "在完成清理后，PCL 将自动重启。", "清理确认", "确定", "取消") ==
+                                "即将清理游戏日志、错误报告、缓存等文件。" + "\r\n" + "虽然应该没人往这些地方放重要文件，但还是问一下，是否确认继续？" +
+                                "\r\n" + "\r\n" + "在完成清理后，PCL 将自动重启。", "清理确认", "确定", "取消") ==
                             2) return;
                         States.Hint.CleanJunkFile += 1;
                     }
@@ -253,7 +253,7 @@ public partial class PageToolsTest
                     num += ModBase.DeleteDirectory(ModBase.OsDrive + @"ProgramData\PCL\", true);
                     if (num != 0)
                     {
-                        ModMain.MyMsgBox(string.Format("清理了 {0} 个文件！", num) + Constants.vbCrLf + "PCL 即将自动重启……",
+                        ModMain.MyMsgBox(string.Format("清理了 {0} 个文件！", num) + "\r\n" + "PCL 即将自动重启……",
                             "缓存已清理", "确定", "", "", false, true, true);
                         Process.Start(new ProcessStartInfo(ModBase.ExePathWithName));
                         FormMain.EndProgramForce();
@@ -378,7 +378,7 @@ public partial class PageToolsTest
     public static void MemoryOptimizeInternal(bool ShowHint)
     {
         if (!ProcessInterop.IsAdmin())
-            throw new Exception("内存优化功能需要管理员权限！" + Constants.vbCrLf +
+            throw new Exception("内存优化功能需要管理员权限！" + "\r\n" +
                                 "如果需要自动以管理员身份启动 PCL，可以右键 PCL，打开 属性 → 兼容性 → 以管理员身份运行此程序。");
         ModBase.Log("[Test] 获取内存优化权限");
 
@@ -619,7 +619,7 @@ public partial class PageToolsTest
 
     public static string GetRating(int luckValue)
     {
-        if (luckValue == 100) return "100！100！" + Constants.vbCrLf + "隐藏主题 欧皇…… 不对，社区版应该没有这玩意……";
+        if (luckValue == 100) return "100！100！" + "\r\n" + "隐藏主题 欧皇…… 不对，社区版应该没有这玩意……";
 
         return luckValue >= 95 ? "差一点就到100了呢..." :
             luckValue >= 90 ? "好评如潮！" :
@@ -638,8 +638,8 @@ public partial class PageToolsTest
         var start = Paths.GetSpecialPath(Environment.SpecialFolder.StartMenu, @"Programs\" + shortcutName);
         var choice =
             ModMain.MyMsgBox(
-                "这个快捷方式不会自动移除，在删除/移动启动器前请手动移除快捷方式。" + Constants.vbCrLf + Constants.vbCrLf + desktopName + "位置: " +
-                desktop + Constants.vbCrLf + startName + "位置: " + start, "选择快捷方式位置", "取消", desktopName, startName);
+                "这个快捷方式不会自动移除，在删除/移动启动器前请手动移除快捷方式。" + "\r\n" + "\r\n" + desktopName + "位置: " +
+                desktop + "\r\n" + startName + "位置: " + start, "选择快捷方式位置", "取消", desktopName, startName);
         if (choice == 1)
             return;
         var shortcutPath = choice == 2 ? desktop : start;

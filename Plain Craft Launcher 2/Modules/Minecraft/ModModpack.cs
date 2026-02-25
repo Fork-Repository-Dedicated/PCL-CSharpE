@@ -772,7 +772,7 @@ public static class ModModpack
             if (!Path.GetFullPath(TargetPath)
                     .StartsWithF($@"{ModMinecraft.McFolderSelected}versions\{InstanceName}\", true))
             {
-                ModMain.MyMsgBox("整合包的文件路径超出了实例文件夹，请向整合包作者反馈此问题！" + Constants.vbCrLf + "错误的文件：" + TargetPath,
+                ModMain.MyMsgBox("整合包的文件路径超出了实例文件夹，请向整合包作者反馈此问题！" + "\r\n" + "错误的文件：" + TargetPath,
                     "文件路径校验失败", IsWarn: true);
                 throw new ModBase.CancelledException();
             }
@@ -1130,7 +1130,7 @@ public static class ModModpack
                 if (Launcher is not null)
                 {
                     ModBase.Log("[Modpack] 找到压缩包中附带的启动器：" + Launcher);
-                    if (ModMain.MyMsgBox($"整合包里似乎自带了启动器，是否换用它继续安装？{Constants.vbCrLf}即将打开：{Launcher}", "换用整合包启动器？", "换用",
+                    if (ModMain.MyMsgBox($"整合包里似乎自带了启动器，是否换用它继续安装？{"\r\n"}即将打开：{Launcher}", "换用整合包启动器？", "换用",
                             "不换用") == 1)
                     {
                         ModBase.OpenExplorer(TargetFolder);
@@ -1532,7 +1532,7 @@ public static class ModModpack
                 if (File.Exists(MMCSetupFile))
                 {
                     List<string> Lines = [];
-                    foreach (var Line in ModBase.ReadFile(MMCSetupFile).Split(new[] { Constants.vbCr, Constants.vbLf },
+                    foreach (var Line in ModBase.ReadFile(MMCSetupFile).Split(new[] { "\r", "\n" },
                                  StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (!Line.Contains("="))
@@ -1540,7 +1540,7 @@ public static class ModModpack
                         Lines.Add(Line.BeforeFirst("=") + ":" + Line.AfterFirst("="));
                     }
 
-                    ModBase.WriteFile(MMCSetupFile, Lines.Join(Constants.vbCrLf));
+                    ModBase.WriteFile(MMCSetupFile, Lines.Join("\r\n"));
                     // 读取文件
                     if (Conversions.ToBoolean(ModBase.ReadIni(MMCSetupFile, "OverrideCommands",
                             Conversions.ToString(false))))

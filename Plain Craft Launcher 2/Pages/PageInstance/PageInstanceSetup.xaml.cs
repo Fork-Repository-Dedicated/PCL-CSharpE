@@ -646,8 +646,8 @@ public partial class PageInstanceSetup
     {
         if (!string.IsNullOrEmpty(TextServerAuthServer.Text) &&
             TextServerAuthServer.Text != "https://littleskin.cn/api/yggdrasil" && ModMain.MyMsgBox(
-                "即将把第三方登录设置覆盖为 LittleSkin 登录。" + Constants.vbCrLf + "除非你是服主，或者服主要求你这样做，否则请不要继续。" + Constants.vbCrLf +
-                Constants.vbCrLf + "是否确实需要覆盖当前设置？", "设置覆盖确认", "继续", "取消") == 2)
+                "即将把第三方登录设置覆盖为 LittleSkin 登录。" + "\r\n" + "除非你是服主，或者服主要求你这样做，否则请不要继续。" + "\r\n" +
+                "\r\n" + "是否确实需要覆盖当前设置？", "设置覆盖确认", "继续", "取消") == 2)
             return;
         TextServerAuthServer.Text = "https://littleskin.cn/api/yggdrasil";
         TextServerAuthRegister.Text = "https://littleskin.cn/auth/register";
@@ -658,7 +658,7 @@ public partial class PageInstanceSetup
     private void BtnServerAuthLock_Click()
     {
         if (ModMain.MyMsgBox(
-                $"你正在选择锁定此实例的验证方式。锁定之后，将无法再更改此实例的验证方式要求，启动此实例将必须使用指定的验证方式。{Constants.vbCrLf}此功能可能会帮助一些服主吧。{Constants.vbCrLf}是否继续？",
+                $"你正在选择锁定此实例的验证方式。锁定之后，将无法再更改此实例的验证方式要求，启动此实例将必须使用指定的验证方式。{"\r\n"}此功能可能会帮助一些服主吧。{"\r\n"}是否继续？",
                 "锁定验证方式确认", "确定", "取消", IsWarn: true) == 1)
         {
             Config.Instance.AuthTypeLucked[PageInstanceLeft.Instance] = true;
@@ -728,7 +728,7 @@ public partial class PageInstanceSetup
                 {
                     Content = $"启动器目录下的 Java | {javaEntry}",
                     Tag = new UseRelativePath(relPref.RelativePath),
-                    ToolTip = $"相对路径: {relPref.RelativePath}{Constants.vbCrLf}解析路径: {absPath}"
+                    ToolTip = $"相对路径: {relPref.RelativePath}{"\r\n"}解析路径: {absPath}"
                 };
             else
                 // 无效路径：提示用户重新选择
@@ -736,7 +736,7 @@ public partial class PageInstanceSetup
                 {
                     Content = "选择启动器目录下的 Java（当前路径无效）",
                     Tag = new UseRelativePath(relPref.RelativePath),
-                    ToolTip = $"无效路径: {absPath}{Constants.vbCrLf}点击此项重新选择有效 Java"
+                    ToolTip = $"无效路径: {absPath}{"\r\n"}点击此项重新选择有效 Java"
                 };
         }
         else
@@ -762,7 +762,7 @@ public partial class PageInstanceSetup
                 {
                     Content = curJava.ToString(),
                     ToolTip =
-                        $"路径: {((dynamic)curJava).Installation.JavaExePath}{Constants.vbCrLf}版本: {((dynamic)curJava).Installation.Version}{Constants.vbCrLf}来源: {((dynamic)curJava).Source}",
+                        $"路径: {((dynamic)curJava).Installation.JavaExePath}{"\r\n"}版本: {((dynamic)curJava).Installation.Version}{"\r\n"}来源: {((dynamic)curJava).Source}",
                     Tag = curJava
                 };
                 ToolTipService.SetInitialShowDelay(item, 300);
@@ -942,8 +942,8 @@ public partial class PageInstanceSetup
         if (IsReverting)
             return;
         if (ModMain.MyMsgBox(
-                "调整版本隔离后，你可能得把游戏存档、Mod 等文件手动迁移到新的游戏文件夹中。" + Constants.vbCrLf + "如果修改后发现存档消失，把这项设置改回来就能恢复。" +
-                Constants.vbCrLf + "如果你不会迁移存档，不建议修改这项设置！", "警告", "我知道我在做什么", "取消", IsWarn: true) == 2)
+                "调整版本隔离后，你可能得把游戏存档、Mod 等文件手动迁移到新的游戏文件夹中。" + "\r\n" + "如果修改后发现存档消失，把这项设置改回来就能恢复。" +
+                "\r\n" + "如果你不会迁移存档，不建议修改这项设置！", "警告", "我知道我在做什么", "取消", IsWarn: true) == 2)
         {
             IsReverting = true;
             ComboArgumentIndieV2.SelectedItem = e.RemovedItems[0];
@@ -979,7 +979,7 @@ public partial class PageInstanceSetup
             return;
         if (Conversions.ToBoolean(!(bool)States.Hint.Renderer && ComboAdvanceRenderer.SelectedIndex != 0))
         {
-            if (ModMain.MyMsgBox("修改此项会严重影响游戏的稳定性与性能。如果你不知道你在做什么，不要修改此选项！" + Constants.vbCrLf + "你确定要继续修改吗？", "警告",
+            if (ModMain.MyMsgBox("修改此项会严重影响游戏的稳定性与性能。如果你不知道你在做什么，不要修改此选项！" + "\r\n" + "你确定要继续修改吗？", "警告",
                     "我知道我在做什么", "取消", IsWarn: true) == 2)
             {
                 ComboAdvanceRenderer.SelectedItem = ((dynamic)e).RemovedItems(0);
@@ -1005,7 +1005,7 @@ public partial class PageInstanceSetup
         if (CheckUseDebugLog4j2Config.Checked.GetValueOrDefault() && !States.Hint.DebugLog4j2Config)
         {
             if (ModMain.MyMsgBox(
-                    "本选项会修改游戏日志级别修改为最低，大量日志输出会消耗大量磁盘空间并可能影响游戏性能。这也可能带来一定安全风险。如果你不知道你在做什么，不要修改此选项！" + Constants.vbCrLf +
+                    "本选项会修改游戏日志级别修改为最低，大量日志输出会消耗大量磁盘空间并可能影响游戏性能。这也可能带来一定安全风险。如果你不知道你在做什么，不要修改此选项！" + "\r\n" +
                     "你确定要继续修改吗？", "警告", "我知道我在做什么", "取消", IsWarn: true) == 2)
             {
                 sender.Checked = false;

@@ -439,7 +439,7 @@ public partial class PageDownloadCompDetail
         var ChineseDescription = await _project.ChineseDescription;
         if (ChineseDescription is null)
             return;
-        ModMain.MyMsgBox($"原文：{_project.Description}{Environment.NewLine}译文：{ChineseDescription}");
+        ModMain.MyMsgBox($"原文：{_project.Description}{"\r\n"}译文：{ChineseDescription}");
     }
 
     /// <summary>

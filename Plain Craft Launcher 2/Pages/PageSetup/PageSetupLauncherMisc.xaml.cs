@@ -176,8 +176,8 @@ public partial class PageSetupLauncherMisc
         if (ComboSystemActivity.SelectedIndex != 2)
             return;
         if (ModMain.MyMsgBox(
-                "若选择此项，即使在将来出现严重问题时，你也无法获取相关通知。" + Constants.vbCrLf + "例如，如果发现某个版本游戏存在严重 Bug，你可能就会因为无法得到通知而导致无法预知的后果。" +
-                Constants.vbCrLf + Constants.vbCrLf + "一般选择 仅在有重要通知时显示公告 就可以让你尽量不受打扰了。" + Constants.vbCrLf +
+                "若选择此项，即使在将来出现严重问题时，你也无法获取相关通知。" + "\r\n" + "例如，如果发现某个版本游戏存在严重 Bug，你可能就会因为无法得到通知而导致无法预知的后果。" +
+                "\r\n" + "\r\n" + "一般选择 仅在有重要通知时显示公告 就可以让你尽量不受打扰了。" + "\r\n" +
                 "除非你在制作服务器整合包，或时常手动更新启动器，否则极度不推荐选择此项！", "警告", "我知道我在做什么", "取消", IsWarn: true) ==
             2) ComboSystemActivity.SelectedItem = e.RemovedItems[0];
     }

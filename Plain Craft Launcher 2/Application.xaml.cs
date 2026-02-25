@@ -168,8 +168,8 @@ public partial class Application
                 problemList.Add("- PCL 正在 QQ、微信、TIM 等社交软件的下载目录运行，请考虑移动到其他位置，否则可能导致游戏存档或设置丢失");
             if (problemList.Count != 0)
                 ModMain.MyMsgBox(
-                    "PCL CE 在启动时检测到环境问题：" + Constants.vbCrLf + Constants.vbCrLf + problemList.Join(Constants.vbCrLf) +
-                    Constants.vbCrLf + Constants.vbCrLf + "不解决这些问题可能会导致部分功能无法正常工作……", "环境警告", "我知道了", IsWarn: true);
+                    "PCL CE 在启动时检测到环境问题：" + "\r\n" + "\r\n" + problemList.Join("\r\n") +
+                    "\r\n" + "\r\n" + "不解决这些问题可能会导致部分功能无法正常工作……", "环境警告", "我知道了", IsWarn: true);
             // 设置初始化
             ModBase.Setup.Load("SystemDebugMode");
             ModBase.Setup.Load("SystemDebugAnim");
@@ -210,7 +210,7 @@ public partial class Application
             var FilePath = ModBase.ExePathWithName;
 
             Interaction.MsgBox(
-                ex + Constants.vbCrLf + "PCL 所在路径：" + (string.IsNullOrEmpty(FilePath) ? "获取失败" : FilePath),
+                ex + "\r\n" + "PCL 所在路径：" + (string.IsNullOrEmpty(FilePath) ? "获取失败" : FilePath),
                 MsgBoxStyle.Critical, "PCL 初始化错误");
             FormMain.EndProgramForce(ModBase.ProcessReturnValues.Exception);
         }

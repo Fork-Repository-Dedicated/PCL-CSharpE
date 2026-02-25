@@ -47,7 +47,7 @@ public partial class PageOtherHelpDetail : IRefreshable
         }
         catch (Exception ex)
         {
-            ModBase.Log("[System] 自定义信息内容：" + Constants.vbCrLf + Content);
+            ModBase.Log("[System] 自定义信息内容：" + "\r\n" + Content);
             ModBase.Log(ex, "加载帮助 XAML 文件失败", ModBase.LogLevel.Msgbox);
             return false;
         }

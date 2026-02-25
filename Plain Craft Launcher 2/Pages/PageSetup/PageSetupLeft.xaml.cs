@@ -83,7 +83,7 @@ public partial class PageSetupLeft
             }
             case (double)FormMain.PageSubType.SetupUI:
             {
-                if (ModMain.MyMsgBox("是否要初始化 启动器-个性化 页面的所有设置？该操作不可撤销。" + Constants.vbCrLf + "（背景图片与音乐、主页等外部文件不会被删除）",
+                if (ModMain.MyMsgBox("是否要初始化 启动器-个性化 页面的所有设置？该操作不可撤销。" + "\r\n" + "（背景图片与音乐、主页等外部文件不会被删除）",
                         "初始化确认", Button2: "取消", IsWarn: true) == 1)
                 {
                     if (ModMain.FrmSetupUI is null)
@@ -139,7 +139,7 @@ public partial class PageSetupLeft
         {
             if (!ModBase.CanFeedback(true))
                 return;
-            switch (ModMain.MyMsgBox("在提交新反馈前，建议先搜索反馈列表，以避免重复提交。" + Constants.vbCrLf + "如果无法打开该网页，请尝试使用加速器或 VPN。", "反馈",
+            switch (ModMain.MyMsgBox("在提交新反馈前，建议先搜索反馈列表，以避免重复提交。" + "\r\n" + "如果无法打开该网页，请尝试使用加速器或 VPN。", "反馈",
                         "提交新反馈", "查看反馈列表", "取消"))
             {
                 case 1:

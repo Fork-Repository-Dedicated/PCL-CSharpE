@@ -82,9 +82,9 @@ internal static class ModSecret
         catch (Exception ex)
         {
             Interaction.MsgBox(
-                $"PCL 无法创建 PCL 文件夹（{dataPath}），请尝试：" + Constants.vbCrLf + "1. 将 PCL 移动到其他文件夹" +
-                (ModBase.ExePath.StartsWithF("C:", true) ? "，例如 C 盘和桌面以外的其他位置。" : "。") + Constants.vbCrLf +
-                "2. 删除当前目录中的 PCL 文件夹，然后再试。" + Constants.vbCrLf + "3. 右键 PCL 选择属性，打开 兼容性 中的 以管理员身份运行此程序。",
+                $"PCL 无法创建 PCL 文件夹（{dataPath}），请尝试：" + "\r\n" + "1. 将 PCL 移动到其他文件夹" +
+                (ModBase.ExePath.StartsWithF("C:", true) ? "，例如 C 盘和桌面以外的其他位置。" : "。") + "\r\n" +
+                "2. 删除当前目录中的 PCL 文件夹，然后再试。" + "\r\n" + "3. 右键 PCL 选择属性，打开 兼容性 中的 以管理员身份运行此程序。",
                 MsgBoxStyle.Critical, "运行环境错误");
             Environment.Exit((int)ModBase.ProcessReturnValues.Cancel);
         }
@@ -92,9 +92,9 @@ internal static class ModSecret
         if (!ModBase.CheckPermission(ModBase.ExePath + "PCL"))
         {
             Interaction.MsgBox(
-                "PCL 没有对当前文件夹的写入权限，请尝试：" + Constants.vbCrLf + "1. 将 PCL 移动到其他文件夹" +
-                (ModBase.ExePath.StartsWithF("C:", true) ? "，例如 C 盘和桌面以外的其他位置。" : "。") + Constants.vbCrLf +
-                "2. 删除当前目录中的 PCL 文件夹，然后再试。" + Constants.vbCrLf + "3. 右键 PCL 选择属性，打开 兼容性 中的 以管理员身份运行此程序。",
+                "PCL 没有对当前文件夹的写入权限，请尝试：" + "\r\n" + "1. 将 PCL 移动到其他文件夹" +
+                (ModBase.ExePath.StartsWithF("C:", true) ? "，例如 C 盘和桌面以外的其他位置。" : "。") + "\r\n" +
+                "2. 删除当前目录中的 PCL 文件夹，然后再试。" + "\r\n" + "3. 右键 PCL 选择属性，打开 兼容性 中的 以管理员身份运行此程序。",
                 MsgBoxStyle.Critical, "运行环境错误");
             Environment.Exit((int)ModBase.ProcessReturnValues.Cancel);
         }
@@ -499,7 +499,7 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
                     ModBase.RunInUi(() =>
                     {
                         if (ModMain.MyMsgBox(
-                                $"启动器有新版本可用（{ModBase.VersionBaseName} -> {version.VersionName}){Constants.vbCrLf}是否立即更新？",
+                                $"启动器有新版本可用（{ModBase.VersionBaseName} -> {version.VersionName}){"\r\n"}是否立即更新？",
                                 "启动器更新", "更新", "取消") ==
                             1) ModMain.FrmMain.PageChange(FormMain.PageType.Setup, FormMain.PageSubType.SetupUpdate);
                     });
@@ -597,7 +597,7 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
             if (ModMain.MyMsgBox(
                     string.Format(
                         @"由于被 Windows 安全中心拦截，或者存在权限问题，导致 PCL 无法更新。{0}请将 PCL 所在文件夹加入白名单，或者手动用 {1}PCL\Plain Craft Launcher Community Edition.exe 替换当前文件！",
-                        Constants.vbCrLf, ModBase.ExePath), "更新失败", "查看帮助", "确定", "", true) ==
+                        "\r\n", ModBase.ExePath), "更新失败", "查看帮助", "确定", "", true) ==
                 1) ModEvent.TryStartEvent("打开帮助", "启动器/Microsoft Defender 添加排除项.json");
         }
     }

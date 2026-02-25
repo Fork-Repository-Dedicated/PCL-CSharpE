@@ -519,7 +519,7 @@ public partial class PageSetupLaunch
             return;
         if (ComboArgumentVisibie.SelectedIndex == 0)
             if (ModMain.MyMsgBox(
-                    "若在游戏启动后立即关闭启动器，崩溃检测、更改游戏标题等功能将失效。" + Constants.vbCrLf + "如果想保留这些功能，可以选择让启动器在游戏启动后隐藏，游戏退出后自动关闭。",
+                    "若在游戏启动后立即关闭启动器，崩溃检测、更改游戏标题等功能将失效。" + "\r\n" + "如果想保留这些功能，可以选择让启动器在游戏启动后隐藏，游戏退出后自动关闭。",
                     "提醒", "继续", "取消") == 2)
                 ComboArgumentVisibie.SelectedItem = ((dynamic)sender).RemovedItems[0];
     }
@@ -532,10 +532,10 @@ public partial class PageSetupLaunch
         if (CheckArgumentRam.Checked == false)
             return;
         if (ModMain.MyMsgBox(
-                "内存优化会显著延长启动耗时，建议仅在内存不足时开启。" + Constants.vbCrLf + "如果你在使用机械硬盘，这还可能导致一小段时间的严重卡顿。" +
+                "内存优化会显著延长启动耗时，建议仅在内存不足时开启。" + "\r\n" + "如果你在使用机械硬盘，这还可能导致一小段时间的严重卡顿。" +
                 (ProcessInterop.IsAdmin()
                     ? ""
-                    : $"{Constants.vbCrLf}{Constants.vbCrLf}每次启动游戏，PCL 都需要申请管理员权限以进行内存优化。{Constants.vbCrLf}若想自动授予权限，可以右键 PCL，打开 属性 → 兼容性 → 以管理员身份运行此程序。"),
+                    : $"{"\r\n"}{"\r\n"}每次启动游戏，PCL 都需要申请管理员权限以进行内存优化。{"\r\n"}若想自动授予权限，可以右键 PCL，打开 属性 → 兼容性 → 以管理员身份运行此程序。"),
                 "提醒", "确定", "取消") == 2) CheckArgumentRam.Checked = false;
     }
 
@@ -544,7 +544,7 @@ public partial class PageSetupLaunch
     {
         if (ModAnimation.AniControlEnabled != 0)
             return;
-        ModMain.MyMsgBox("默认策略只会对今后新安装的实例生效。" + Constants.vbCrLf + "已有实例的隔离策略需要在它的设置中调整。");
+        ModMain.MyMsgBox("默认策略只会对今后新安装的实例生效。" + "\r\n" + "已有实例的隔离策略需要在它的设置中调整。");
     }
 
     #endregion
@@ -579,7 +579,7 @@ public partial class PageSetupLaunch
             return;
         if (!Conversions.ToBoolean(States.Hint.Renderer) && ComboAdvanceRenderer.SelectedIndex != 0)
         {
-            if (ModMain.MyMsgBox("修改此项会严重影响游戏的稳定性与性能。如果你不知道你在做什么，不要修改此选项！" + Constants.vbCrLf + "你确定要继续修改吗？", "警告",
+            if (ModMain.MyMsgBox("修改此项会严重影响游戏的稳定性与性能。如果你不知道你在做什么，不要修改此选项！" + "\r\n" + "你确定要继续修改吗？", "警告",
                     "我知道我在做什么", "取消", IsWarn: true) == 2)
             {
                 ComboAdvanceRenderer.SelectedItem = ((SelectionChangedEventArgs)e).RemovedItems[0];

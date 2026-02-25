@@ -61,7 +61,7 @@ public partial class PageLoginMs
                 else if (ex is AuthenticationException && ex.Message.ContainsF("SSL/TLS"))
                 {
                     ModBase.Log(ex,
-                        "正版登录验证失败，请考虑在 [设置 → 其他] 中关闭 [在正版登录时验证 SSL 证书]，然后再试。" + Constants.vbCrLf + Constants.vbCrLf +
+                        "正版登录验证失败，请考虑在 [设置 → 其他] 中关闭 [在正版登录时验证 SSL 证书]，然后再试。" + "\r\n" + "\r\n" +
                         "原始错误信息：", ModBase.LogLevel.Msgbox);
                 }
                 else

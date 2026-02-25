@@ -669,7 +669,7 @@ public static class ModProfile
         {
             if (hasProfiles)
             {
-                opType = ModMain.MyMsgBox($"PCL CE 支持与 HMCL 相互同步全局档案列表。{Constants.vbCrLf}请选择操作：", "档案迁移", "导入", "导出",
+                opType = ModMain.MyMsgBox($"PCL CE 支持与 HMCL 相互同步全局档案列表。{"\r\n"}请选择操作：", "档案迁移", "导入", "导出",
                     "取消", ForceWait: true);
             }
             else
@@ -1142,7 +1142,7 @@ public static class ModProfile
                     return;
                 }
 
-                ModBase.Log("[Skin] 皮肤修改返回值：" + Constants.vbCrLf + res);
+                ModBase.Log("[Skin] 皮肤修改返回值：" + "\r\n" + res);
                 var resultJson = (JObject)ModBase.GetJson(res);
                 if (resultJson.ContainsKey("errorMessage")) throw new Exception(resultJson["errorMessage"].ToString());
                 foreach (JObject skin in resultJson["skins"])

@@ -503,7 +503,7 @@ public static class ModDownload
             foreach (JObject Version in DlClientListLoader.Output.Value["versions"])
                 if ((string)Version["id"] == Id)
                     return Version["url"].ToString();
-            ModBase.Log($"未发现版本 {Id} 的 json 下载地址，版本列表返回为：{Constants.vbCrLf}{DlClientListLoader.Output.Value}",
+            ModBase.Log($"未发现版本 {Id} 的 json 下载地址，版本列表返回为：{"\r\n"}{DlClientListLoader.Output.Value}",
                 ModBase.LogLevel.Debug);
             return null;
         }
@@ -1080,7 +1080,7 @@ public static class ModDownload
                     Versions.Add(new DlForgeVersionEntry(Name, Branch, Inherit)
                     {
                         Category = Category, IsRecommended = IsRecommended,
-                        Hash = MD5.Trim(Conversions.ToChar(Constants.vbCr), Conversions.ToChar(Constants.vbLf)),
+                        Hash = MD5.Trim(Conversions.ToChar("\r"), Conversions.ToChar("\n")),
                         ReleaseTime = ReleaseTime
                     });
                 }
@@ -1329,7 +1329,7 @@ public static class ModDownload
         catch (Exception ex)
         {
             throw new Exception(
-                "NeoForge 官方源版本列表解析失败（" + resultLatest + Constants.vbCrLf + Constants.vbCrLf + resultLegacy + "）", ex);
+                "NeoForge 官方源版本列表解析失败（" + resultLatest + "\r\n" + "\r\n" + resultLegacy + "）", ex);
         }
     }
 
@@ -1365,7 +1365,7 @@ public static class ModDownload
         catch (Exception ex)
         {
             throw new Exception(
-                "NeoForge BMCLAPI 版本列表解析失败（" + resultLatest + Constants.vbCrLf + Constants.vbCrLf + resultLegacy + "）",
+                "NeoForge BMCLAPI 版本列表解析失败（" + resultLatest + "\r\n" + "\r\n" + resultLegacy + "）",
                 ex);
         }
     }
@@ -2060,7 +2060,7 @@ public static class ModDownload
             catch (Exception ex)
             {
                 // 镜像源可能随机爆炸，忽略就好
-                if (!ex.Message.ContainsF("mcimirror")) Exs += ex.Message + Constants.vbCrLf;
+                if (!ex.Message.ContainsF("mcimirror")) Exs += ex.Message + "\r\n";
             }
 
         throw new Exception(Exs);
@@ -2111,7 +2111,7 @@ public static class ModDownload
             }
             catch (Exception ex)
             {
-                if (!ex.Message.ContainsF("mcimirror")) Exs += ex.Message + Constants.vbCrLf;
+                if (!ex.Message.ContainsF("mcimirror")) Exs += ex.Message + "\r\n";
             }
 
         throw new Exception(Exs);

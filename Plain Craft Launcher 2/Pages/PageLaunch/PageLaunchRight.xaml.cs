@@ -29,7 +29,7 @@ public partial class PageLaunchRight : IRefreshable
             ? Visibility.Visible
             : Visibility.Collapsed;
         LabHint1.Text =
-            $"你正在使用 PCL 社区版！此版本为独立开发和维护，与官方版本维护路线不同，体验有所出入。{Constants.vbCrLf}{Constants.vbCrLf}如果你是意外下载到了社区版，我们十分建议您下载 PCL 官方版长期使用，此发行版本对新手用户体验可能不友好。{Constants.vbCrLf}此外，社区版的问题请向社区版的仓库提交 Issue，不要向官方仓库反馈社区版的问题哦！{Constants.vbCrLf}";
+            $"你正在使用 PCL 社区版！此版本为独立开发和维护，与官方版本维护路线不同，体验有所出入。{"\r\n"}{"\r\n"}如果你是意外下载到了社区版，我们十分建议您下载 PCL 官方版长期使用，此发行版本对新手用户体验可能不友好。{"\r\n"}此外，社区版的问题请向社区版的仓库提交 Issue，不要向官方仓库反馈社区版的问题哦！{"\r\n"}";
         LabHint2.Text = "若要永久隐藏此提示，请输入正确的 PCL CE 开发组织名称。";
     }
 
@@ -272,7 +272,7 @@ public partial class PageLaunchRight : IRefreshable
                            UriKind.Absolute)).Stream))
             {
                 var lines = reader.ReadToEnd()
-                    .Split(new[] { Constants.vbCr, Constants.vbLf }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                     .Where(l => !string.IsNullOrWhiteSpace(l)).Select(l => l.Trim()).ToArray();
                 var validHints = enableLengthLimit ? lines.Where(l => l.Length < 50).ToArray() : lines;
                 var hint = validHints[new Random().Next(validHints.Length)];
@@ -431,11 +431,11 @@ public partial class PageLaunchRight : IRefreshable
             {
                 if (ModBase.ModeDebug)
                 {
-                    ModBase.Log(ex, "加载失败的主页内容：" + Constants.vbCrLf + Content);
+                    ModBase.Log(ex, "加载失败的主页内容：" + "\r\n" + Content);
                     if (ModMain.MyMsgBox(
                             ex is UnauthorizedAccessException
                                 ? ex.Message
-                                : $"主页内容编写有误，请根据下列错误信息进行检查：{Constants.vbCrLf}{ex}", "加载主页界面失败", "重试", "取消") ==
+                                : $"主页内容编写有误，请根据下列错误信息进行检查：{"\r\n"}{ex}", "加载主页界面失败", "重试", "取消") ==
                         1) goto Refresh; // 防止 SyncLock 死锁
                 }
                 else

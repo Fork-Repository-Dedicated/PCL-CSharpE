@@ -893,7 +893,7 @@ public static class ModBase
             {
                 var readValue = new StringBuilder();
                 readValue.AppendLine(softKey.GetValue(Key).ToString());
-                var value = readValue.ToString().Replace(Constants.vbCrLf, ""); // 去除莫名的回车
+                var value = readValue.ToString().Replace("\r\n", ""); // 去除莫名的回车
                 return string.IsNullOrEmpty(value) ? DefaultValue : value;
             } // 错误则返回默认值
         }
@@ -998,7 +998,7 @@ public static class ModBase
                 return null;
             var Ini = new SafeDictionary<string, string>();
             foreach (var Line in ReadFile(FileName)
-                         .Split(Constants.vbCrLf.ToArray(), StringSplitOptions.RemoveEmptyEntries))
+                         .Split("\r\n".ToArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 var Index = Line.IndexOfF(":");
                 if (Index > 0)
@@ -1061,8 +1061,8 @@ public static class ModBase
             // 预处理
             if (Key.Contains(":"))
                 throw new Exception($"尝试写入 ini 文件 {FileName} 的键名中包含了冒号：{Key}");
-            Key = Key.Replace(Constants.vbCr, "").Replace(Constants.vbLf, "");
-            Value = Value?.Replace(Constants.vbCr, "").Replace(Constants.vbLf, "");
+            Key = Key.Replace("\r", "").Replace("\n", "");
+            Value = Value?.Replace("\r", "").Replace("\n", "");
             // 防止争用
             lock (WriteIniLock)
             {
@@ -1091,7 +1091,7 @@ public static class ModBase
                     FileContent.Append(Pair.Key);
                     FileContent.Append(":");
                     FileContent.Append(Pair.Value);
-                    FileContent.Append(Constants.vbCrLf);
+                    FileContent.Append("\r\n");
                 }
 
                 if (!FileName.Contains(@":\"))
@@ -1966,8 +1966,8 @@ public static class ModBase
     {
         if (RemoveQuote)
             Str = Str.Split("（")[0].Split("：")[0].Split("(")[0].Split(":")[0];
-        return Str.Trim('.', '。', '！', ' ', '!', '?', '？', Conversions.ToChar(Constants.vbCr),
-            Conversions.ToChar(Constants.vbLf));
+        return Str.Trim('.', '。', '！', ' ', '!', '?', '？', Conversions.ToChar("\r"),
+            Conversions.ToChar("\n"));
     }
 
     /// <summary>
@@ -2188,7 +2188,7 @@ public static class ModBase
         if (Str.StartsWithF("{"))
             Str = "{}" + Str; // #4187
         return Str.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("'", "&apos;")
-            .Replace("\"", "&quot;").Replace(Constants.vbCrLf, "&#xa;");
+            .Replace("\"", "&quot;").Replace("\r\n", "&#xa;");
     }
 
     /// <summary>
@@ -3249,7 +3249,7 @@ public static class ModBase
             Log(ex, "无法打开网页（" + Url + "）");
             ClipboardSet(Url, false);
             ModMain.MyMsgBox(
-                "可能由于浏览器未正确配置，PCL 无法为你打开网页。" + Constants.vbCrLf + "网址已经复制到剪贴板，若有需要可以手动粘贴访问。" + Constants.vbCrLf +
+                "可能由于浏览器未正确配置，PCL 无法为你打开网页。" + "\r\n" + "网址已经复制到剪贴板，若有需要可以手动粘贴访问。" + "\r\n" +
                 $"网址：{Url}", "无法打开网页");
         }
     }
@@ -3809,13 +3809,13 @@ public static class ModBase
             {
                 if (CanFeedback(false))
                 {
-                    if (ModMain.MyMsgBox(Text + Constants.vbCrLf + Constants.vbCrLf + "是否反馈此问题？如果不反馈，这个问题可能永远无法得到解决！",
+                    if (ModMain.MyMsgBox(Text + "\r\n" + "\r\n" + "是否反馈此问题？如果不反馈，这个问题可能永远无法得到解决！",
                             Title, "反馈", "取消", IsWarn: true) == 1)
                         Feedback(false, true);
                 }
                 else
                 {
-                    ModMain.MyMsgBox(Text + Constants.vbCrLf + Constants.vbCrLf + "将 PCL 更新至最新版或许可以解决这个问题……", Title,
+                    ModMain.MyMsgBox(Text + "\r\n" + "\r\n" + "将 PCL 更新至最新版或许可以解决这个问题……", Title,
                         IsWarn: true);
                 }
 
@@ -3832,14 +3832,14 @@ public static class ModBase
                 IsCriticalErrorTriggered = true;
                 if (CanFeedback(false))
                 {
-                    if (Interaction.MsgBox(Text + Constants.vbCrLf + Constants.vbCrLf + "是否反馈此问题？如果不反馈，这个问题可能永远无法得到解决！",
+                    if (Interaction.MsgBox(Text + "\r\n" + "\r\n" + "是否反馈此问题？如果不反馈，这个问题可能永远无法得到解决！",
                             (MsgBoxStyle)((int)MsgBoxStyle.Critical + (int)MsgBoxStyle.YesNo), Title) ==
                         MsgBoxResult.Yes)
                         Feedback(false, true);
                 }
                 else
                 {
-                    Interaction.MsgBox(Text + Constants.vbCrLf + Constants.vbCrLf + "将 PCL 更新至最新版或许可以解决这个问题……",
+                    Interaction.MsgBox(Text + "\r\n" + "\r\n" + "将 PCL 更新至最新版或许可以解决这个问题……",
                         MsgBoxStyle.Critical, Title);
                 }
 
@@ -3879,7 +3879,7 @@ public static class ModBase
             return;
 
         if (Ex.GetType() == typeof(Win32Exception))
-            ExFull += Constants.vbCrLf + "与系统底层交互失败，请尝试重新安装 .NET 8 解决此问题";
+            ExFull += "\r\n" + "与系统底层交互失败，请尝试重新安装 .NET 8 解决此问题";
 
         // 输出提示
         switch (Level)
@@ -3929,13 +3929,13 @@ public static class ModBase
             {
                 if (CanFeedback(false))
                 {
-                    if (ModMain.MyMsgBox(ExFull + Constants.vbCrLf + Constants.vbCrLf + "是否反馈此问题？如果不反馈，这个问题可能永远无法得到解决！",
+                    if (ModMain.MyMsgBox(ExFull + "\r\n" + "\r\n" + "是否反馈此问题？如果不反馈，这个问题可能永远无法得到解决！",
                             Title, "反馈", "取消", IsWarn: true) == 1)
                         Feedback(false, true);
                 }
                 else
                 {
-                    ModMain.MyMsgBox(ExFull + Constants.vbCrLf + Constants.vbCrLf + "将 PCL 更新至最新版或许可以解决这个问题……", Title,
+                    ModMain.MyMsgBox(ExFull + "\r\n" + "\r\n" + "将 PCL 更新至最新版或许可以解决这个问题……", Title,
                         IsWarn: true);
                 }
 
@@ -3953,14 +3953,14 @@ public static class ModBase
                 if (CanFeedback(false))
                 {
                     if (Interaction.MsgBox(
-                            ExFull + Constants.vbCrLf + Constants.vbCrLf + "是否反馈此问题？如果不反馈，这个问题可能永远无法得到解决！",
+                            ExFull + "\r\n" + "\r\n" + "是否反馈此问题？如果不反馈，这个问题可能永远无法得到解决！",
                             (MsgBoxStyle)((int)MsgBoxStyle.Critical + (int)MsgBoxStyle.YesNo), Title) ==
                         MsgBoxResult.Yes)
                         Feedback(false, true);
                 }
                 else
                 {
-                    Interaction.MsgBox(ExFull + Constants.vbCrLf + Constants.vbCrLf + "将 PCL 更新至最新版或许可以解决这个问题……",
+                    Interaction.MsgBox(ExFull + "\r\n" + "\r\n" + "将 PCL 更新至最新版或许可以解决这个问题……",
                         MsgBoxStyle.Critical, Title);
                 }
 
@@ -3999,7 +3999,7 @@ public static class ModBase
         if (ForceOpenLog || (ShowMsgbox &&
                              ModMain.MyMsgBox(
                                  "若你在汇报一个 Bug，请点击 打开文件夹 按钮，并上传 Launch-" + currentDate + "-[一串数字].log 中包含错误信息的文件。" +
-                                 Constants.vbCrLf + "游戏崩溃一般与启动器无关，请不要因为游戏崩溃而提交反馈。", "反馈提交提醒", "打开文件夹", "不需要") ==
+                                 "\r\n" + "游戏崩溃一般与启动器无关，请不要因为游戏崩溃而提交反馈。", "反馈提交提醒", "打开文件夹", "不需要") ==
                              1)) OpenExplorer(ExePath + @"PCL\Log\");
         OpenWebsite("https://github.com/PCL-Community/PCL2-CE/issues/");
     }
@@ -4012,8 +4012,8 @@ public static class ModBase
             if (ShowHint)
                 if (ModMain.MyMsgBox(
                         stat == ModSecret.VersionStatus.NotLatest
-                            ? $"你的 PCL 不是最新版，因此无法提交反馈。{Constants.vbCrLf}请在更新后，确认该问题在最新版中依然存在，然后再提交反馈。"
-                            : $"你的 PCL 检查更新失败，因此无法提交反馈。{Constants.vbCrLf}请连接到互联网，在检查更新后，确认该问题在最新版中依然存在，然后再提交反馈。",
+                            ? $"你的 PCL 不是最新版，因此无法提交反馈。{"\r\n"}请在更新后，确认该问题在最新版中依然存在，然后再提交反馈。"
+                            : $"你的 PCL 检查更新失败，因此无法提交反馈。{"\r\n"}请连接到互联网，在检查更新后，确认该问题在最新版中依然存在，然后再提交反馈。",
                         "无法提交反馈", stat == ModSecret.VersionStatus.NotLatest ? "更新" : "重新检查更新", "取消") == 1)
                     ModMain.FrmMain.PageChange(FormMain.PageType.Setup, FormMain.PageSubType.SetupUpdate);
 
@@ -4039,11 +4039,11 @@ public static class ModBase
             var dpiScale = Math.Round(DPI / 96.0, 2);
 
             // Build diagnostic information string
-            var info = $"[System] Diagnostic Information:{Environment.NewLine}" +
-                       $"OS: {RuntimeInformation.OSDescription} (32-bit: {Is32BitSystem}){Environment.NewLine}" +
-                       $"Memory: {availableMb} MB / {totalMb} MB{Environment.NewLine}" +
-                       $"DPI: {DPI} ({dpiScale * 100}%){Environment.NewLine}" +
-                       $"MC Folder: {ModMinecraft.McFolderSelected ?? "Nothing"}{Environment.NewLine}" +
+            var info = $"[System] Diagnostic Information:{"\r\n"}" +
+                       $"OS: {RuntimeInformation.OSDescription} (32-bit: {Is32BitSystem}){"\r\n"}" +
+                       $"Memory: {availableMb} MB / {totalMb} MB{"\r\n"}" +
+                       $"DPI: {DPI} ({dpiScale * 100}%){"\r\n"}" +
+                       $"MC Folder: {ModMinecraft.McFolderSelected ?? "Nothing"}{"\r\n"}" +
                        $"Executable Path: {ExePath}";
 
             LogWrapper.Info(info);
@@ -4068,8 +4068,8 @@ public static class ModBase
         var Stack = new StackTrace();
         return Stack.GetFrames().Skip(1).Select(f => f.GetMethod())
             .Select(f => f.Name + "(" + f.GetParameters().Select(p => p.ToString()).ToList().Join(", ") + ") - " +
-                         f.Module).ToList().Join(Constants.vbCrLf)
-            .Replace(Constants.vbCrLf + Constants.vbCrLf, Constants.vbCrLf);
+                         f.Module).ToList().Join("\r\n")
+            .Replace("\r\n" + "\r\n", "\r\n");
     }
 
     #endregion

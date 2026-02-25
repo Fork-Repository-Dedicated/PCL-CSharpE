@@ -246,21 +246,24 @@ public partial class FormMain
                 {
 
 #if DEBUG
+                    const string hint = """
+                                        当前运行的 PCL 社区版为 Debug 版本。
+                                        该版本仅适合开发者调试运行，可能会有严重的性能下降以及各种奇怪的网络问题。
 
-                    const string hint = "当前运行的 PCL 社区版为 Debug 版本。" + Constants.vbCrLf +
-                                        "该版本仅适合开发者调试运行，可能会有严重的性能下降以及各种奇怪的网络问题。" + Constants.vbCrLf + Constants.vbCrLf +
-                                        "非开发者用户使用该版本造成的一切问题均不被社区支持，相关 issue 可能会被直接关闭。" + Constants.vbCrLf +
-                                        "除非您是开发者，否则请立即删除该版本，并下载最新稳定版使用。";
-
+                                        非开发者用户使用该版本造成的一切问题均不被社区支持，相关 issue 可能会被直接关闭。
+                                        除非您是开发者，否则请立即删除该版本，并下载最新稳定版使用。
+                                        """;
 #else
-                    const string hint = "当前运行的 PCL 社区版为 CI 自动构建版本。" + Constants.vbCrLf +
-                                    "该版本包含最新的漏洞修复、优化和新特性，但性能和稳定性较差，不适合日常使用和制作整合包。" + Constants.vbCrLf +
-                                    Constants.vbCrLf +
-                                    "除非社区开发者要求或您自己想要这么做，否则请下载最新稳定版使用。";
+                    const string hint = """
+                                        当前运行的 PCL 社区版为 CI 自动构建版本。
+                                        该版本包含最新的漏洞修复、优化和新特性，但性能和稳定性较差，不适合日常使用和制作整合包。
+                
+                                        除非社区开发者要求或您自己想要这么做，否则请下载最新稳定版使用。
+                                        """;
 #endif
 
                     ModMain.MyMsgBox(
-                        $"{hint}{Constants.vbCrLf}{Constants.vbCrLf}可以添加 PCL_DISABLE_DEBUG_HINT 环境变量 (任意值) 来隐藏这个提示。",
+                        $"{hint}{"\r\n"}{"\r\n"}可以添加 PCL_DISABLE_DEBUG_HINT 环境变量 (任意值) 来隐藏这个提示。",
                         "特殊版本提示", "我清楚我在做什么", "打开最新版下载页并退出", IsWarn: true, Button2Action: () =>
                         {
                             ModBase.OpenWebsite("https://github.com/PCL-Community/PCL2-CE/releases/latest");
@@ -291,12 +294,12 @@ public partial class FormMain
                 if (Config.System.TelemetryConfig.IsDefault())
                 {
                     var selection = ModMain.MyMsgBox(
-                                "这是一项与 Steam 硬件调查类似的计划，参与调查可以帮助我们更好的进行规划和开发，且我们会不定期发布该调查的统计结果。" + Constants.vbCrLf +
-                                "如果选择参与调查，我们将会收集以下信息：" + Constants.vbCrLf + Constants.vbCrLf + "- 启动器版本信息与识别码" +
-                                Constants.vbCrLf + "- Windows 系统版本与架构" + Constants.vbCrLf + "- 已安装的物理内存大小" +
-                                Constants.vbCrLf + "- NAT 与 IPv6 支持情况" + Constants.vbCrLf + "- 是否使用过官方版 PCL、HMCL 或 BakaXL" +
-                                Constants.vbCrLf + Constants.vbCrLf + "这些数据均不与你关联，我们也绝不会向第三方出售数据。" + Constants.vbCrLf +
-                                "如果不想参与该调查，可以选择拒绝，不会影响其他功能使用。" + Constants.vbCrLf + "你可以随时在启动器设置中调整这项设置。",
+                                "这是一项与 Steam 硬件调查类似的计划，参与调查可以帮助我们更好的进行规划和开发，且我们会不定期发布该调查的统计结果。" + "\r\n" +
+                                "如果选择参与调查，我们将会收集以下信息：" + "\r\n" + "\r\n" + "- 启动器版本信息与识别码" +
+                                "\r\n" + "- Windows 系统版本与架构" + "\r\n" + "- 已安装的物理内存大小" +
+                                "\r\n" + "- NAT 与 IPv6 支持情况" + "\r\n" + "- 是否使用过官方版 PCL、HMCL 或 BakaXL" +
+                                "\r\n" + "\r\n" + "这些数据均不与你关联，我们也绝不会向第三方出售数据。" + "\r\n" +
+                                "如果不想参与该调查，可以选择拒绝，不会影响其他功能使用。" + "\r\n" + "你可以随时在启动器设置中调整这项设置。",
                                 "参与 PCL CE 软硬件调查", "同意", "拒绝");
                     Config.System.TelemetryConfig.SetValue(selection == 1, forceNewValue: true);
                 }
@@ -331,7 +334,7 @@ public partial class FormMain
         if (Conversions.ToBoolean(
                 Operators.ConditionalCompareObjectGreaterEqual(States.System.StartupCount, 99, false)))
             if (ModSecret.ThemeUnlock(6, false))
-                ModMain.MyMsgBox("你已经打开了 99 次 PCL 社区版啦，感谢你长期以来的支持！" + Constants.vbCrLf + "隐藏主题 铁杆粉 未解锁！社区版不包含隐藏主题！");
+                ModMain.MyMsgBox("你已经打开了 99 次 PCL 社区版啦，感谢你长期以来的支持！" + "\r\n" + "隐藏主题 铁杆粉 未解锁！社区版不包含隐藏主题！");
     }
 
     // 升级与降级事件
@@ -375,7 +378,7 @@ public partial class FormMain
             var UnlockedTheme = new List<string>(States.UI.ThemeHiddenV2.ToString().Split("|"));
             UnlockedTheme.Remove("13");
             States.UI.ThemeHiddenV2 = UnlockedTheme.Join("|");
-            ModMain.MyMsgBox("由于新版 PCL 修改了欧皇彩的解锁方式，你需要重新解锁欧皇彩。" + Constants.vbCrLf + "多谢各位的理解啦！", "重新解锁提醒");
+            ModMain.MyMsgBox("由于新版 PCL 修改了欧皇彩的解锁方式，你需要重新解锁欧皇彩。" + "\r\n" + "多谢各位的理解啦！", "重新解锁提醒");
         }
 
         // 重置滑稽彩
@@ -384,7 +387,7 @@ public partial class FormMain
             var UnlockedTheme = new List<string>(States.UI.ThemeHiddenV2.ToString().Split("|"));
             UnlockedTheme.Remove("12");
             States.UI.ThemeHiddenV2 = UnlockedTheme.Join("|");
-            ModMain.MyMsgBox("由于新版 PCL 修改了滑稽彩的解锁方式，你需要重新解锁滑稽彩。" + Constants.vbCrLf + "多谢各位的理解啦！", "重新解锁提醒");
+            ModMain.MyMsgBox("由于新版 PCL 修改了滑稽彩的解锁方式，你需要重新解锁滑稽彩。" + "\r\n" + "多谢各位的理解啦！", "重新解锁提醒");
         }
 
         // 移动自定义皮肤
@@ -971,7 +974,7 @@ public partial class FormMain
                             return;
                         }
 
-                        if (ModMain.MyMsgBox($"是否要创建新的第三方验证档案？{Constants.vbCrLf}验证服务器地址：{AuthlibServer}", "创建新的第三方验证档案",
+                        if (ModMain.MyMsgBox($"是否要创建新的第三方验证档案？{"\r\n"}验证服务器地址：{AuthlibServer}", "创建新的第三方验证档案",
                                 "确定", "取消") == 2)
                             return;
                         ModProfile.SelectedProfile = null;

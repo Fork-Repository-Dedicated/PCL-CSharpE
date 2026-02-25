@@ -172,7 +172,7 @@ public partial class PageLoginProfile
     // 删除档案
     private void DeleteProfile(object sender, EventArgs e)
     {
-        if (ModMain.MyMsgBox($"你正在选择删除此档案，该操作无法撤销。{Constants.vbCrLf}确定继续？", "删除档案确认", "继续", "取消", IsWarn: true,
+        if (ModMain.MyMsgBox($"你正在选择删除此档案，该操作无法撤销。{"\r\n"}确定继续？", "删除档案确认", "继续", "取消", IsWarn: true,
                 ForceWait: true) == 2)
             return;
         ModProfile.RemoveProfile((ModProfile.McProfile)((dynamic)sender).Tag);

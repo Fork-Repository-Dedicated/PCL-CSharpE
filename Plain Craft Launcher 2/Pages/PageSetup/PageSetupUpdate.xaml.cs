@@ -154,7 +154,7 @@ public partial class PageSetupUpdate
                 .ContainsF("Microsoft.WindowsDesktop.App 8.0.", true))
         {
             ModMain.MyMsgBox(
-                $"发现了启动器更新（版本 {UpdateInfo.VersionName}），但是新版本要求你的电脑安装 .NET 8 才可以运行。{Constants.vbCrLf}你需要先安装 .NET 8 才可以继续更新。{Constants.vbCrLf}{Constants.vbCrLf}点击下方按钮打开网页，然后选择 ⌈.NET 桌面运行时⌋ 中的 {(ModBase.IsArm64System ? "Arm64" : "x64")} 选项下载。",
+                $"发现了启动器更新（版本 {UpdateInfo.VersionName}），但是新版本要求你的电脑安装 .NET 8 才可以运行。{"\r\n"}你需要先安装 .NET 8 才可以继续更新。{"\r\n"}{"\r\n"}点击下方按钮打开网页，然后选择 ⌈.NET 桌面运行时⌋ 中的 {(ModBase.IsArm64System ? "Arm64" : "x64")} 选项下载。",
                 "启动器更新 - 缺少运行环境", "下载 .NET 8 运行时", "取消",
                 Button1Action: () => ModBase.OpenWebsite("https://get.dot.net/8"), ForceWait: true);
             return;
@@ -194,9 +194,9 @@ public partial class PageSetupUpdate
             case 1:
             {
                 if (ModMain.MyMsgBox(
-                        "你正在切换启动器更新通道到测试版。" + Constants.vbCrLf + "测试版可以提供下个版本更新内容的预览，但可能会包含未经充分测试的功能，稳定性欠佳。" +
-                        Constants.vbCrLf + Constants.vbCrLf + "在升级到测试版后，你需要等待下一个正式版发布，或是手动重新下载启动器来切换到正式版。" +
-                        Constants.vbCrLf + "该选项仅推荐具有一定基础知识和能力的用户选择。如果你正在制作整合包，请使用正式版！", "继续之前...", "我已知晓", "取消",
+                        "你正在切换启动器更新通道到测试版。" + "\r\n" + "测试版可以提供下个版本更新内容的预览，但可能会包含未经充分测试的功能，稳定性欠佳。" +
+                        "\r\n" + "\r\n" + "在升级到测试版后，你需要等待下一个正式版发布，或是手动重新下载启动器来切换到正式版。" +
+                        "\r\n" + "该选项仅推荐具有一定基础知识和能力的用户选择。如果你正在制作整合包，请使用正式版！", "继续之前...", "我已知晓", "取消",
                         IsWarn: true) == 2)
                     IsCancelled = true;
                 else
@@ -207,8 +207,8 @@ public partial class PageSetupUpdate
             case 2:
             {
                 if (ModMain.MyMsgBox(
-                        "你正在切换启动器更新通道到开发版。" + Constants.vbCrLf + "该通道可第一时间获取基于最新代码构建的开发版本，但可能极不稳定，甚至直接无法启动。" +
-                        Constants.vbCrLf + Constants.vbCrLf + "在升级到开发版后，只能手动重新下载启动器来切换回正式版或测试版。" + Constants.vbCrLf +
+                        "你正在切换启动器更新通道到开发版。" + "\r\n" + "该通道可第一时间获取基于最新代码构建的开发版本，但可能极不稳定，甚至直接无法启动。" +
+                        "\r\n" + "\r\n" + "在升级到开发版后，只能手动重新下载启动器来切换回正式版或测试版。" + "\r\n" +
                         "该选项仅推荐高级用户选择。如果你正在制作整合包，请使用正式版！", "继续之前...", "我已知晓", "取消", IsWarn: true) == 2)
                 {
                     IsCancelled = true;
@@ -216,9 +216,9 @@ public partial class PageSetupUpdate
                 }
 
                 var ret = ModMain.MyMsgBoxInput("最终确认",
-                    "你确定要切换到开发版通道吗？" + Constants.vbCrLf + "开发版可能存在严重问题，甚至无法启动！" + Constants.vbCrLf +
-                    "在升级到开发版后，将无法切换回其他任何更新通道，只能手动重新下载启动器来切换回正式版或测试版。" + Constants.vbCrLf + Constants.vbCrLf +
-                    "该选项仅推荐高级用户选择。如果你正在制作整合包，请使用正式版！" + Constants.vbCrLf + "请输入 '我确认切换到此分支并已知晓风险' 以确认。", Button1: "提交",
+                    "你确定要切换到开发版通道吗？" + "\r\n" + "开发版可能存在严重问题，甚至无法启动！" + "\r\n" +
+                    "在升级到开发版后，将无法切换回其他任何更新通道，只能手动重新下载启动器来切换回正式版或测试版。" + "\r\n" + "\r\n" +
+                    "该选项仅推荐高级用户选择。如果你正在制作整合包，请使用正式版！" + "\r\n" + "请输入 '我确认切换到此分支并已知晓风险' 以确认。", Button1: "提交",
                     Button2: "取消", IsWarn: true);
                 if (ret is null)
                 {

@@ -301,14 +301,14 @@ public partial class PageSelectRight
                     if (ShowHidden)
                     {
                         LabEmptyTitle.Text = "无隐藏实例";
-                        LabEmptyContent.Text = "没有实例被隐藏，你可以在实例设置的实例分类选项中隐藏实例。" + Constants.vbCrLf +
+                        LabEmptyContent.Text = "没有实例被隐藏，你可以在实例设置的实例分类选项中隐藏实例。" + "\r\n" +
                                                "再次按下 F11 即可退出隐藏实例查看模式。";
                         BtnEmptyDownload.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         LabEmptyTitle.Text = "无可用实例";
-                        LabEmptyContent.Text = "未找到任何游戏实例，请先下载一个游戏实例。" + Constants.vbCrLf +
+                        LabEmptyContent.Text = "未找到任何游戏实例，请先下载一个游戏实例。" + "\r\n" +
                                                "若有已存在的实例，请在左边的列表中选择添加文件夹，选择 .minecraft 文件夹将其导入。";
                         BtnEmptyDownload.Visibility =
                             Config.Preference.Hide.PageDownload && !PageSetupUI.HiddenForceShow
@@ -337,7 +337,7 @@ public partial class PageSelectRight
                     PanBack.Visibility = Visibility.Collapsed;
                     LabEmptyTitle.Text = "无隐藏实例";
                     LabEmptyContent.Text =
-                        "没有实例被隐藏，你可以在实例设置的实例分类选项中隐藏实例。" + Constants.vbCrLf + "再次按下 F11 即可退出隐藏实例查看模式。";
+                        "没有实例被隐藏，你可以在实例设置的实例分类选项中隐藏实例。" + "\r\n" + "再次按下 F11 即可退出隐藏实例查看模式。";
                     BtnEmptyDownload.Visibility = Visibility.Collapsed;
                     PanVerSearchBox.Visibility = Visibility.Collapsed;
                 }
@@ -526,7 +526,7 @@ public partial class PageSelectRight
                               (instance.PathIndie ?? "") != (ModMinecraft.McFolderSelected ?? "");
             switch (ModMain.MyMsgBox(
                         $"你确定要{(IsShiftPressed ? "永久" : "")}删除实例 {instance.Name} 吗？" + (IsHintIndie
-                            ? Constants.vbCrLf + "由于该实例开启了版本隔离，删除时该实例对应的存档、资源包、Mod 等文件也将被一并删除！"
+                            ? "\r\n" + "由于该实例开启了版本隔离，删除时该实例对应的存档、资源包、Mod 等文件也将被一并删除！"
                             : ""), "实例删除确认", Button2: "取消", IsWarn: true))
             {
                 case 1:

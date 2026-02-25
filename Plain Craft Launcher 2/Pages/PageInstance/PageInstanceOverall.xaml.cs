@@ -262,7 +262,7 @@ public partial class PageInstanceOverall
                 if (Conversions.ToBoolean(!(bool)States.Hint.HideGameInstance))
                 {
                     if (ModMain.MyMsgBox(
-                            "确认要从实例列表中隐藏该实例吗？隐藏该实例后，它将不再出现于 PCL 显示的实例列表中。" + Constants.vbCrLf +
+                            "确认要从实例列表中隐藏该实例吗？隐藏该实例后，它将不再出现于 PCL 显示的实例列表中。" + "\r\n" +
                             "此后，在实例列表页面按下 F11 才可以查看被隐藏的实例。", "隐藏实例提示", Button2: "取消") != 1)
                     {
                         ComboDisplayType.SelectedIndex = 0;
@@ -613,7 +613,7 @@ public partial class PageInstanceOverall
 
             // 确认操作
             if (ModMain.MyMsgBox(
-                    "你确定要重置实例 " + PageInstanceLeft.Instance.Name + " 吗？" + Constants.vbCrLf +
+                    "你确定要重置实例 " + PageInstanceLeft.Instance.Name + " 吗？" + "\r\n" +
                     "PCL 将会尝试重新从互联网获取此实例的资源文件信息，并重新执行自动安装。", "实例重置确认", "确认", "取消") == 2)
                 return;
 
@@ -688,7 +688,7 @@ public partial class PageInstanceOverall
                               (PageInstanceLeft.Instance.PathIndie ?? "") != (ModMinecraft.McFolderSelected ?? "");
             switch (ModMain.MyMsgBox(
                         $"你确定要{(IsShiftPressed ? "永久" : "")}删除实例 {PageInstanceLeft.Instance.Name} 吗？" + (IsHintIndie
-                            ? Constants.vbCrLf + "由于该实例开启了版本隔离，删除时该实例对应的存档、资源包、Mod 等文件也将被一并删除！"
+                            ? "\r\n" + "由于该实例开启了版本隔离，删除时该实例对应的存档、资源包、Mod 等文件也将被一并删除！"
                             : ""), "实例删除确认", Button2: "取消", IsWarn: IsHintIndie || IsShiftPressed))
             {
                 case 1:
@@ -736,7 +736,7 @@ public partial class PageInstanceOverall
     private void BtnManagePatch_Click(object sender, MouseButtonEventArgs e)
     {
         switch (ModMain.MyMsgBox(
-                    $"你确定要对 {PageInstanceLeft.Instance.Name} 的核心文件进行修补吗？ {Constants.vbCrLf}修补游戏核心可能导致游戏崩溃等问题。{Constants.vbCrLf}在修补核心后，文件校验会自动关闭。",
+                    $"你确定要对 {PageInstanceLeft.Instance.Name} 的核心文件进行修补吗？ {"\r\n"}修补游戏核心可能导致游戏崩溃等问题。{"\r\n"}在修补核心后，文件校验会自动关闭。",
                     "修补提示", Button2: "取消"))
         {
             case 1:

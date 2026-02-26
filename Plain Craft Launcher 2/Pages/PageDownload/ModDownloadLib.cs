@@ -325,13 +325,13 @@ public static class ModDownloadLib
         ToolTipService.SetPlacement(BtnInfo, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnInfo, 30d);
         ToolTipService.SetHorizontalOffset(BtnInfo, 2d);
-        BtnInfo.Click += (ss, ee) => McDownloadMenuLog(ss, (dynamic)ee);
+        BtnInfo.Click += (ss, ee) => McDownloadMenuLog(ss, (RoutedEventArgs)ee);
         var BtnServer = new MyIconButton { LogoScale = 1d, Logo = ModBase.Logo.IconButtonServer, ToolTip = "下载服务端" };
         ToolTipService.SetPlacement(BtnServer, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnServer, 30d);
         ToolTipService.SetHorizontalOffset(BtnServer, 2d);
-        BtnServer.Click += (ss, ee) => McDownloadMenuSaveServer(ss, (dynamic)ee);
-        ((dynamic)sender).Buttons = new[] { BtnServer, BtnInfo };
+        BtnServer.Click += (ss, ee) => McDownloadMenuSaveServer(ss, (RoutedEventArgs)ee);
+        ((MyListItem)sender).Buttons = new[] { BtnServer, BtnInfo };
     }
 
     private static void McDownloadMenuBuild(object sender, EventArgs e)
@@ -340,45 +340,65 @@ public static class ModDownloadLib
         ToolTipService.SetPlacement(BtnSave, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnSave, 30d);
         ToolTipService.SetHorizontalOffset(BtnSave, 2d);
-        BtnSave.Click += (a, b) => McDownloadMenuSave(a, (dynamic)b); // dynamic!
+        BtnSave.Click += (a, b) => McDownloadMenuSave(a, (RoutedEventArgs)b);
         var BtnInfo = new MyIconButton { LogoScale = 1.05d, Logo = ModBase.Logo.IconButtonInfo, ToolTip = "更新日志" };
         ToolTipService.SetPlacement(BtnInfo, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnInfo, 30d);
         ToolTipService.SetHorizontalOffset(BtnInfo, 2d);
-        BtnInfo.Click += (a, b) => McDownloadMenuLog(a, (dynamic)b); // dynamic!
+        BtnInfo.Click += (a, b) => McDownloadMenuLog(a, (RoutedEventArgs)b);
         var BtnServer = new MyIconButton { LogoScale = 1d, Logo = ModBase.Logo.IconButtonServer, ToolTip = "下载服务端" };
         ToolTipService.SetPlacement(BtnServer, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnServer, 30d);
         ToolTipService.SetHorizontalOffset(BtnServer, 2d);
-        BtnServer.Click += (a, b) => McDownloadMenuSaveServer(a, (dynamic)b); // dynamic!
-        ((dynamic)sender).Buttons = new[] { BtnSave, BtnInfo, BtnServer };
+        BtnServer.Click += (a, b) => McDownloadMenuSaveServer(a, (RoutedEventArgs)b);
+        ((MyListItem)sender).Buttons = new[] { BtnSave, BtnInfo, BtnServer };
     }
 
     private static void McDownloadMenuLog(object sender, RoutedEventArgs e)
     {
-        JToken Version;
-        if (((dynamic)sender).Tag is not null)
-            Version = (JToken)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Version = (JToken)((dynamic)sender).Parent.Tag;
+        JToken Version = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Version = (JToken)myListItem.Tag;
         else
-            Version = (JToken)((dynamic)sender).Parent.Parent.Tag;
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Version = (JToken)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
         McUpdateLogShow(Version);
     }
 
     private static void McDownloadMenuSaveServer(object sender, RoutedEventArgs e)
     {
-        MyListItem Version;
+        MyListItem Version = null;
         if (sender is MyListItem)
             Version = (MyListItem)sender;
-        else if (((dynamic)sender).Parent is MyListItem)
-            Version = (MyListItem)((dynamic)sender).Parent;
         else
-            Version = (MyListItem)((dynamic)sender).Parent.Parent;
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem)
+                {
+                    Version = parentListItem;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
         try
         {
             var Id = Version.Title;
-            string JsonUrl = ((dynamic)Version.Tag)["url"].ToString();
+            string JsonUrl = null;
+            if (Version.Tag is JObject jObject)
+                JsonUrl = jObject["url"]?.ToString();
             var VersionFolder = SystemDialogs.SelectFolder();
             if (!VersionFolder.Contains(@"\"))
                 return;
@@ -659,7 +679,7 @@ pause";
         // 添加 Java Wrapper 作为主 Jar
         string Arguments;
         if (Conversions.ToBoolean(UseJavaWrapper &&
-                                  !(dynamic)Config.Launch.DisableJlw)) // dynamic!
+                                  !(bool)Config.Launch.DisableJlw))
             Arguments =
                 $"-Doolloo.jlw.tmpdir=\"{ModBase.PathPure.TrimEnd('\\')}\" -Duser.home=\"{BaseMcFolderHome.TrimEnd('\\')}\" -cp \"{Target}\" -jar \"{ModLaunch.ExtractJavaWrapper()}\" optifine.Installer";
         else
@@ -1122,7 +1142,7 @@ pause";
         ToolTipService.SetVerticalOffset(BtnInfo, 30d);
         ToolTipService.SetHorizontalOffset(BtnInfo, 2d);
         BtnInfo.Click += static (sender, e) => OptiFineSaveContMenuBuild(sender, e);
-        ((dynamic)sender).Buttons = new[] { BtnInfo };
+        ((MyListItem)sender).Buttons = new[] { BtnInfo };
     }
 
     private static void OptiFineContMenuBuild(object sender, EventArgs e)
@@ -1137,31 +1157,51 @@ pause";
         ToolTipService.SetVerticalOffset(BtnInfo, 30d);
         ToolTipService.SetHorizontalOffset(BtnInfo, 2d);
         BtnInfo.Click += (sender, e) => OptiFineLog_Click(sender, (RoutedEventArgs)e);
-        ((dynamic)sender).Buttons = new[] { btnSave, BtnInfo };
+        ((MyListItem)sender).Buttons = new[] { btnSave, BtnInfo };
     }
 
     private static void OptiFineLog_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlOptiFineListEntry Version;
-        if (((dynamic)sender).Tag is not null)
-            Version = (ModDownload.DlOptiFineListEntry)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Version = (ModDownload.DlOptiFineListEntry)((dynamic)sender).Parent.Tag;
+        ModDownload.DlOptiFineListEntry Version = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Version = (ModDownload.DlOptiFineListEntry)myListItem.Tag;
         else
-            Version = (ModDownload.DlOptiFineListEntry)((dynamic)sender).Parent.Parent.Tag;
-        ModBase.OpenWebsite("https://optifine.net/changelog?f=" + Version.NameFile);
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Version = (ModDownload.DlOptiFineListEntry)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+        if (Version != null)
+            ModBase.OpenWebsite("https://optifine.net/changelog?f=" + Version.NameFile);
     }
 
     public static void OptiFineSave_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlOptiFineListEntry Version;
-        if (((dynamic)sender).Tag is not null)
-            Version = (ModDownload.DlOptiFineListEntry)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Version = (ModDownload.DlOptiFineListEntry)((dynamic)sender).Parent.Tag;
+        ModDownload.DlOptiFineListEntry Version = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Version = (ModDownload.DlOptiFineListEntry)myListItem.Tag;
         else
-            Version = (ModDownload.DlOptiFineListEntry)((dynamic)sender).Parent.Parent.Tag;
-        McDownloadOptiFineSave(Version);
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Version = (ModDownload.DlOptiFineListEntry)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+        if (Version != null)
+            McDownloadOptiFineSave(Version);
     }
 
     #endregion
@@ -1409,7 +1449,8 @@ pause";
 
     private static void LiteLoaderSaveContMenuBuild(MyListItem sender, EventArgs e)
     {
-        if (Conversions.ToBoolean(((dynamic)sender.Tag).IsLegacy))
+        if (sender.Tag is ModDownload.DlLiteLoaderListEntry liteLoaderEntry &&
+            Conversions.ToBoolean(liteLoaderEntry.IsLegacy))
         {
             sender.Buttons = Array.Empty<MyIconButton>();
         }
@@ -1431,7 +1472,8 @@ pause";
         ToolTipService.SetVerticalOffset(BtnSave, 30d);
         ToolTipService.SetHorizontalOffset(BtnSave, 2d);
         BtnSave.Click += (sender, e) => LiteLoaderSave_Click(sender, (RoutedEventArgs)e);
-        if (Conversions.ToBoolean(((dynamic)sender.Tag).IsLegacy))
+        if (sender.Tag is ModDownload.DlLiteLoaderListEntry liteLoaderEntry &&
+            Conversions.ToBoolean(liteLoaderEntry.IsLegacy))
         {
             sender.Buttons = [BtnSave];
         }
@@ -1448,23 +1490,26 @@ pause";
 
     private static void LiteLoaderAll_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlLiteLoaderListEntry Version;
-        if (((dynamic)sender).Tag is ModDownload.DlLiteLoaderListEntry)
-            Version = (ModDownload.DlLiteLoaderListEntry)((dynamic)sender).Tag;
-        else
-            Version = (ModDownload.DlLiteLoaderListEntry)((dynamic)sender).Tag.Tag;
-        ModBase.OpenWebsite("https://jenkins.liteloader.com/view/" + Version.Inherit);
+        ModDownload.DlLiteLoaderListEntry Version = null;
+        var senderControl = sender as DependencyObject;
+        if (senderControl is MyListItem myListItem && myListItem.Tag is ModDownload.DlLiteLoaderListEntry liteLoaderEntry)
+            Version = liteLoaderEntry;
+        else if (senderControl is MyListItem listItem && listItem.Tag is MyListItem nestedListItem && nestedListItem.Tag is ModDownload.DlLiteLoaderListEntry nestedLiteLoaderEntry)
+            Version = nestedLiteLoaderEntry;
+        if (Version != null)
+            ModBase.OpenWebsite("https://jenkins.liteloader.com/view/" + Version.Inherit);
     }
 
     public static void LiteLoaderSave_Click(object sender, RoutedEventArgs e)
     {
         // ListItem 与小按钮都会调用这个方法
-        ModDownload.DlLiteLoaderListEntry Version;
-        if (((dynamic)sender).Tag is ModDownload.DlLiteLoaderListEntry)
-            Version = (ModDownload.DlLiteLoaderListEntry)((dynamic)sender).Tag;
-        else
-            Version = (ModDownload.DlLiteLoaderListEntry)((dynamic)sender).Tag.Tag;
-        McDownloadLiteLoaderSave(Version);
+        ModDownload.DlLiteLoaderListEntry Version = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is ModDownload.DlLiteLoaderListEntry liteLoaderEntry)
+            Version = liteLoaderEntry;
+        else if (sender is MyListItem listItem && listItem.Tag is MyListItem nestedListItem && nestedListItem.Tag is ModDownload.DlLiteLoaderListEntry nestedLiteLoaderEntry)
+            Version = nestedLiteLoaderEntry;
+        if (Version != null)
+            McDownloadLiteLoaderSave(Version);
     }
 
     #endregion
@@ -2309,12 +2354,12 @@ pause";
         ToolTipService.SetPlacement(BtnSave, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnSave, 30d);
         ToolTipService.SetHorizontalOffset(BtnSave, 2d);
-        BtnSave.Click += (ss, ee) => ForgeSave_Click(ss, (dynamic)ee);
+        BtnSave.Click += (ss, ee) => ForgeSave_Click(ss, (RoutedEventArgs)ee);
         var BtnInfo = new MyIconButton { LogoScale = 1.05d, Logo = ModBase.Logo.IconButtonInfo, ToolTip = "更新日志" };
         ToolTipService.SetPlacement(BtnInfo, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnInfo, 30d);
         ToolTipService.SetHorizontalOffset(BtnInfo, 2d);
-        BtnInfo.Click += (ss, ee) => ForgeLog_Click(ss, (dynamic)ee);
+        BtnInfo.Click += (ss, ee) => ForgeLog_Click(ss, (RoutedEventArgs)ee);
         sender.Buttons = new[] { BtnSave, BtnInfo };
     }
 
@@ -2324,33 +2369,52 @@ pause";
         ToolTipService.SetPlacement(BtnInfo, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnInfo, 30d);
         ToolTipService.SetHorizontalOffset(BtnInfo, 2d);
-        BtnInfo.Click += (ss, ee) => ForgeLog_Click(ss, (dynamic)e);
+        BtnInfo.Click += (ss, ee) => ForgeLog_Click(ss, (RoutedEventArgs)e);
         sender.Buttons = new[] { BtnInfo };
     }
 
     private static void ForgeLog_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlForgeVersionEntry Version;
-        if (((dynamic)sender).Tag is not null)
-            Version = (ModDownload.DlForgeVersionEntry)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Version = (ModDownload.DlForgeVersionEntry)((dynamic)sender).Parent.Tag;
+        ModDownload.DlForgeVersionEntry Version = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Version = (ModDownload.DlForgeVersionEntry)myListItem.Tag;
         else
-            Version = (ModDownload.DlForgeVersionEntry)((dynamic)sender).Parent.Parent.Tag;
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Version = (ModDownload.DlForgeVersionEntry)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
         ModBase.OpenWebsite(
             $"https://files.minecraftforge.net/maven/net/minecraftforge/forge/{Version.Inherit}-{Version.VersionName}/forge-{Version.Inherit}-{Version.VersionName}-changelog.txt");
     }
 
     public static void ForgeSave_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlForgeVersionEntry Version;
-        if (((dynamic)sender).Tag is not null)
-            Version = (ModDownload.DlForgeVersionEntry)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Version = (ModDownload.DlForgeVersionEntry)((dynamic)sender).Parent.Tag;
+        ModDownload.DlForgeVersionEntry Version = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Version = (ModDownload.DlForgeVersionEntry)myListItem.Tag;
         else
-            Version = (ModDownload.DlForgeVersionEntry)((dynamic)sender).Parent.Parent.Tag;
-        McDownloadForgelikeSave(Version);
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Version = (ModDownload.DlForgeVersionEntry)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+        if (Version != null)
+            McDownloadForgelikeSave(Version);
     }
 
     #endregion
@@ -2530,26 +2594,46 @@ pause";
 
     private static void NeoForgeLog_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlNeoForgeListEntry Info;
-        if (((dynamic)sender).Tag is not null)
-            Info = (ModDownload.DlNeoForgeListEntry)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Info = (ModDownload.DlNeoForgeListEntry)((dynamic)sender).Parent.Tag;
+        ModDownload.DlNeoForgeListEntry Info = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Info = (ModDownload.DlNeoForgeListEntry)myListItem.Tag;
         else
-            Info = (ModDownload.DlNeoForgeListEntry)((dynamic)sender).Parent.Parent.Tag;
-        ModBase.OpenWebsite(Info.UrlBase + "-changelog.txt");
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Info = (ModDownload.DlNeoForgeListEntry)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+        if (Info != null)
+            ModBase.OpenWebsite(Info.UrlBase + "-changelog.txt");
     }
 
     public static void NeoForgeSave_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlNeoForgeListEntry Info;
-        if (((dynamic)sender).Tag is not null)
-            Info = (ModDownload.DlNeoForgeListEntry)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Info = (ModDownload.DlNeoForgeListEntry)((dynamic)sender).Parent.Tag;
+        ModDownload.DlNeoForgeListEntry Info = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Info = (ModDownload.DlNeoForgeListEntry)myListItem.Tag;
         else
-            Info = (ModDownload.DlNeoForgeListEntry)((dynamic)sender).Parent.Parent.Tag;
-        McDownloadForgelikeSave(Info);
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Info = (ModDownload.DlNeoForgeListEntry)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+        if (Info != null)
+            McDownloadForgelikeSave(Info);
     }
 
     #endregion
@@ -2632,32 +2716,52 @@ pause";
         ToolTipService.SetPlacement(BtnInfo, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(BtnInfo, 30d);
         ToolTipService.SetHorizontalOffset(BtnInfo, 2d);
-        BtnInfo.Click += (a, b) => CleanroomLog_Click(a, (dynamic)b);
+        BtnInfo.Click += (a, b) => CleanroomLog_Click(a, (RoutedEventArgs)b);
         sender.Buttons = new[] { BtnInfo };
     }
 
     private static void CleanroomLog_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlCleanroomListEntry Info;
-        if (((dynamic)sender).Tag is not null)
-            Info = (ModDownload.DlCleanroomListEntry)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Info = (ModDownload.DlCleanroomListEntry)((dynamic)sender).Parent.Tag;
+        ModDownload.DlCleanroomListEntry Info = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Info = (ModDownload.DlCleanroomListEntry)myListItem.Tag;
         else
-            Info = (ModDownload.DlCleanroomListEntry)((dynamic)sender).Parent.Parent.Tag;
-        ModBase.OpenWebsite(Info.UrlBase + "-changelog.txt");
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Info = (ModDownload.DlCleanroomListEntry)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+        if (Info != null)
+            ModBase.OpenWebsite(Info.UrlBase + "-changelog.txt");
     }
 
     public static void CleanroomSave_Click(object sender, RoutedEventArgs e)
     {
-        ModDownload.DlCleanroomListEntry Info;
-        if (((dynamic)sender).Tag is not null)
-            Info = (ModDownload.DlCleanroomListEntry)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            Info = (ModDownload.DlCleanroomListEntry)((dynamic)sender).Parent.Tag;
+        ModDownload.DlCleanroomListEntry Info = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            Info = (ModDownload.DlCleanroomListEntry)myListItem.Tag;
         else
-            Info = (ModDownload.DlCleanroomListEntry)((dynamic)sender).Parent.Parent.Tag;
-        McDownloadForgelikeSave(Info);
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    Info = (ModDownload.DlCleanroomListEntry)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+        if (Info != null)
+            McDownloadForgelikeSave(Info);
     }
 
     #endregion
@@ -2888,8 +2992,8 @@ pause";
         ToolTipService.SetPlacement(btnInfo, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(btnInfo, 30d);
         ToolTipService.SetHorizontalOffset(btnInfo, 2d);
-        btnInfo.Click += (a, b) => FabricLog_Click(a, (dynamic)b);
-        ((dynamic)sender).Buttons = new[] { btnInfo };
+        btnInfo.Click += (a, b) => FabricLog_Click(a, (RoutedEventArgs)b);
+        ((MyListItem)sender).Buttons = new[] { btnInfo };
     }
 
     private static void FabricLog_Click(object sender, RoutedEventArgs e)
@@ -3107,8 +3211,8 @@ pause";
         ToolTipService.SetPlacement(btnInfo, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(btnInfo, 30d);
         ToolTipService.SetHorizontalOffset(btnInfo, 2d);
-        btnInfo.Click += (a, b) => QuiltLog_Click(a, (dynamic)b);
-        ((dynamic)sender).Buttons = new[] { btnInfo };
+        btnInfo.Click += (a, b) => QuiltLog_Click(a, (RoutedEventArgs)b);
+        ((MyListItem)sender).Buttons = new[] { btnInfo };
     }
 
     private static void QuiltLog_Click(object sender, RoutedEventArgs e)
@@ -3381,13 +3485,13 @@ pause";
         ToolTipService.SetPlacement(btnSave, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(btnSave, 30d);
         ToolTipService.SetHorizontalOffset(btnSave, 2d);
-        btnSave.Click += (a, b) => LabyModSave_Click(a, (dynamic)b);
+        btnSave.Click += (a, b) => LabyModSave_Click(a, (RoutedEventArgs)b);
         var btnInfo = new MyIconButton { LogoScale = 1.05d, Logo = ModBase.Logo.IconButtonInfo, ToolTip = "更新日志" };
         ToolTipService.SetPlacement(btnInfo, PlacementMode.Center);
         ToolTipService.SetVerticalOffset(btnInfo, 30d);
         ToolTipService.SetHorizontalOffset(btnInfo, 2d);
-        btnInfo.Click += (a, b) => LabyModLog_Click(a, (dynamic)b);
-        ((dynamic)sender).Buttons = new[] { btnSave, btnInfo };
+        btnInfo.Click += (a, b) => LabyModLog_Click(a, (RoutedEventArgs)b);
+        ((MyListItem)sender).Buttons = new[] { btnSave, btnInfo };
     }
 
     private static void LabyModLog_Click(object sender, RoutedEventArgs e)
@@ -3397,14 +3501,23 @@ pause";
 
     private static void LabyModSave_Click(object sender, RoutedEventArgs e)
     {
-        JObject version;
-        if (((dynamic)sender).Tag is not null)
-            version = (JObject)((dynamic)sender).Tag;
-        else if (((dynamic)sender).Parent.Tag is not null)
-            version = (JObject)((dynamic)sender).Parent.Tag;
+        JObject version = null;
+        if (sender is MyListItem myListItem && myListItem.Tag is not null)
+            version = (JObject)myListItem.Tag;
         else
-            version = (JObject)((dynamic)sender).Parent.Parent.Tag;
-        if ((string)version["channel"] == "snapshot")
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(sender as DependencyObject);
+            while (parent != null)
+            {
+                if (parent is MyListItem parentListItem && parentListItem.Tag is not null)
+                {
+                    version = (JObject)parentListItem.Tag;
+                    break;
+                }
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+        if (version != null && (string)version["channel"] == "snapshot")
             McDownloadLabyModSnapshotLoaderSave();
         else
             McDownloadLabyModProductionLoaderSave();
@@ -3545,11 +3658,12 @@ pause";
     /// </summary>
     public static void LoaderStateChangedHintOnly(object Loader)
     {
-        switch (((dynamic)Loader).State)
+        var loader = (dynamic)Loader;
+        switch (loader.State)
         {
             case var @case when Operators.ConditionalCompareObjectEqual(@case, ModBase.LoadState.Finished, false):
             {
-                ModMain.Hint(Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Name, "成功！")),
+                ModMain.Hint(Conversions.ToString(Operators.ConcatenateObject(loader.Name, "成功！")),
                     ModMain.HintType.Finish);
                 break;
             }
@@ -3557,13 +3671,13 @@ pause";
             {
                 ModMain.Hint(
                     Conversions.ToString(Operators.ConcatenateObject(
-                        Operators.ConcatenateObject(((dynamic)Loader).Name, "失败："), ((dynamic)Loader).Error.Message)),
+                        Operators.ConcatenateObject(loader.Name, "失败："), loader.Error.Message)),
                     ModMain.HintType.Critical);
                 break;
             }
             case var case2 when Operators.ConditionalCompareObjectEqual(case2, ModBase.LoadState.Aborted, false):
             {
-                ModMain.Hint(Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Name, "已取消！")),
+                ModMain.Hint(Conversions.ToString(Operators.ConcatenateObject(loader.Name, "已取消！")),
                     ModMain.HintType.Info);
                 break;
             }
@@ -3575,13 +3689,14 @@ pause";
     /// </summary>
     public static void McInstallState(object Loader)
     {
-        switch (((dynamic)Loader).State)
+        var loader = (dynamic)Loader;
+        switch (loader.State)
         {
             case var @case when Operators.ConditionalCompareObjectEqual(@case, ModBase.LoadState.Finished, false):
             {
                 if (Conversions.ToBoolean(Config.Download.AutoSelectInstance))
                 {
-                    string VersionName = ((dynamic)Loader).Name.ToString();
+                    string VersionName = loader.Name.ToString();
                     ModBase.WriteIni(ModMinecraft.McFolderSelected + "PCL.ini", "Version",
                         VersionName.Remove(VersionName.Length - 3, 3));
                 }
@@ -3589,8 +3704,8 @@ pause";
                 ModBase.WriteIni(ModMinecraft.McFolderSelected + "PCL.ini", "InstanceCache",
                     ""); // 清空缓存（合并安装会先生成文件夹，这会在刷新时误判为可以使用缓存）
                 ModBase.DeleteDirectory(
-                    Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input, @"PCLInstallBackups\")));
-                ModMain.Hint(Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Name, "成功！")),
+                    Conversions.ToString(Operators.ConcatenateObject(loader.Input, @"PCLInstallBackups\")));
+                ModMain.Hint(Conversions.ToString(Operators.ConcatenateObject(loader.Name, "成功！")),
                     ModMain.HintType.Finish);
                 break;
             }
@@ -3598,13 +3713,13 @@ pause";
             {
                 ModMain.Hint(
                     Conversions.ToString(Operators.ConcatenateObject(
-                        Operators.ConcatenateObject(((dynamic)Loader).Name, "失败："), ((dynamic)Loader).Error.Message)),
+                        Operators.ConcatenateObject(loader.Name, "失败："), loader.Error.Message)),
                     ModMain.HintType.Critical);
                 break;
             }
             case var case2 when Operators.ConditionalCompareObjectEqual(case2, ModBase.LoadState.Aborted, false):
             {
-                ModMain.Hint(Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Name, "已取消！")),
+                ModMain.Hint(Conversions.ToString(Operators.ConcatenateObject(loader.Name, "已取消！")),
                     ModMain.HintType.Info);
                 break;
             }
@@ -3614,18 +3729,19 @@ pause";
             }
         }
 
+        var loaderInput = loader.Input;
         if (Conversions.ToBoolean(
-                !Operators.ConditionalCompareObjectEqual(((dynamic)Loader).State, ModBase.LoadState.Finished, false) &&
+                !Operators.ConditionalCompareObjectEqual(loader.State, ModBase.LoadState.Finished, false) &&
                 Directory.Exists(
-                    Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input,
+                    Conversions.ToString(Operators.ConcatenateObject(loaderInput,
                         @"PCLInstallBackups\"))))) // 实例修改失败回滚
         {
             ModBase.CopyDirectory(
-                Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input, @"PCLInstallBackups\")),
-                Conversions.ToString(((dynamic)Loader).Input));
-            File.Delete(Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input, ".pclignore")));
+                Conversions.ToString(Operators.ConcatenateObject(loaderInput, @"PCLInstallBackups\")),
+                Conversions.ToString(loaderInput));
+            File.Delete(Conversions.ToString(Operators.ConcatenateObject(loaderInput, ".pclignore")));
             ModBase.DeleteDirectory(
-                Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input, @"PCLInstallBackups\")));
+                Conversions.ToString(Operators.ConcatenateObject(loaderInput, @"PCLInstallBackups\")));
         }
         else
         {
@@ -3641,31 +3757,33 @@ pause";
         try
         {
             Thread.Sleep(1000); // 防止存在尚未完全释放的文件，导致清理失败（例如整合包安装）
+            var loader = (dynamic)Loader;
             if (Conversions.ToBoolean(
-                    Operators.ConditionalCompareObjectEqual(((dynamic)Loader).State, ModBase.LoadState.Failed,
+                    Operators.ConditionalCompareObjectEqual(loader.State, ModBase.LoadState.Failed,
                         false)) || Conversions.ToBoolean(
-                    Operators.ConditionalCompareObjectEqual(((dynamic)Loader).State, ModBase.LoadState.Aborted, false)))
+                    Operators.ConditionalCompareObjectEqual(loader.State, ModBase.LoadState.Aborted, false)))
             {
                 // 删除实例文件夹
+                var loaderInput = loader.Input;
                 if (Directory.Exists(
-                        Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input, @"saves\"))) ||
+                        Conversions.ToString(Operators.ConcatenateObject(loaderInput, @"saves\"))) ||
                     Directory.Exists(
-                        Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input, @"versions\"))) ||
+                        Conversions.ToString(Operators.ConcatenateObject(loaderInput, @"versions\"))) ||
                     Directory.Exists(
-                        Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input, @"mods\"))) ||
+                        Conversions.ToString(Operators.ConcatenateObject(loaderInput, @"mods\"))) ||
                     File.Exists(
-                        Conversions.ToString(Operators.ConcatenateObject(((dynamic)Loader).Input, "server.dat"))))
+                        Conversions.ToString(Operators.ConcatenateObject(loaderInput, "server.dat"))))
                 {
                     ModBase.Log(
                         Conversions.ToString(Operators.ConcatenateObject("[Download] 由于实例已被独立启动，不清理实例文件夹：",
-                            ((dynamic)Loader).Input)), ModBase.LogLevel.Developer);
+                            loaderInput)), ModBase.LogLevel.Developer);
                 }
                 else
                 {
                     ModBase.Log(
                         Conversions.ToString(Operators.ConcatenateObject("[Download] 由于下载失败或取消，清理实例文件夹：",
-                            ((dynamic)Loader).Input)), ModBase.LogLevel.Developer);
-                    ModBase.DeleteDirectory(Conversions.ToString(((dynamic)Loader).Input));
+                            loaderInput)), ModBase.LogLevel.Developer);
+                    ModBase.DeleteDirectory(Conversions.ToString(loaderInput));
                 }
             }
         }

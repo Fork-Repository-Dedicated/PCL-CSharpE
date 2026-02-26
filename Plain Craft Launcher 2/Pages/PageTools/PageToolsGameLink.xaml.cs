@@ -768,7 +768,7 @@ public partial class PageToolsGameLink
             return;
         }
 
-        int port = Conversions.ToInteger(((dynamic)ComboWorldList.SelectedItem).Tag);
+        int port = Conversions.ToInteger(((MyComboBoxItem)ComboWorldList.SelectedItem).Tag);
         await CreateLobby(port);
     }
 

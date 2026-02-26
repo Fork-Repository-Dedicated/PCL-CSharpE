@@ -34,9 +34,10 @@ public partial class PageToolsLeft
 
     public void Refresh(object sender, EventArgs e)
     {
-        if (((dynamic)sender).Tag is null)
+        var button = (MyIconButton)sender;
+        if (button.Tag is null)
             return;
-        double id = ModBase.Val(((MyIconButton)sender).Tag);
+        double id = ModBase.Val(button.Tag);
         switch (id)
         {
             case (double)FormMain.PageSubType.ToolsGameLink:

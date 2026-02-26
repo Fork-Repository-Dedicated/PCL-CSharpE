@@ -565,7 +565,7 @@ public partial class PageSelectLeft : IRefreshable
     public void Delete_Click(object sender, RoutedEventArgs e)
     {
         var Folder =
-            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent).PlacementTarget)
+            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((MyMenuItem)sender).Parent).Parent).PlacementTarget)
             .Tag;
         var DeleteText =
             (Folder.Type == ModMinecraft.McFolder.Types.Original ||
@@ -616,13 +616,13 @@ public partial class PageSelectLeft : IRefreshable
 
     public void Open_Click(object sender, RoutedEventArgs e)
     {
-        ModBase.OpenExplorer(((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent).PlacementTarget)
+        ModBase.OpenExplorer(((MyListItem)((Popup)((ContextMenu)((MyMenuItem)sender).Parent).Parent).PlacementTarget)
             .Info);
     }
 
     public void Refresh_Click(object sender, RoutedEventArgs e)
     {
-        var Data = (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent)
+        var Data = (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((MyMenuItem)sender).Parent).Parent)
             .PlacementTarget).Tag;
         RefreshCurrent(Data.Location);
     }

@@ -79,8 +79,7 @@
                                    Margin="0,0,25,0" />
                         <local:MyComboBox x:Name="ComboArgumentVisibie" Grid.Row="6" Grid.ColumnSpan="2"
                                           Tag="LaunchArgumentVisible" Grid.Column="1"
-                                          SizeChanged="ComboArgumentVisibie_SizeChanged"
-                                          SelectionChanged="ComboChange">
+                                          SelectionChanged="ComboArgumentVisibie_SelectionChanged">
                             <local:MyComboBoxItem Content="游戏启动后立即关闭" />
                             <local:MyComboBoxItem Content="" IsEnabled="False" Visibility="Collapsed" />
                             <local:MyComboBoxItem Content="游戏启动后隐藏，游戏退出后自动关闭" />

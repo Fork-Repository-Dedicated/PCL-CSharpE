@@ -514,8 +514,9 @@ public partial class PageSetupLaunch
     }
 
     // 可见性选择直接关闭的警告
-    private void ComboArgumentVisibie_SizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+    private void ComboArgumentVisibie_SelectionChanged(object sender, SelectionChangedEventArgs sizeChangedEventArgs)
     {
+        ComboChange(sender, sizeChangedEventArgs);
         if (ModAnimation.AniControlEnabled != 0)
             return;
         if (ComboArgumentVisibie.SelectedIndex == 0)

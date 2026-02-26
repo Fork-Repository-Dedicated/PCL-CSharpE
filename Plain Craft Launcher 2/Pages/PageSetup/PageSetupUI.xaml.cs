@@ -876,11 +876,11 @@ public partial class PageSetupUI
 
                 foreach (var category in categories)
                 {
-                    var isVisible = ((dynamic)category).Item2 || HiddenForceShow;
-                    ((dynamic)category).Item1.Visibility =
+                    var isVisible = category.Item2 || HiddenForceShow;
+                    category.Item1.Visibility =
                         Conversions.ToBoolean(isVisible) ? Visibility.Visible : Visibility.Collapsed;
                     if (Conversions.ToBoolean(isVisible))
-                        ((dynamic)category).Item1.Opacity = 0.6d;
+                        category.Item1.Opacity = 0.6d;
                 }
 
                 // 统计设置页可用项数量

@@ -357,7 +357,7 @@ public partial class PageSpeedLeft
                     Card.Children.Add(Cancel);
                     Cancel.Click += (sender, e) =>
                     {
-                        ModAnimation.AniDispose((dynamic)sender, false);
+                        ModAnimation.AniDispose((MyIconButton)sender, false);
                         ModAnimation.AniDispose(Card, true, _ =>
                         {
                             if (ModMain.FrmSpeedRight.PanMain.Children.Count == 0 &&
@@ -393,14 +393,15 @@ public partial class PageSpeedLeft
 
     public void TaskRemove(object Loader)
     {
-        if (RightCards.ContainsKey(Conversions.ToString(((dynamic)Loader).Name)))
+        var loaderCombo = (ModLoader.LoaderCombo<string>)Loader;
+        if (RightCards.ContainsKey(Conversions.ToString(loaderCombo.Name)))
             ModBase.RunInUiWait(() =>
             {
                 // 移除已有的卡片
-                Grid Card = RightCards[Conversions.ToString(((dynamic)Loader).Name)];
+                Grid Card = RightCards[Conversions.ToString(loaderCombo.Name)];
                 ModMain.FrmSpeedRight.PanMain.Children.Remove(Card);
-                RightCards.Remove(Conversions.ToString(((dynamic)Loader).Name));
-                ModBase.Log($"[Watcher] 移除任务管理卡片：{((dynamic)Loader).Name}");
+                RightCards.Remove(Conversions.ToString(loaderCombo.Name));
+                ModBase.Log($"[Watcher] 移除任务管理卡片：{loaderCombo.Name}");
             });
     }
 

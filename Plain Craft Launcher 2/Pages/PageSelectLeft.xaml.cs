@@ -4,10 +4,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using FluentValidation;
 using Microsoft.VisualBasic;
 using PCL.Core.App;
 using PCL.Core.Logging;
 using PCL.Core.UI;
+using PCL.Core.Utils.Validate;
 
 namespace PCL;
 
@@ -365,9 +367,9 @@ public partial class PageSelectLeft : IRefreshable
             if (DefaultName.Length > 40)
                 DefaultName = DefaultName.Substring(0, 39);
             var NewName = ModMain.MyMsgBoxInput("输入显示名称", "输入该文件夹在左边栏列表中显示的名称。", DefaultName,
-                new Collection<ValidateType>
+                new Collection<IValidator<string>>
                 {
-                    new ValidateNullOrWhiteSpace(), new ValidateLength(1, 30), new ValidateExcept(new[] { ">", "|" })
+                    new NullOrWhiteSpaceValidator(), new StringLengthValidator(), new BlacklistValidator([">", "|"])
                 });
             if (string.IsNullOrWhiteSpace(NewName))
                 return;
@@ -649,9 +651,9 @@ public partial class PageSelectLeft : IRefreshable
         {
             // 获取输入
             var NewName = ModMain.MyMsgBoxInput("输入新名称", "", Folder.Name,
-                new Collection<ValidateType>
+                new Collection<IValidator<string>>
                 {
-                    new ValidateNullOrWhiteSpace(), new ValidateLength(1, 30), new ValidateExcept(new[] { ">", "|" })
+                    new NullOrWhiteSpaceValidator(), new StringLengthValidator(1, 30), new BlacklistValidator([">", "|"])
                 });
             if (string.IsNullOrWhiteSpace(NewName))
                 return;

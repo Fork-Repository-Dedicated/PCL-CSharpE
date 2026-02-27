@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using FluentValidation;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Win32;
@@ -539,7 +540,7 @@ public static class ModMain
         /// <summary>
         ///     输入模式：输入验证规则。
         /// </summary>
-        public Collection<ValidateType> ValidateRules;
+        public Collection<IValidator<string>> ValidateRules;
 
         public DispatcherFrame WaitFrame = new(true);
     }
@@ -749,7 +750,7 @@ public static class ModMain
     /// <param name="Button2">显示的第二个按钮，默认为“取消”。</param>
     /// <param name="IsWarn">是否为警告弹窗，若为 True，弹窗配色和背景会变为红色。</param>
     public static string MyMsgBoxInput(string Title, string Text = "", string DefaultInput = "",
-        Collection<ValidateType>? ValidateRules = null, string HintText = "", string Button1 = "确定",
+        Collection<IValidator<string>>? ValidateRules = null, string HintText = "", string Button1 = "确定",
         string Button2 = "取消", bool IsWarn = false)
     {
         // 将弹窗列入队列

@@ -2,10 +2,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using FluentValidation;
 using fNbt;
 using PCL.Core.Link.McPing;
 using PCL.Core.Link.McPing.Model;
 using PCL.Core.Minecraft;
+using PCL.Core.Utils.Validate;
 
 namespace PCL;
 
@@ -248,12 +250,12 @@ public partial class PageInstanceServer : MyPageRight
     public static (string Name, string Address, bool Success) GetServerInfo(MinecraftServerInfo server)
     {
         var newName = ModMain.MyMsgBoxInput("编辑服务器信息", "请输入新的服务器名称：", server.Name,
-            new Collection<ValidateType> { new ValidateNullOrWhiteSpace() });
+            [new NullOrWhiteSpaceValidator()]);
 
         if (string.IsNullOrEmpty(newName)) return (string.Empty, string.Empty, false);
 
         var newAddress = ModMain.MyMsgBoxInput("编辑服务器信息", "请输入新的服务器地址：", server.Address,
-            new Collection<ValidateType> { new ValidateNullOrWhiteSpace() });
+            [new NullOrWhiteSpaceValidator()]);
         if (string.IsNullOrEmpty(newAddress)) return (string.Empty, string.Empty, false);
         return (newName, newAddress, true);
     }

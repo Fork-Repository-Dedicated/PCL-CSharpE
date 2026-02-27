@@ -439,7 +439,7 @@ public partial class PageInstanceOverall
         // 进行更改
         try
         {
-            string NewLogo = Conversions.ToString(((dynamic)ComboDisplayLogo.SelectedItem).Tag);
+            string NewLogo = Conversions.ToString(((MyComboBoxItem)ComboDisplayLogo.SelectedItem).Tag);
             Config.Instance.LogoPath[PageInstanceLeft.Instance.PathInstance] = NewLogo;
             Config.Instance.IsLogoCustom[PageInstanceLeft.Instance.PathInstance] = !string.IsNullOrEmpty(NewLogo);
             // 刷新显示

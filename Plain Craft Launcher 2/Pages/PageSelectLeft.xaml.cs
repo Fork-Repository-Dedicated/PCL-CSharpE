@@ -643,7 +643,7 @@ public partial class PageSelectLeft : IRefreshable
     public void Rename_Click(object sender, RoutedEventArgs e)
     {
         var Folder =
-            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((dynamic)sender).Parent).Parent).PlacementTarget)
+            (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((MyMenuItem)sender).Parent).Parent).PlacementTarget)
             .Tag;
         try
         {

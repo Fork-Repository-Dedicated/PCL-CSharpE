@@ -40,7 +40,7 @@ public partial class PageInstanceServer : MyPageRight
         {
             var serverCard = new ServerCard();
             serverCard.RemoveServer += RemoveServerEvent;
-            serverCard.EditServer += (a, b) => this.EditServer(a, (dynamic)b);
+            serverCard.EditServer += (a, b) => this.EditServer(a, (ServerCard.ResultEventArgs)b);
             serverCard.UpdateServerInfo(server);
             ServerCardList.Add(serverCard);
             PanServers.Children.Add(serverCard);
@@ -213,7 +213,7 @@ public partial class PageInstanceServer : MyPageRight
 
             var serverCard = new ServerCard();
             serverCard.RemoveServer += RemoveServerEvent;
-            serverCard.EditServer += (a, b) => this.EditServer(a, (dynamic)b);
+            serverCard.EditServer += (a, b) => this.EditServer(a, (ServerCard.ResultEventArgs)b);
             serverCard.UpdateServerInfo(newServer);
             ServerCardList.Add(serverCard);
             PanServers.Children.Add(serverCard);
@@ -222,7 +222,7 @@ public partial class PageInstanceServer : MyPageRight
 
             var serversDatPath = Path.Combine(PageInstanceLeft.Instance.PathIndie, "servers.dat");
 
-            object nbtData;
+            NbtList nbtData;
             if (!File.Exists(serversDatPath))
             {
                 nbtData = new NbtList("servers", NbtTagType.Compound);
@@ -238,8 +238,8 @@ public partial class PageInstanceServer : MyPageRight
                 var server = new NbtCompound();
                 server["name"] = new NbtString("name", result.Name);
                 server["ip"] = new NbtString("ip", result.Address);
-                ((dynamic)nbtData).Add(server);
-                var clonedNbtData = (NbtList)((dynamic)nbtData).Clone();
+                nbtData.Add(server);
+                var clonedNbtData = (NbtList)nbtData.Clone();
                 await NbtFileHandler.WriteTagInNbtFileAsync(clonedNbtData, serversDatPath);
             }
         }
@@ -335,7 +335,7 @@ public partial class PageInstanceServer : MyPageRight
         {
             var serverCard = new ServerCard();
             serverCard.RemoveServer += RemoveServerEvent;
-            serverCard.EditServer += (a, b) => this.EditServer(a, (dynamic)b);
+            serverCard.EditServer += (a, b) => this.EditServer(a, (ServerCard.ResultEventArgs)b);
             serverCard.UpdateServerInfo(server);
             ServerCardList.Add(serverCard);
             PanServers.Children.Add(serverCard);

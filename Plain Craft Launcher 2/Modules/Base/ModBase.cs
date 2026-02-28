@@ -3242,7 +3242,11 @@ public static class ModBase
             if (!Url.StartsWithF("http", true) && !Url.StartsWithF("minecraft://", true))
                 throw new Exception(Url + " 不是一个有效的网址，它必须以 http 开头！");
             Log("[System] 正在打开网页：" + Url);
-            Basics.OpenUri(Url);
+            var psi = new ProcessStartInfo(Url)
+            {
+                UseShellExecute = true,
+            };
+            _ = Task.Run(() => Process.Start(psi));
         }
         catch (Exception ex)
         {

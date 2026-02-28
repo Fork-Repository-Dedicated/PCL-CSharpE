@@ -7,7 +7,6 @@ using PCL.Core.IO.Net.Http.Client;
 using PCL.Core.Minecraft.Yggdrasil;
 using PCL.Core.Utils;
 using PCL.Core.Utils.Exts;
-using PCL.Core.Utils.Validate;
 
 namespace PCL;
 
@@ -189,7 +188,7 @@ public partial class PageLoginAuth
         var Address = Conversions.ToString(ModMinecraft.McInstanceSelected is not null
             ? ModBase.Setup.Get("VersionServerAuthRegister", ModMinecraft.McInstanceSelected)
             : "");
-        BtnLink.Visibility = new HttpValidator().Validate(Address).IsValid
+        BtnLink.Visibility = string.IsNullOrEmpty(new ValidateHttp().Validate(Address))
             ? Visibility.Visible
             : Visibility.Collapsed;
     }

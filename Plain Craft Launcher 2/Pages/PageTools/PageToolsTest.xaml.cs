@@ -17,7 +17,6 @@ using PCL.Core.IO.Net;
 using PCL.Core.UI;
 using PCL.Core.Utils.OS;
 using PCL.Core.Utils.Secret;
-using PCL.Core.Utils.Validate;
 
 namespace PCL;
 
@@ -138,7 +137,7 @@ public partial class PageToolsTest
             ModBase.Log("[Download] 自定义下载文件目标：" + Folder);
             var uuid = ModBase.GetUuid();
             ModLoader.LoaderBase loaderdownload;
-            if (new HttpValidator().Validate(Url).IsValid)
+            if (string.IsNullOrEmpty(new ValidateHttp().Validate(Url)))
                 loaderdownload = new ModNet.LoaderDownload("自定义下载文件：" + FileName + " ",
                     new List<ModNet.NetFile> { new(new[] { Url }, Folder + FileName, null, true, UserAgent) });
             else // UNC 路径

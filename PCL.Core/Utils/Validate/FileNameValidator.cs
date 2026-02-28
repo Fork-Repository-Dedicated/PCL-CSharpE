@@ -2,31 +2,27 @@
 using System.IO;
 using System.Linq;
 using FluentValidation;
-using FluentValidation.Results;
 using PCL.Core.Utils.Exts;
 
 namespace PCL.Core.Utils.Validate;
 
-public class FileNameValidator(
-    string? parentFolder = null,
-    bool ignoreCase = true,
-    bool useMinecraftCharCheck = true,
-    bool requireParentFolderExists = true)
-    : FileSystemValidator
+public class FileNameValidator : FileSystemValidator
 {
-    public bool UseMinecraftCharCheck { get; set; } = useMinecraftCharCheck;
-    public bool IgnoreCase { get; set; } = ignoreCase;
-    public string? ParentFolder { get; set; } = parentFolder;
-    public bool RequireParentFolderExists { get; set; } = requireParentFolderExists;
-
+    public bool UseMinecraftCharCheck { get; set; }
+    public bool IgnoreCase { get; set; }
+    public string? ParentFolder { get; set; }
+    public bool RequireParentFolderExists { get; set; }
+    
     private bool? _isParentFolderExists;
 
-    public FileNameValidator() : this(null)
+    public FileNameValidator(string? parentFolder = null, bool ignoreCase = true, bool useMinecraftCharCheck = true,
+        bool requireParentFolderExists = true)
     {
-    }
-
-    private void BuildRules()
-    {
+        ParentFolder = parentFolder;
+        IgnoreCase = ignoreCase;
+        UseMinecraftCharCheck = useMinecraftCharCheck;
+        RequireParentFolderExists = requireParentFolderExists;
+        
         RuleFor(x => x)
             .Must(x => !string.IsNullOrWhiteSpace(x)).WithMessage("输入内容不能为空！")
             .Must(x => !x.StartsWith(' ')).WithMessage("文件名不能以空格开头！")
@@ -64,11 +60,5 @@ public class FileNameValidator(
                 return !RequireParentFolderExists;
 
             }).WithMessage(_isParentFolderExists is not null ? $"父文件夹不存在：{ParentFolder}" : "不可与现有文件重名！");
-    }
-
-    protected override bool PreValidate(ValidationContext<string> context, ValidationResult result)
-    {
-        BuildRules();
-        return base.PreValidate(context, result);
     }
 }

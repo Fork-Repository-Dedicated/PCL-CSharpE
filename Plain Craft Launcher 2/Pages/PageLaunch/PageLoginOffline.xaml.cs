@@ -1,6 +1,5 @@
 using System.Windows;
 using Microsoft.VisualBasic;
-using PCL.Core.Utils.Validate;
 
 namespace PCL;
 
@@ -40,8 +39,8 @@ public partial class PageLoginOffline
     {
         // 玩家 ID 输入检查
         var Username = TextName.Text;
-        var UsernameValidateResult = new RegexValidator("^[A-z0-9_]{3,16}$").Validate(Username);
-        if (!UsernameValidateResult.IsValid)
+        var UsernameValidateResult = new ValidateRegex("^[A-z0-9_]{3,16}$").Validate(Username);
+        if (!string.IsNullOrEmpty(UsernameValidateResult))
             if (ModMain.MyMsgBox(
                     $"你输入的玩家 ID 不符合标准（3 - 16 位，只可以包含英文字母、数字与下划线），可能导致部分版本的游戏无法启动或发生错误。{"\r\n"}强烈建议使用规范的玩家 ID！{"\r\n"}如果你坚持，仍然可以继续创建档案。",
                     "玩家 ID 不符合规范", "继续", "取消", IsWarn: true, ForceWait: true) == 2)
@@ -52,8 +51,8 @@ public partial class PageLoginOffline
         {
             // 自定义输入检查
             var UuidInput = TextUuid.Text.Replace("-", "");
-            var UuidValidateResult = new RegexValidator("^[a-fA-F0-9]{32}$").Validate(UuidInput);
-            if (RadioUuidCustom.Checked && !UuidValidateResult.IsValid)
+            var UuidValidateResult = new ValidateRegex("^[a-fA-F0-9]{32}$").Validate(UuidInput);
+            if (RadioUuidCustom.Checked && !string.IsNullOrEmpty(UuidValidateResult))
             {
                 ModMain.Hint("UUID 不符合要求：" + UuidValidateResult, ModMain.HintType.Critical);
                 return;

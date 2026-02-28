@@ -17,6 +17,7 @@ using PCL.Core.UI;
 using PCL.Core.UI.Theme;
 using PCL.Core.Utils;
 using PCL.Core.Utils.OS;
+using PCL.Core.Utils.Validate;
 
 namespace PCL;
 
@@ -968,7 +969,7 @@ public partial class FormMain
                         var AuthlibServer =
                             WebUtility.UrlDecode(Str.Substring("authlib-injector:yggdrasil-server:".Length));
                         ModBase.Log("[System] Authlib 拖拽：" + AuthlibServer);
-                        if (!string.IsNullOrEmpty(new ValidateHttp().Validate(AuthlibServer)))
+                        if (!new HttpValidator().Validate(AuthlibServer).IsValid)
                         {
                             ModMain.Hint($"输入的 Authlib 验证服务器不符合网址格式（{AuthlibServer}）！", ModMain.HintType.Critical);
                             return;

@@ -604,7 +604,7 @@ public partial class PageInstanceCompResource : IRefreshable
             var lastClickTime = DateTime.MinValue;
             sender.Click += (sss, _) =>
             {
-                dynamic ss = sss;
+                var ss = (MyLocalCompItem)sss;
                 var currentTime = DateTime.Now;
                 var timeDiff = (currentTime - lastClickTime).TotalMilliseconds;
 
@@ -623,7 +623,7 @@ public partial class PageInstanceCompResource : IRefreshable
             // 文件项的点击事件：切换选中状态
             sender.Click += (sss, _) =>
             {
-                dynamic ss = sss;
+                var ss = (MyLocalCompItem)sss;
                 ss.Checked = !ss.Checked;
             };
         }

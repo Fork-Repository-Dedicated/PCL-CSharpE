@@ -2617,7 +2617,7 @@ public partial class PageDownloadInstall
         {
             TargetInstanceName = instanceName,
             TargetInstanceFolder = $@"{ModMinecraft.McFolderSelected}versions\{instanceName}\",
-            MinecraftJson = _vanillaData["url"].ToString(),
+            MinecraftJson = _vanillaData?["url"].ToString(),
             MinecraftName = _vanillaName,
             OptiFineEntry = SelectedOptiFine,
             ForgeEntry = SelectedForge,

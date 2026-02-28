@@ -16,8 +16,8 @@ public partial class PageSetupLaunch
 
     public PageSetupLaunch()
     {
-        InitializeComponent();
         Loaded += PageSetupLaunch_Loaded;
+        InitializeComponent();
     }
 
     private void PageSetupLaunch_Loaded(object sender, RoutedEventArgs e)

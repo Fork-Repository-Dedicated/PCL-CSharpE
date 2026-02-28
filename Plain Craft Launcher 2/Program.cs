@@ -7,13 +7,15 @@ using PCL.Core.App.IoC;
 
 namespace PCL;
 
-internal static class Program
+internal static partial class Program
 {
-    [DllImport("kernel32.dll")]
-    private static extern bool AllocConsole();
+    // ReSharper disable once UnusedMethodReturnValue.Local
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool AllocConsole();
 
     /// <summary>
-    ///     Program startup point
+    /// Program startup point
     /// </summary>
     [STAThread]
     public static void Main()

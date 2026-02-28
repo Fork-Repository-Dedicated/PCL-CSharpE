@@ -1794,10 +1794,10 @@ public partial class PageInstanceInstall
         if (SelectedLoaderName is not null && !ReferenceEquals(SelectedLoaderName, "Cleanroom"))
             return $"与 {SelectedLoaderName} 不兼容";
         // 检查 Loader
-        if (GetLoaderError(LoadNeoForge) is not null)
-            return GetLoaderError(LoadNeoForge);
+        if (GetLoaderError(LoadCleanroom) is not null)
+            return GetLoaderError(LoadCleanroom);
         // 检查版本
-        return ModDownload.DlNeoForgeListLoader.Output.Value.Any(v => (v.Inherit ?? "") == (_vanillaName ?? ""))
+        return ModDownload.DlCleanroomListLoader.Output.Value.Any(v => (v.Inherit ?? "") == (_vanillaName ?? ""))
             ? null
             : "无可用版本";
     }

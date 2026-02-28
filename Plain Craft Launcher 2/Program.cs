@@ -1,30 +1,27 @@
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
 using PCL.Core.App;
 using PCL.Core.App.Essentials;
 using PCL.Core.App.IoC;
+using PCL.Core.Utils.OS;
 
 namespace PCL;
 
-internal static partial class Program
+internal static class Program
 {
-    // ReSharper disable once UnusedMethodReturnValue.Local
-    [LibraryImport("kernel32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool AllocConsole();
-
     /// <summary>
     /// Program startup point
     /// </summary>
     [STAThread]
     public static void Main()
     {
-        if (Basics.CommandLineArguments.Contains("--console")) AllocConsole();
+        if (Basics.CommandLineArguments.Contains("--console")) KernelInterop.AllocateConsole();
 #if DEBUG
         if (Basics.CommandLineArguments.Contains("--debug"))
-            while (!Debugger.IsAttached)
-                Thread.Sleep(50);
+        {
+            Console.WriteLine("Waiting for debugger...");
+            while (!Debugger.IsAttached) Thread.Sleep(50);
+        }
 #endif
         Console.WriteLine("Welcome to Plain Craft Launcher 2 Community Edition!");
         // Preloading tasks

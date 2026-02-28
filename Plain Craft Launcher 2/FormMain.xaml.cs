@@ -8,8 +8,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.App;
 using PCL.Core.App.IoC;
 using PCL.Core.Logging;
@@ -107,8 +105,8 @@ public partial class FormMain
         Opacity = 0d;
         try
         {
-            Height = Conversions.ToDouble(States.UI.WindowHeight);
-            Width = Conversions.ToDouble(States.UI.WindowWidth);
+            Height = States.UI.WindowHeight;
+            Width = States.UI.WindowWidth;
         }
         catch (Exception ex) // 修复 #2019
         {
@@ -187,15 +185,12 @@ public partial class FormMain
 
         ModSecret.ThemeRefresh();
 
-        System.Windows.Application.Current.Resources["BlurSamplingRate"] =
-            Operators.MultiplyObject(Config.Preference.Blur.SamplingRate, 0.01d);
-        System.Windows.Application.Current.Resources["BlurType"] =
-            (KernelType)Conversions.ToInteger(Config.Preference.Blur.KernelType);
-        if (Conversions.ToBoolean(Config.Preference.Blur.IsEnabled))
-            System.Windows.Application.Current.Resources["BlurRadius"] =
-                Operators.MultiplyObject(Config.Preference.Blur.Radius, 1.0d);
+        Lifecycle.CurrentApplication.Resources["BlurSamplingRate"] = Config.Preference.Blur.SamplingRate * 0.01d;
+        Lifecycle.CurrentApplication.Resources["BlurType"] = Config.Preference.Blur.KernelType;
+        if (Config.Preference.Blur.IsEnabled)
+            Lifecycle.CurrentApplication.Resources["BlurRadius"] = Config.Preference.Blur.Radius * 1.0d;
         else
-            System.Windows.Application.Current.Resources["BlurRadius"] = 0.0d;
+            Lifecycle.CurrentApplication.Resources["BlurRadius"] = 0.0d;
 
         // #If DEBUG Then
         // MinHeight = 50
@@ -214,10 +209,7 @@ public partial class FormMain
         ModAnimation.AniStart(new[]
         {
             ModAnimation.AaCode(() => ModAnimation.AniControlEnabled -= 1, 50),
-            ModAnimation.AaOpacity(this,
-                Conversions.ToDouble(
-                    Operators.AddObject(Operators.DivideObject(Config.Preference.Theme.WindowOpacity, 1000),
-                        0.4d)), 250, 100),
+            ModAnimation.AaOpacity(this, Config.Preference.Theme.WindowOpacity / 1000d + 0.4d, 250, 100),
             ModAnimation.AaDouble(i => TransformPos.Y += (double)i, -TransformPos.Y, 600,
                 100, new ModAnimation.AniEaseOutBack(ModAnimation.AniEasePower.Weak)),
             ModAnimation.AaDouble(i => TransformRotate.Angle += (double)i,
@@ -332,10 +324,9 @@ public partial class FormMain
     private void RunCountSub()
     {
         States.System.StartupCount += 1;
-        if (Conversions.ToBoolean(
-                Operators.ConditionalCompareObjectGreaterEqual(States.System.StartupCount, 99, false)))
-            if (ModSecret.ThemeUnlock(6, false))
-                ModMain.MyMsgBox("你已经打开了 99 次 PCL 社区版啦，感谢你长期以来的支持！" + "\r\n" + "隐藏主题 铁杆粉 未解锁！社区版不包含隐藏主题！");
+        if (States.System.StartupCount < 99) return;
+        if (ModSecret.ThemeUnlock(6, false))
+            ModMain.MyMsgBox("你已经打开了 99 次 PCL 社区版啦，感谢你长期以来的支持！" + "\r\n" + "隐藏主题 铁杆粉 未解锁！社区版不包含隐藏主题！");
     }
 
     // 升级与降级事件
@@ -352,7 +343,7 @@ public partial class FormMain
                     Log("[Start] 最高版本号从 " & LowerVersionCode & " 升高到 " & VersionCode)
                 End If
 #else
-        LowerVersionCode = Conversions.ToInteger(States.System.LastAlphaVersion);
+        LowerVersionCode = States.System.LastAlphaVersion;
         if (LowerVersionCode < ModBase.VersionCode)
         {
             States.System.LastAlphaVersion = ModBase.VersionCode;
@@ -361,8 +352,7 @@ public partial class FormMain
 #endif
 
         // 被移除的窗口设置选项
-        if (Conversions.ToBoolean(
-                Operators.ConditionalCompareObjectEqual(Config.Launch.GameWindowMode, 5, false)))
+        if ((int)Config.Launch.GameWindowMode == 5)
             Config.Launch.GameWindowMode = GameWindowSizeMode.Default;
         // 修改主题设置项名称
         if (LowerVersionCode <= 207)
@@ -535,7 +525,7 @@ public partial class FormMain
     protected override void OnSourceInitialized(EventArgs e)
     {
         // 硬件加速
-        if (Conversions.ToBoolean(Config.System.DisableHardwareAcceleration))
+        if (Config.System.DisableHardwareAcceleration)
         {
             var hwndSource = PresentationSource.FromVisual(this) as HwndSource;
             if (hwndSource is not null) hwndSource.CompositionTarget.RenderMode = RenderMode.SoftwareOnly;
@@ -776,12 +766,9 @@ public partial class FormMain
             if (e.Key == Key.Escape)
             {
                 object Msg = PanMsg.Children[0];
-                if (!(Msg is MyMsgInput) && !(Msg is MyMsgSelect) && Conversions.ToBoolean(
-                        Operators.ConditionalCompareObjectEqual(((dynamic)Msg).Btn3.Visibility, Visibility.Visible,
-                            false)))
+                if (!(Msg is MyMsgInput) && !(Msg is MyMsgSelect) && ((dynamic)Msg).Btn3.Visibility == Visibility.Visible)
                     ((dynamic)Msg).Btn3_Click();
-                else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(((dynamic)Msg).Btn2.Visibility,
-                             Visibility.Visible, false)))
+                else if (((dynamic)Msg).Btn2.Visibility == Visibility.Visible)
                     ((dynamic)Msg).Btn2_Click();
                 else
                     ((dynamic)Msg).Btn1_Click();
@@ -863,7 +850,7 @@ public partial class FormMain
     {
         try
         {
-            if (Conversions.ToBoolean(Config.Download.Comp.ReadClipboard))
+            if (Config.Download.Comp.ReadClipboard)
                 ModComp.CompClipboard.GetClipboardResource();
             if (PageCurrent == PageType.InstanceSetup && PageCurrentSub == PageSubType.VersionMod)
             {
@@ -929,7 +916,7 @@ public partial class FormMain
             e.Effects = DragDropEffects.None;
             if (e.Data.GetDataPresent(DataFormats.Text))
             {
-                var Str = Conversions.ToString(e.Data.GetData(DataFormats.Text));
+                var Str = (string)e.Data.GetData(DataFormats.Text);
                 if (Str.StartsWithF("authlib-injector:yggdrasil-server:"))
                     e.Effects = DragDropEffects.Copy;
                 else if (Str.StartsWithF("file:///")) e.Effects = DragDropEffects.Copy;
@@ -959,7 +946,7 @@ public partial class FormMain
                 // 获取文本
                 try
                 {
-                    var Str = Conversions.ToString(e.Data.GetData(DataFormats.Text));
+                    var Str = (string)e.Data.GetData(DataFormats.Text);
                     ModBase.Log("[System] 接受文本拖拽：" + Str);
                     if (Str.StartsWithF("authlib-injector:yggdrasil-server:"))
                     {
@@ -1274,7 +1261,7 @@ public partial class FormMain
             if (Marshal.PtrToStringAuto(lParam) == "ImmersiveColorSet")
             {
                 ModBase.Log($"[System] 系统主题更改，深色模式：{SystemTheme.IsSystemInDarkMode()}");
-                if (Operators.ConditionalCompareObjectEqual(Config.Preference.Theme.ColorMode, 2, false) &
+                if (Config.Preference.Theme.ColorMode == ColorMode.System &
                     (ModSecret.IsDarkMode != SystemTheme.IsSystemInDarkMode())) ThemeService.RefreshColorMode();
             }
         }
@@ -1529,7 +1516,7 @@ public partial class FormMain
             }
             case PageType.VersionSaves:
             {
-                return $"存档管理 - {ModBase.GetFolderNameFromPath(Conversions.ToString(Stack.Additional))}";
+                return $"存档管理 - {ModBase.GetFolderNameFromPath((string)Stack.Additional)}";
             }
             case PageType.HomePageMarket:
             {
@@ -1633,9 +1620,9 @@ public partial class FormMain
                 return PageOther.Additional is not null && Additional.Equals(PageOther.Additional);
             }
 
-            if (other is int)
+            if (other is int o)
             {
-                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(Page, other, false)))
+                if ((int)Page == o)
                     return false;
                 return Additional is null;
             }
@@ -1922,7 +1909,7 @@ public partial class FormMain
                     {
                         if (ModMain.FrmInstanceSavesLeft is null)
                             ModMain.FrmInstanceSavesLeft = new PageInstanceSavesLeft();
-                        PageInstanceSavesLeft.CurrentSave = Conversions.ToString(Stack.Additional);
+                        PageInstanceSavesLeft.CurrentSave = (string)Stack.Additional;
                         PageChangeAnim(ModMain.FrmInstanceSavesLeft,
                             (FrameworkElement)ModMain.FrmInstanceSavesLeft.PageGet(SubType));
                         break;

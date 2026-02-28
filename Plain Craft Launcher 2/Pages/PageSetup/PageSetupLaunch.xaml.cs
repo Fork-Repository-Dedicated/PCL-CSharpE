@@ -3,8 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.App;
 using PCL.Core.Utils.OS;
 
@@ -65,11 +63,8 @@ public partial class PageSetupLaunch
             // CheckArgumentJavaTraversal.Checked = Setup.Get("LaunchArgumentJavaTraversal")
 
             // 游戏内存
-            ((MyRadioBox)FindName(
-                    Conversions.ToString(Operators.ConcatenateObject("RadioRamType",
-                        ModBase.Setup.Load("LaunchRamType")))))
-                .Checked = true;
-            SliderRamCustom.Value = Conversions.ToInteger(Config.Launch.CustomMemorySize);
+            ((MyRadioBox)FindName("RadioRamType" + (string)ModBase.Setup.Load("LaunchRamType"))).Checked = true;
+            SliderRamCustom.Value = Config.Launch.CustomMemorySize;
 
             // 高级设置
             ComboAdvanceRenderer.SelectedIndex = Config.Launch.Renderer;
@@ -399,8 +394,7 @@ public partial class PageSetupLaunch
         // ------------------------------------------
 
         var RamGive = default(double);
-        if (Conversions.ToBoolean(
-                Operators.ConditionalCompareObjectEqual(Config.Launch.MemoryAllocationMode, 0, false)))
+        if (Config.Launch.MemoryAllocationMode == 0)
         {
             // 自动配置
             var RamAvailable =
@@ -472,15 +466,14 @@ public partial class PageSetupLaunch
         else
         {
             // 手动配置
-            var Value = Conversions.ToInteger(Config.Launch.CustomMemorySize);
-            if (Value <= 12)
-                RamGive = Value * 0.1d + 0.3d;
-            else if (Value <= 25)
-                RamGive = (Value - 12) * 0.5d + 1.5d;
-            else if (Value <= 33)
-                RamGive = (Value - 25) * 1 + 8;
-            else
-                RamGive = (Value - 33) * 2 + 16;
+            var Value = Config.Launch.CustomMemorySize;
+            RamGive = Value switch
+            {
+                <= 12 => Value * 0.1d + 0.3d,
+                <= 25 => (Value - 12) * 0.5d + 1.5d,
+                <= 33 => (Value - 25) * 1 + 8,
+                _ => (Value - 33) * 2 + 16
+            };
         }
 
         // 若使用 32 位 Java，则限制为 1G
@@ -563,8 +556,7 @@ public partial class PageSetupLaunch
     private void TextAdvanceJvm_TextChanged(object sender, TextChangedEventArgs e)
     {
         BtnAdvanceJvmReset.Visibility =
-            Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(TextAdvanceJvm.Text,
-                ModBase.Setup.GetDefault("LaunchAdvanceJvm"), false))
+            TextAdvanceJvm.Text == (string)ModBase.Setup.GetDefault("LaunchAdvanceJvm")
                 ? Visibility.Hidden
                 : Visibility.Visible;
     }
@@ -579,7 +571,7 @@ public partial class PageSetupLaunch
     {
         if (ModAnimation.AniControlEnabled != 0)
             return;
-        if (!Conversions.ToBoolean(States.Hint.Renderer) && ComboAdvanceRenderer.SelectedIndex != 0)
+        if (!States.Hint.Renderer && ComboAdvanceRenderer.SelectedIndex != 0)
         {
             if (ModMain.MyMsgBox("修改此项会严重影响游戏的稳定性与性能。如果你不知道你在做什么，不要修改此选项！" + "\r\n" + "你确定要继续修改吗？", "警告",
                     "我知道我在做什么", "取消", IsWarn: true) == 2)
@@ -588,13 +580,13 @@ public partial class PageSetupLaunch
             }
             else
             {
-                ModBase.Setup.Set(Conversions.ToString(sender.Tag), sender.SelectedIndex);
+                ModBase.Setup.Set((string)sender.Tag, sender.SelectedIndex);
                 States.Hint.Renderer = true;
             }
         }
         else
         {
-            ModBase.Setup.Set(Conversions.ToString(sender.Tag), sender.SelectedIndex);
+            ModBase.Setup.Set((string)sender.Tag, sender.SelectedIndex);
         }
     }
 

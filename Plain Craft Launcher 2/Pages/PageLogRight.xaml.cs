@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.App;
 using PCL.Core.UI;
 
@@ -76,31 +75,19 @@ public partial class PageLogRight
         BtnOperationKill.IsEnabled = !ModMain.FrmLogLeft.CurrentLog.GameProcess.HasExited;
         BtnOperationExportStackDump.IsEnabled = !ModMain.FrmLogLeft.CurrentLog.GameProcess.HasExited &
                                                 !string.IsNullOrWhiteSpace(ModMain.FrmLogLeft.CurrentLog.JStackPath);
-        SliderMaxLog.Value = Conversions.ToInteger(Config.System.MaxGameLog);
+        SliderMaxLog.Value = Config.System.MaxGameLog;
         // y = 10x + 50 (0 <= x <= 5, 50 <= y <= 100)
         // y = 50x - 150 (5 < x <= 13, 100 < y <= 500)
         // y = 100x - 800 (13 < x <= 28, 500 < y <= 2000)
         SliderMaxLog.GetHintText = new Func<object, object>(v =>
         {
-            switch (v)
+            return v switch
             {
-                case var @case when Operators.ConditionalCompareObjectLessEqual(@case, 5, false):
-                {
-                    return Operators.AddObject(Operators.MultiplyObject(v, 10), 50);
-                }
-                case var case1 when Operators.ConditionalCompareObjectLessEqual(case1, 13, false):
-                {
-                    return Operators.SubtractObject(Operators.MultiplyObject(v, 50), 150);
-                }
-                case var case2 when Operators.ConditionalCompareObjectLessEqual(case2, 28, false):
-                {
-                    return Operators.SubtractObject(Operators.MultiplyObject(v, 100), 800);
-                }
-                default:
-                {
-                    return "无限制";
-                }
-            }
+                _ when (int)v <= 5 => ((int)v * 10 + 50).ToString(),
+                _ when (int)v <= 13 => ((int)v * 50 - 150).ToString(),
+                _ when (int)v <= 28 => ((int)v * 100 - 800).ToString(),
+                _ => "无限制"
+            };
         });
         // 绑定日志输出
         PanLog.Document = ModMain.FrmLogLeft.FlowDocuments[ModMain.FrmLogLeft.CurrentUuid];

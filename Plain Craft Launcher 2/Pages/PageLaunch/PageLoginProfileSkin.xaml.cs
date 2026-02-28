@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace PCL;
 
@@ -46,7 +45,7 @@ public partial class PageLoginProfileSkin
 
         Skin.Loader.Start(IsForceRestart: true);
         TextName.Text = ModProfile.SelectedProfile.Username;
-        TextType.Text = Conversions.ToString(ModProfile.GetProfileInfo(ModProfile.SelectedProfile));
+        TextType.Text = (string)ModProfile.GetProfileInfo(ModProfile.SelectedProfile);
     }
 
     #region 控制与编辑

@@ -2,9 +2,6 @@
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
-using FluentValidation;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using PCL.Core.App;
 using PCL.Core.Link;
@@ -770,7 +767,7 @@ public partial class PageToolsGameLink
             return;
         }
 
-        int port = Conversions.ToInteger(((MyComboBoxItem)ComboWorldList.SelectedItem).Tag);
+        var port = (int)((MyComboBoxItem)ComboWorldList.SelectedItem).Tag;
         await CreateLobby(port);
     }
 

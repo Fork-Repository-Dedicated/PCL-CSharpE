@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using FluentValidation;
-using Microsoft.VisualBasic;
 using PCL.Core.App;
 using PCL.Core.Logging;
 using PCL.Core.UI;

@@ -1,8 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace PCL;
 
@@ -80,8 +78,7 @@ public partial class PageSpeedLeft
                                       "0", 2) + " %";
                 LabProgress.Text = RawPercent > 0.999999d ? "100 %" : PredictText;
                 LabSpeed.Text = ModBase.GetString(ModNet.NetManager.Speed) + "/s";
-                LabFile.Text =
-                    Conversions.ToString(ModNet.NetManager.FileRemain < 0 ? "0*" : ModNet.NetManager.FileRemain);
+                LabFile.Text = ModNet.NetManager.FileRemain < 0 ? "0*" : ModNet.NetManager.FileRemain.ToString();
                 LabThread.Text = ModNet.NetTaskThreadCount + " / " + ModNet.NetTaskThreadLimit;
             }
         }
@@ -189,10 +186,7 @@ public partial class PageSpeedLeft
                                         {
                                             case ModBase.LoadState.Waiting:
                                             {
-                                                if (Conversions.ToBoolean(
-                                                        Operators.ConditionalCompareObjectNotEqual(
-                                                            ((FrameworkElement)Card.Children[Row * 2]).Tag, "Waiting",
-                                                            false)))
+                                                if ((string)((FrameworkElement)Card.Children[Row * 2]).Tag != "Waiting")
                                                 {
                                                     Card.Children.RemoveAt(Row * 2);
                                                     Card.Children.Insert(Row * 2,
@@ -206,10 +200,7 @@ public partial class PageSpeedLeft
                                             }
                                             case ModBase.LoadState.Loading:
                                             {
-                                                if (Conversions.ToBoolean(
-                                                        Operators.ConditionalCompareObjectNotEqual(
-                                                            ((FrameworkElement)Card.Children[Row * 2]).Tag, "Loading",
-                                                            false)))
+                                                if ((string)((FrameworkElement)Card.Children[Row * 2]).Tag != "Loading")
                                                 {
                                                     Card.Children.RemoveAt(Row * 2);
                                                     Card.Children.Insert(Row * 2,
@@ -229,10 +220,7 @@ public partial class PageSpeedLeft
                                             }
                                             case ModBase.LoadState.Finished:
                                             {
-                                                if (Conversions.ToBoolean(
-                                                        Operators.ConditionalCompareObjectNotEqual(
-                                                            ((FrameworkElement)Card.Children[Row * 2]).Tag, "Finished",
-                                                            false)))
+                                                if ((string)((FrameworkElement)Card.Children[Row * 2]).Tag != "Finished")
                                                 {
                                                     Card.Children.RemoveAt(Row * 2);
                                                     Card.Children.Insert(Row * 2,
@@ -394,13 +382,13 @@ public partial class PageSpeedLeft
     public void TaskRemove(object Loader)
     {
         var loaderCombo = (ModLoader.LoaderCombo<string>)Loader;
-        if (RightCards.ContainsKey(Conversions.ToString(loaderCombo.Name)))
+        if (RightCards.ContainsKey(loaderCombo.Name))
             ModBase.RunInUiWait(() =>
             {
                 // 移除已有的卡片
-                Grid Card = RightCards[Conversions.ToString(loaderCombo.Name)];
+                Grid Card = RightCards[loaderCombo.Name];
                 ModMain.FrmSpeedRight.PanMain.Children.Remove(Card);
-                RightCards.Remove(Conversions.ToString(loaderCombo.Name));
+                RightCards.Remove(loaderCombo.Name);
                 ModBase.Log($"[Watcher] 移除任务管理卡片：{loaderCombo.Name}");
             });
     }

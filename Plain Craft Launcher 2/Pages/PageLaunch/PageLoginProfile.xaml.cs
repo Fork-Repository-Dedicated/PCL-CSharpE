@@ -4,8 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.App;
 
 namespace PCL;
@@ -68,7 +66,7 @@ public partial class PageLoginProfile
         public ProfileItem(ModProfile.McProfile profile)
         {
             Profile = profile;
-            Info = Conversions.ToString(ModProfile.GetProfileInfo(profile));
+            Info = (string)ModProfile.GetProfileInfo(profile);
             var LogoPath = ModBase.PathTemp + $@"Cache\Skin\Head\{profile.SkinHeadId}.png";
             if (!(File.Exists(LogoPath) && !(new FileInfo(LogoPath).Length == 0L)))
                 LogoPath = ModBase.Logo.IconButtonUser;

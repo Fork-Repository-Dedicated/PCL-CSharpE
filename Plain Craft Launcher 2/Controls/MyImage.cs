@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.IO.Net.Http.Client;
 using PCL.Core.Utils;
 
@@ -188,7 +187,7 @@ public class MyImage : Image
     /// </summary>
     public bool EnableCache
     {
-        get => Conversions.ToBoolean(GetValue(EnableCacheProperty));
+        get => (bool)GetValue(EnableCacheProperty);
         set => SetValue(EnableCacheProperty, value);
     }
 

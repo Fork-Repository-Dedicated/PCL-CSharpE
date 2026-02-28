@@ -3,8 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Clipboard = System.Windows.Forms.Clipboard;
 
 // Author: uye (owner of the MaaAssistantArknights team)
@@ -42,16 +40,23 @@ public sealed class ClipboardInterceptor
 
     public static bool GetEnableSafeClipboard(DependencyObject element)
     {
-        return Conversions.ToBoolean(element.GetValue(EnableSafeClipboardProperty));
+        return (bool)element.GetValue(EnableSafeClipboardProperty);
     }
 
     private static void OnEnableSafeClipboardChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is TextBox && Conversions.ToBoolean(e.NewValue))
-            AddCommandBindingsToTextBox((TextBox)d);
-        else if (d is RichTextBox && Conversions.ToBoolean(e.NewValue))
-            AddCommandBindingsToRichTextBox((RichTextBox)d);
-        else if (d is DataGrid && Conversions.ToBoolean(e.NewValue)) AddCommandBindingsToDataGrid((DataGrid)d);
+        switch (d)
+        {
+            case TextBox box when (bool)e.NewValue:
+                AddCommandBindingsToTextBox(box);
+                break;
+            case RichTextBox box when (bool)e.NewValue:
+                AddCommandBindingsToRichTextBox(box);
+                break;
+            case DataGrid grid when (bool)e.NewValue:
+                AddCommandBindingsToDataGrid(grid);
+                break;
+        }
     }
 
     private static void AddCommandBindingsToTextBox(TextBox tb)
@@ -211,7 +216,7 @@ public sealed class ClipboardInterceptor
 
         foreach (var row in rowGroups)
         {
-            var rowText = string.Join(Constants.vbTab, row.Select(cell =>
+            var rowText = string.Join("\t", row.Select(cell =>
             {
                 var tb = cell.Column.GetCellContent(cell.Item) as TextBlock;
                 return tb is not null ? tb.Text : "";
@@ -219,7 +224,7 @@ public sealed class ClipboardInterceptor
             sb.AppendLine(rowText);
         }
 
-        var sbStr = sb.ToString().TrimEnd(ControlChars.Cr, ControlChars.Lf);
+        var sbStr = sb.ToString().TrimEnd('\r', '\n');
 
         try
         {

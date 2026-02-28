@@ -2,7 +2,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.UI.Controls;
 
 namespace PCL;
@@ -23,7 +22,7 @@ public partial class MyMsgInput
             LabTitle.Text = Converter.Title;
             LabText.Text = Converter.Text;
             PanText.Visibility = string.IsNullOrEmpty(Converter.Text) ? Visibility.Collapsed : Visibility.Visible;
-            TextArea.Text = Conversions.ToString(Converter.Content);
+            TextArea.Text = (string)Converter.Content;
             TextArea.HintText = Converter.HintText;
             TextArea.ValidateRules = Converter.ValidateRules;
             Btn1.Text = Converter.Button1;

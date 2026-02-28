@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.App;
 
 namespace PCL;
@@ -104,27 +103,24 @@ public partial class PageLogLeft
                 {
                     var Paragraph = new Paragraph(new Run(e.LogText)) { Foreground = e.Color, Margin = Margin };
                     FlowDocuments[Uuid].Blocks.Add(Paragraph);
-                    var MaxLog = Conversions.ToULong(Config.System.MaxGameLog);
+                    var MaxLog = (ulong)Config.System.MaxGameLog;
                     switch (MaxLog)
                     {
-                        case var @case when @case <= 5UL:
+                        case <= 5UL:
                         {
                             MaxLog = (ulong)Math.Round(MaxLog * 10m + 50m);
                             break;
                         }
-
-                        case var case1 when case1 <= 13UL:
+                        case <= 13UL:
                         {
                             MaxLog = (ulong)Math.Round(MaxLog * 50m - 150m);
                             break;
                         }
-
-                        case var case2 when case2 <= 28UL:
+                        case <= 28UL:
                         {
                             MaxLog = (ulong)Math.Round(MaxLog * 100m - 800m);
                             break;
                         }
-
                         default:
                         {
                             MaxLog = 18446744073709551615UL;
@@ -218,12 +214,12 @@ public partial class PageLogLeft
     // End Sub
     public void Remove_Click(object sender, RoutedEventArgs e)
     {
-        RemoveItem(Conversions.ToInteger(((MyListItem)((MyIconButton)sender).Parent).Tag));
+        RemoveItem((int)((MyListItem)((MyIconButton)sender).Parent).Tag);
     }
 
     // 点击选项
     public void Version_Change(object sender, ModBase.RouteEventArgs e)
     {
-        SelectionChange(Conversions.ToInteger(((MyListItem)sender).Tag));
+        SelectionChange((int)((MyListItem)sender).Tag);
     }
 }

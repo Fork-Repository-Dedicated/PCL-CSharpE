@@ -6,8 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.App;
 using PCL.Core.App.IoC;
 using PCL.Core.Logging;
@@ -80,7 +78,7 @@ public partial class Application
                     }
                     catch (Exception ex)
                     {
-                        Interaction.MsgBox(ex.Message, MsgBoxStyle.Critical, "内存优化失败");
+                        MessageBox.Show(ex.Message, "内存优化失败", MessageBoxButton.OK, MessageBoxImage.Error);
                         Environment.Exit(-1);
                     }
 
@@ -148,7 +146,7 @@ public partial class Application
             ToolTipService.VerticalOffsetProperty.OverrideMetadata(typeof(DependencyObject),
                 new FrameworkPropertyMetadata(4.0d));
             // 设置初始窗口
-            if (Conversions.ToBoolean(Config.Preference.ShowStartupLogo))
+            if (Config.Preference.ShowStartupLogo)
             {
                 ModMain.FrmStart = new SplashScreen(@"Images\icon.ico");
                 ModMain.FrmStart.Show(false, true);
@@ -208,10 +206,8 @@ public partial class Application
         catch (Exception ex)
         {
             var FilePath = ModBase.ExePathWithName;
-
-            Interaction.MsgBox(
-                ex + "\r\n" + "PCL 所在路径：" + (string.IsNullOrEmpty(FilePath) ? "获取失败" : FilePath),
-                MsgBoxStyle.Critical, "PCL 初始化错误");
+            MessageBox.Show(ex + "\r\n" + "PCL 所在路径：" + (string.IsNullOrEmpty(FilePath) ? "获取失败" : FilePath),
+                "PCL 初始化错误", MessageBoxButton.OK, MessageBoxImage.Error);
             FormMain.EndProgramForce(ModBase.ProcessReturnValues.Exception);
         }
     }

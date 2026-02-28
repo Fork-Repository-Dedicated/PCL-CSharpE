@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.Logging;
 using PCL.Core.Utils.Exts;
 
@@ -28,7 +27,7 @@ public partial class FontSelector
 
     public new string Tooltip
     {
-        get => Conversions.ToString(GetValue(TooltipProperty));
+        get => (string)GetValue(TooltipProperty);
         set => SetValue(TooltipProperty, value);
     }
 

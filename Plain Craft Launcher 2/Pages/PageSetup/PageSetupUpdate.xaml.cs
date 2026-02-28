@@ -1,8 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using PCL.Core.App;
 using PCL.Core.Utils;
 
@@ -38,7 +36,7 @@ public partial class PageSetupUpdate
             // 修复：使用 dynamic 绕过命名空间重名导致的编译期类型冲突，
             // 或者你可以尝试替换为 PCL.Core.App.SemVer.Parse(ModBase.VersionBaseName)
             if (await ModSecret.RemoteServer.IsLatestAsync(
-                    Conversions.ToBoolean(ModSecret.IsCurrentVersionBeta) ? UpdateChannel.beta : UpdateChannel.stable,
+                    ModSecret.IsCurrentVersionBeta ? UpdateChannel.beta : UpdateChannel.stable,
                     ModBase.IsArm64System ? UpdateArch.arm64 : UpdateArch.x64,
                     SemVer.Parse(ModBase.VersionBaseName),
                     ModBase.VersionCode))
@@ -72,7 +70,7 @@ public partial class PageSetupUpdate
                 try
                 {
                     UpdateInfo = ModSecret.RemoteServer.GetLatestVersion(
-                        Conversions.ToBoolean(ModSecret.IsCurrentVersionBeta)
+                        ModSecret.IsCurrentVersionBeta
                             ? UpdateChannel.beta
                             : UpdateChannel.stable, ModBase.IsArm64System ? UpdateArch.arm64 : UpdateArch.x64);
                     TextUpdateName.Text = "PCL CE " + VersionNameFormat(UpdateInfo.VersionName);

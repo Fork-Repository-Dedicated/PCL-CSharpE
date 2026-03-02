@@ -2340,15 +2340,12 @@ public partial class PageInstanceCompResource : IRefreshable
                 ModMain.FrmMain.PageChange(new FormMain.PageStackData
                 {
                     Page = FormMain.PageType.CompDetail,
-                    Additional = new object[]
-                    {
-                        ModEntry.Comp, new List<string>(), PageInstanceLeft.Instance.Info.VanillaName,
+                    Additional = (ModEntry.Comp, new List<string>(), PageInstanceLeft.Instance.Info.VanillaName,
                         PageInstanceLeft.Instance.Info.HasForge ? ModComp.CompLoaderType.Forge :
                         PageInstanceLeft.Instance.Info.HasNeoForge ? ModComp.CompLoaderType.NeoForge :
                         PageInstanceLeft.Instance.Info.HasFabric || ModdedLabyMod ? ModComp.CompLoaderType.Fabric :
                         ModComp.CompLoaderType.Any,
-                        CurrentCompType
-                    }
+                        CurrentCompType, null, null, null)
                 });
             }
             else

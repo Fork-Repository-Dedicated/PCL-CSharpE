@@ -264,7 +264,8 @@ public partial class MyCompItem
                 if (!string.IsNullOrEmpty(Card.Title) && !Card.IsSwapped)
                     Titles.Add(Card.Title);
             ModBase.Log("[Comp] 记录当前已展开的卡片：" + string.Join("、", Titles));
-            ((object[])ModMain.FrmMain.PageCurrent.Additional)[1] = Titles;
+            var additional = ModMain.FrmMain.PageCurrent.Additional.Value;
+            ModMain.FrmMain.PageCurrent.Additional = additional with { ExpandedTitles = Titles };
         }
 
         // 打开详情页
@@ -332,15 +333,15 @@ public partial class MyCompItem
         {
             // 从详情页进入（查看前置）
             TargetType = ModComp.CompType.Any; // 允许任意类别
-            TargetVersion = Conversions.ToString(((object[])ModMain.FrmMain.PageCurrent.Additional)[2]);
-            TargetLoader =
-                (ModComp.CompLoaderType)Conversions.ToInteger(((object[])ModMain.FrmMain.PageCurrent.Additional)[3]);
+            var additional = ModMain.FrmMain.PageCurrent.Additional.Value;
+            TargetVersion = additional.TargetVersion;
+            TargetLoader = additional.TargetLoader;
         }
 
         ModMain.FrmMain.PageChange(new FormMain.PageStackData
         {
             Page = FormMain.PageType.CompDetail,
-            Additional = new[] { sender.Tag, new List<string>(), TargetVersion, TargetLoader, TargetType }
+            Additional = ((ModComp.CompProject)sender.Tag, new List<string>(), TargetVersion, TargetLoader, TargetType, null, null, null)
         });
     }
 

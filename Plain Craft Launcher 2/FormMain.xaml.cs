@@ -1504,19 +1504,19 @@ public partial class FormMain
             }
             case PageType.InstanceSetup:
             {
-                return "实例设置 - " + (PageInstanceLeft.Instance is null ? "未知实例" : PageInstanceLeft.Instance.Name);
+                return $"实例设置 - {(PageInstanceLeft.Instance is null ? "未知实例" : PageInstanceLeft.Instance.Name)}";
             }
             case PageType.CompDetail:
             {
-                return "资源下载 - " + ((ModComp.CompProject)((object[])Stack.Additional)[0]).TranslatedName;
+                return $"资源下载 - {Stack.Additional.Value.CompProject.TranslatedName}";
             }
             case PageType.HelpDetail:
             {
-                return ((ModMain.HelpEntry)((object[])Stack.Additional)[0]).Title;
+                return Stack.Additional.Value.HelpEntry.Title;
             }
             case PageType.VersionSaves:
             {
-                return $"存档管理 - {ModBase.GetFolderNameFromPath((string)Stack.Additional)}";
+                return $"存档管理 - {ModBase.GetFolderNameFromPath(Stack.Additional.Value.SavePath)}";
             }
             case PageType.HomePageMarket:
             {
@@ -1602,7 +1602,23 @@ public partial class FormMain
 
     public class PageStackData
     {
-        public object Additional;
+        /// <summary>
+        /// <list type="bullet">
+        ///   <item><description>CompDetail: (CompProject, ExpandedTitles, TargetVersion, TargetLoader, ResourceType)</description></item>
+        ///   <item><description>HelpDetail: (HelpEntry, HelpPage)</description></item>
+        ///   <item><description>VersionSaves: SavePath</description></item>
+        /// </list>
+        /// </summary>
+        public (
+            ModComp.CompProject CompProject,
+            List<string> ExpandedTitles,
+            string TargetVersion,
+            ModComp.CompLoaderType TargetLoader,
+            ModComp.CompType ResourceType,
+            ModMain.HelpEntry HelpEntry,
+            FrameworkElement HelpPage,
+            string SavePath
+        )? Additional;
 
         public PageType Page;
 
@@ -1902,14 +1918,14 @@ public partial class FormMain
                     }
                 case PageType.HelpDetail: // 帮助详情
                     {
-                        PageChangeAnim(new MyPageLeft(), ((dynamic)Stack.Additional)[1]);
+                        PageChangeAnim(new MyPageLeft(), Stack.Additional.Value.HelpPage);
                         break;
                     }
                 case PageType.VersionSaves: // 存档管理
                     {
                         if (ModMain.FrmInstanceSavesLeft is null)
                             ModMain.FrmInstanceSavesLeft = new PageInstanceSavesLeft();
-                        PageInstanceSavesLeft.CurrentSave = (string)Stack.Additional;
+                        PageInstanceSavesLeft.CurrentSave = Stack.Additional.Value.SavePath;
                         PageChangeAnim(ModMain.FrmInstanceSavesLeft,
                             (FrameworkElement)ModMain.FrmInstanceSavesLeft.PageGet(SubType));
                         break;

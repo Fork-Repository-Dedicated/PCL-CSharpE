@@ -654,11 +654,8 @@ public static class ModComp
                             ModMain.FrmMain.PageChange(new FormMain.PageStackData
                             {
                                 Page = FormMain.PageType.CompDetail,
-                                Additional = new object[]
-                                {
-                                    compProjects.First(), new List<string>(), string.Empty, CompLoaderType.Any,
-                                    CompType.Any
-                                }
+                                Additional = (compProjects.First(), new List<string>(), string.Empty, CompLoaderType.Any,
+                                    CompType.Any, null, null, null)
                             });
                         }
                     }));

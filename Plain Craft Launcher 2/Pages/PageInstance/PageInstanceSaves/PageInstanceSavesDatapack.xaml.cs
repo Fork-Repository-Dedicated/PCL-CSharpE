@@ -1464,11 +1464,8 @@ public partial class PageInstanceSavesDatapack : IRefreshable
                 ModMain.FrmMain.PageChange(new FormMain.PageStackData
                 {
                     Page = FormMain.PageType.CompDetail,
-                    Additional = new object[]
-                    {
-                        DatapackEntry.Comp, new List<string>(), PageInstanceLeft.Instance.Info.VanillaName,
-                        ModComp.CompLoaderType.Minecraft, ModComp.CompType.DataPack
-                    }
+                    Additional = (DatapackEntry.Comp, new List<string>(), PageInstanceLeft.Instance.Info.VanillaName,
+                        ModComp.CompLoaderType.Minecraft, ModComp.CompType.DataPack, null, null, null)
                 });
             }
             else

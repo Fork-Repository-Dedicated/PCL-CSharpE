@@ -207,7 +207,7 @@ public partial class PageInstanceSaves : IRefreshable
                         Type = MyListItem.CheckType.Clickable
                     };
                     worldItem.Click += (_, _) => ModMain.FrmMain.PageChange(new FormMain.PageStackData
-                        { Page = FormMain.PageType.VersionSaves, Additional = tmpCurFolder });
+                        { Page = FormMain.PageType.VersionSaves, Additional = (null, null, null, ModComp.CompLoaderType.Any, ModComp.CompType.Any, null, null, tmpCurFolder) });
 
                     var BtnOpen = new MyIconButton
                     {
@@ -271,7 +271,7 @@ public partial class PageInstanceSaves : IRefreshable
                         ToolTip = "详情"
                     };
                     BtnInfo.Click += (_, _) => ModMain.FrmMain.PageChange(new FormMain.PageStackData
-                        { Page = FormMain.PageType.VersionSaves, Additional = tmpCurFolder });
+                        { Page = FormMain.PageType.VersionSaves, Additional = (null, null, null, ModComp.CompLoaderType.Any, ModComp.CompType.Any, null, null, tmpCurFolder) });
 
                     var BtnLaunch = new MyIconButton
                     {

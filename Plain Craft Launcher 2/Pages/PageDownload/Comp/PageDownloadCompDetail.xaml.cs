@@ -23,7 +23,7 @@ public partial class PageDownloadCompDetail
     private void Init()
     {
         ModAnimation.AniControlEnabled += 1;
-        _project = (ModComp.CompProject)((object[])ModMain.FrmMain.PageCurrent.Additional)[0];
+        _project = ModMain.FrmMain.PageCurrent.Additional.Value.CompProject;
         PanBack.ScrollToHome();
         // 重启加载器
         if (_isFirstInit)
@@ -498,11 +498,11 @@ public partial class PageDownloadCompDetail
 
     public void LoadTargetFromAdditional()
     {
-        var array = (object[])ModMain.FrmMain.PageCurrent.Additional;
-        _project = (ModComp.CompProject)array[0];
-        _targetInstance = Conversions.ToString(array[2]);
-        _targetLoader = (ModComp.CompLoaderType)Conversions.ToInteger(array[3]);
-        _pageType = (ModComp.CompType)Conversions.ToInteger(array[4]);
+        var additional = ModMain.FrmMain.PageCurrent.Additional.Value;
+        _project = additional.CompProject;
+        _targetInstance = additional.TargetVersion;
+        _targetLoader = additional.TargetLoader;
+        _pageType = additional.ResourceType;
     }
 
     private ModComp.CompProject _project;
@@ -860,9 +860,9 @@ public partial class PageDownloadCompDetail
         try
         {
             PanResults.Children.Clear();
-            var array = (object[])ModMain.FrmMain.PageCurrent.Additional;
-            var additionalTitles = array is not null
-                ? (List<string>)array[1]
+            var additional = ModMain.FrmMain.PageCurrent.Additional;
+            var additionalTitles = additional is not null
+                ? additional.Value.ExpandedTitles
                 : new List<string>();
 
             foreach (var pair in dict)

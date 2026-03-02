@@ -82,9 +82,12 @@ internal static class ModSecret
         catch (Exception ex)
         {
             Interaction.MsgBox(
-                $"PCL 无法创建 PCL 文件夹（{dataPath}），请尝试：" + "\r\n" + "1. 将 PCL 移动到其他文件夹" +
-                (ModBase.ExePath.StartsWithF("C:", true) ? "，例如 C 盘和桌面以外的其他位置。" : "。") + "\r\n" +
-                "2. 删除当前目录中的 PCL 文件夹，然后再试。" + "\r\n" + "3. 右键 PCL 选择属性，打开 兼容性 中的 以管理员身份运行此程序。",
+                $$"""
+                  PCL 无法创建 PCL 文件夹（{{dataPath}}），请尝试：
+                  1. 将 PCL 移动到其他文件夹{{(ModBase.ExePath.StartsWithF("C:", true) ? "，例如 C 盘和桌面以外的其他位置。" : "。")}}
+                  2. 删除当前目录中的 PCL 文件夹，然后再试。
+                  3. 右键 PCL 选择属性，打开 兼容性 中的 以管理员身份运行此程序。
+                  """,
                 MsgBoxStyle.Critical, "运行环境错误");
             Environment.Exit((int)ModBase.ProcessReturnValues.Cancel);
         }
@@ -92,9 +95,12 @@ internal static class ModSecret
         if (!ModBase.CheckPermission(ModBase.ExePath + "PCL"))
         {
             Interaction.MsgBox(
-                "PCL 没有对当前文件夹的写入权限，请尝试：" + "\r\n" + "1. 将 PCL 移动到其他文件夹" +
-                (ModBase.ExePath.StartsWithF("C:", true) ? "，例如 C 盘和桌面以外的其他位置。" : "。") + "\r\n" +
-                "2. 删除当前目录中的 PCL 文件夹，然后再试。" + "\r\n" + "3. 右键 PCL 选择属性，打开 兼容性 中的 以管理员身份运行此程序。",
+                $$"""
+                  PCL 没有对当前文件夹的写入权限，请尝试：
+                  1. 将 PCL 移动 to 其他文件夹{{(ModBase.ExePath.StartsWithF("C:", true) ? "，例如 C 盘和桌面以外的其他位置。" : "。")}}
+                  2. 删除当前目录中的 PCL 文件夹，然后再试。
+                  3. 右键 PCL 选择属性，打开 兼容性 中的 以管理员身份运行此程序。
+                  """,
                 MsgBoxStyle.Critical, "运行环境错误");
             Environment.Exit((int)ModBase.ProcessReturnValues.Cancel);
         }
@@ -152,13 +158,11 @@ PCL-Community 及其成员与龙腾猫跃无从属关系，且均不会为您的
             }
         }
 
-        ModLaunch.McLaunchLog("当前剩余内存：" +
-                              Math.Round((double)(KernelInterop.GetAvailablePhysicalMemoryBytes()
-                                  / 1024 / 1024 / 1024 * 10)) /
-                              10 + "G");
-        DataList.Add("-Xmn" + Math.Floor(PageInstanceSetup.GetRam(ModMinecraft.McInstanceSelected) * 1024d * 0.15d) +
-                     "m");
-        DataList.Add("-Xmx" + Math.Floor(PageInstanceSetup.GetRam(ModMinecraft.McInstanceSelected) * 1024d) + "m");
+        double availableGb = KernelInterop.GetAvailablePhysicalMemoryBytes() / 1073741824.0;
+        ModLaunch.McLaunchLog($"当前剩余内存：{availableGb:N1}G");
+        double totalRamMb = PageInstanceSetup.GetRam(ModMinecraft.McInstanceSelected) * 1024d;
+        DataList.Add($"-Xmn{Math.Floor(totalRamMb * 0.15)}m");
+        DataList.Add($"-Xmx{Math.Floor(totalRamMb)}m");
         if (!DataList.Any(d => d.Contains("-Dlog4j2.formatMsgNoLookups=true")))
             DataList.Add("-Dlog4j2.formatMsgNoLookups=true");
     }

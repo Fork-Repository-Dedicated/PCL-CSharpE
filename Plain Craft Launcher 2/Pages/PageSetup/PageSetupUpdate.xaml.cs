@@ -191,40 +191,50 @@ public partial class PageSetupUpdate
             }
             case 1:
             {
-                if (ModMain.MyMsgBox(
-                        "你正在切换启动器更新通道到测试版。" + "\r\n" + "测试版可以提供下个版本更新内容的预览，但可能会包含未经充分测试的功能，稳定性欠佳。" +
-                        "\r\n" + "\r\n" + "在升级到测试版后，你需要等待下一个正式版发布，或是手动重新下载启动器来切换到正式版。" +
-                        "\r\n" + "该选项仅推荐具有一定基础知识和能力的用户选择。如果你正在制作整合包，请使用正式版！", "继续之前...", "我已知晓", "取消",
-                        IsWarn: true) == 2)
+                const string warningMsg = """
+                                          你正在切换启动器更新通道到测试版。
+                                          测试版可以提供下个版本更新内容的预览，但可能会包含未经充分测试的功能，稳定性欠佳。
+
+                                          在升级到测试版后，你需要等待下一个正式版发布，或是手动重新下载启动器来切换到正式版。
+                                          该选项仅推荐具有一定基础知识和能力的用户选择。如果你正在制作整合包，请使用正式版！
+                                          """;
+
+                if (ModMain.MyMsgBox(warningMsg, "继续之前...", "我已知晓", "取消", IsWarn: true) == 2)
                     IsCancelled = true;
                 else
                     CheckUpdate();
-
                 break;
             }
             case 2:
             {
-                if (ModMain.MyMsgBox(
-                        "你正在切换启动器更新通道到开发版。" + "\r\n" + "该通道可第一时间获取基于最新代码构建的开发版本，但可能极不稳定，甚至直接无法启动。" +
-                        "\r\n" + "\r\n" + "在升级到开发版后，只能手动重新下载启动器来切换回正式版或测试版。" + "\r\n" +
-                        "该选项仅推荐高级用户选择。如果你正在制作整合包，请使用正式版！", "继续之前...", "我已知晓", "取消", IsWarn: true) == 2)
+                const string devWarning = """
+                                          你正在切换启动器更新通道到开发版。
+                                          该通道可第一时间获取基于最新代码构建的开发版本，但可能极不稳定，甚至直接无法启动。
+
+                                          在升级到开发版后，只能手动重新下载启动器来切换回正式版或测试版。
+                                          该选项仅推荐高级用户选择。如果你正在制作整合包，请使用正式版！
+                                          """;
+
+                if (ModMain.MyMsgBox(devWarning, "继续之前...", "我已知晓", "取消", IsWarn: true) == 2)
                 {
                     IsCancelled = true;
                     break;
                 }
 
-                var ret = ModMain.MyMsgBoxInput("最终确认",
-                    "你确定要切换到开发版通道吗？" + "\r\n" + "开发版可能存在严重问题，甚至无法启动！" + "\r\n" +
-                    "在升级到开发版后，将无法切换回其他任何更新通道，只能手动重新下载启动器来切换回正式版或测试版。" + "\r\n" + "\r\n" +
-                    "该选项仅推荐高级用户选择。如果你正在制作整合包，请使用正式版！" + "\r\n" + "请输入 '我确认切换到此分支并已知晓风险' 以确认。", Button1: "提交",
-                    Button2: "取消", IsWarn: true);
-                if (ret is null)
-                {
-                    IsCancelled = true;
-                    break;
-                }
+                const string confirmText = "我确认切换到此分支并已知晓风险";
+                const string finalConfirmPrompt = $"""
+                                                   你确定要切换到开发版通道吗？
+                                                   开发版可能存在严重问题，甚至无法启动！
 
-                if (ret == "我确认切换到此分支并已知晓风险")
+                                                   在升级到开发版后，将无法切换回其他任何更新通道，只能手动重新下载启动器来切换回正式版或测试版。
+
+                                                   该选项仅推荐高级用户选择。如果你正在制作整合包，请使用正式版！
+                                                   请输入 '{confirmText}' 以确认。
+                                                   """;
+
+                var ret = ModMain.MyMsgBoxInput("最终确认", finalConfirmPrompt, Button1: "提交", Button2: "取消", IsWarn: true);
+    
+                if (ret == confirmText)
                 {
                     CheckUpdate();
                 }
@@ -233,7 +243,6 @@ public partial class PageSetupUpdate
                     ModMain.Hint("你输入了错误的内容...");
                     IsCancelled = true;
                 }
-
                 break;
             }
         }
@@ -272,7 +281,7 @@ public partial class PageSetupUpdate
             return str;
         var add = str.AfterLast("-");
         str = str.BeforeLast("-");
-        return str + " " + add.Replace(".", " ").Replace("beta", "Beta").Replace("rc", "RC");
+        return $"{str} {add.Replace(".", " ").Replace("beta", "Beta").Replace("rc", "RC")}";
     }
 
     private void BtnCheckAgain_OnClick(object sender, MouseButtonEventArgs e)

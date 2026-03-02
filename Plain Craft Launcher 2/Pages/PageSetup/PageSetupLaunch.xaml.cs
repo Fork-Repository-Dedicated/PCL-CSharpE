@@ -63,7 +63,7 @@ public partial class PageSetupLaunch
             // CheckArgumentJavaTraversal.Checked = Setup.Get("LaunchArgumentJavaTraversal")
 
             // 游戏内存
-            ((MyRadioBox)FindName("RadioRamType" + ModBase.Setup.Load("LaunchRamType").ToString())).Checked = true;
+            ((MyRadioBox)FindName("RadioRamType" + ModBase.Setup.Load("LaunchRamType"))).Checked = true;
             SliderRamCustom.Value = Config.Launch.CustomMemorySize;
 
             // 高级设置

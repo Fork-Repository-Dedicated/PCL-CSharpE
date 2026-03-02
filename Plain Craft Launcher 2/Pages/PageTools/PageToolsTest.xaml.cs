@@ -89,19 +89,19 @@ public partial class PageToolsTest
             {
                 case ModBase.LoadState.Finished:
                 {
-                    ModMain.Hint(Loader.Name + "完成！", ModMain.HintType.Finish);
+                    ModMain.Hint($"{Loader.Name}完成！", ModMain.HintType.Finish);
                     Interaction.Beep();
                     break;
                 }
                 case ModBase.LoadState.Failed:
                 {
-                    ModBase.Log(Loader.Error, Loader.Name + "失败", ModBase.LogLevel.Msgbox);
+                    ModBase.Log(Loader.Error, $"{Loader.Name}失败", ModBase.LogLevel.Msgbox);
                     Interaction.Beep();
                     break;
                 }
                 case ModBase.LoadState.Aborted:
                 {
-                    ModMain.Hint(Loader.Name + "已取消！");
+                    ModMain.Hint($"{Loader.Name}已取消！");
                     break;
                 }
             }
@@ -130,7 +130,7 @@ public partial class PageToolsTest
             }
             catch (Exception ex)
             {
-                ModBase.Log(ex, "访问文件夹失败（" + Folder + "）", ModBase.LogLevel.Hint);
+                ModBase.Log(ex, $"访问文件夹失败（{Folder}）", ModBase.LogLevel.Hint);
                 return;
             }
 
@@ -139,12 +139,12 @@ public partial class PageToolsTest
             var uuid = ModBase.GetUuid();
             ModLoader.LoaderBase loaderdownload;
             if (new HttpValidator().Validate(Url).IsValid)
-                loaderdownload = new ModNet.LoaderDownload("自定义下载文件：" + FileName + " ",
+                loaderdownload = new ModNet.LoaderDownload($"自定义下载文件：{FileName} ",
                     new List<ModNet.NetFile> { new(new[] { Url }, Folder + FileName, null, true, UserAgent) });
             else // UNC 路径
-                loaderdownload = new ModNet.LoaderDownloadUnc("自定义下载文件：" + FileName + " ",
+                loaderdownload = new ModNet.LoaderDownloadUnc($"自定义下载文件：{FileName} ",
                     new Tuple<string, string>(Url, Folder + FileName));
-            var loaderCombo = new ModLoader.LoaderCombo<int>("自定义下载 (" + uuid + ") ", new[] { loaderdownload })
+            var loaderCombo = new ModLoader.LoaderCombo<int>($"自定义下载 ({uuid}) ", new[] { loaderdownload })
                 { OnStateChanged = a => DownloadState((ModLoader.LoaderCombo<int>)a) };
             loaderCombo.Start();
             ModLoader.LoaderTaskbarAdd(loaderCombo);
@@ -212,8 +212,12 @@ public partial class PageToolsTest
                                 false)))
                     {
                         if (ModMain.MyMsgBox(
-                                "即将清理游戏日志、错误报告、缓存等文件。" + "\r\n" + "虽然应该没人往这些地方放重要文件，但还是问一下，是否确认继续？" +
-                                "\r\n" + "\r\n" + "在完成清理后，PCL 将自动重启。", "清理确认", "确定", "取消") ==
+                                """
+                                即将清理游戏日志、错误报告、缓存等文件。
+                                虽然应该没人往这些地方放重要文件，但还是问一下，是否确认继续？
+
+                                在完成清理后，PCL 将自动重启。
+                                """, "清理确认", "确定", "取消") ==
                             2) return;
                         States.Hint.CleanJunkFile += 1;
                     }
@@ -254,7 +258,10 @@ public partial class PageToolsTest
                     num += ModBase.DeleteDirectory(ModBase.OsDrive + @"ProgramData\PCL\", true);
                     if (num != 0)
                     {
-                        ModMain.MyMsgBox(string.Format("清理了 {0} 个文件！", num) + "\r\n" + "PCL 即将自动重启……",
+                        ModMain.MyMsgBox($"""
+                                           清理了 {num} 个文件！
+                                           PCL 即将自动重启……
+                                           """,
                             "缓存已清理", "确定", "", "", false, true, true);
                         Process.Start(new ProcessStartInfo(ModBase.ExePathWithName));
                         FormMain.EndProgramForce();
@@ -379,8 +386,10 @@ public partial class PageToolsTest
     public static void MemoryOptimizeInternal(bool ShowHint)
     {
         if (!ProcessInterop.IsAdmin())
-            throw new Exception("内存优化功能需要管理员权限！" + "\r\n" +
-                                "如果需要自动以管理员身份启动 PCL，可以右键 PCL，打开 属性 → 兼容性 → 以管理员身份运行此程序。");
+            throw new Exception("""
+                                内存优化功能需要管理员权限！
+                                如果需要自动以管理员身份启动 PCL，可以右键 PCL，打开 属性 → 兼容性 → 以管理员身份运行此程序。
+                                """);
         ModBase.Log("[Test] 获取内存优化权限");
 
         // 提权部分
@@ -571,7 +580,7 @@ public partial class PageToolsTest
                     Result = ModMinecraft.McSkinDownload(Result);
                     ModBase.RunInUi(() =>
                     {
-                        var Path = SystemDialogs.SelectSaveFile("保存皮肤", ID + ".png", "皮肤图片文件(*.png)|*.png");
+                        var Path = SystemDialogs.SelectSaveFile("保存皮肤", $"{ID}.png", "皮肤图片文件(*.png)|*.png");
                         ModBase.CopyFile(Result, Path);
                         ModMain.Hint($"玩家 {ID} 的皮肤已保存！", ModMain.HintType.Finish);
                     });
@@ -582,11 +591,11 @@ public partial class PageToolsTest
                 if (ex.ToString().Contains("429"))
                 {
                     ModMain.Hint("获取皮肤太过频繁，请 5 分钟之后再试！", ModMain.HintType.Critical);
-                    ModBase.Log("获取正版皮肤失败（" + ID + "）：获取皮肤太过频繁，请 5 分钟后再试！");
+                    ModBase.Log($"获取正版皮肤失败（{ID}）：获取皮肤太过频繁，请 5 分钟后再试！");
                 }
                 else
                 {
-                    ModBase.Log(ex, "获取正版皮肤失败（" + ID + "）");
+                    ModBase.Log(ex, $"获取正版皮肤失败（{ID}）");
                 }
             }
         });
@@ -620,7 +629,11 @@ public partial class PageToolsTest
 
     public static string GetRating(int luckValue)
     {
-        if (luckValue == 100) return "100！100！" + "\r\n" + "隐藏主题 欧皇…… 不对，社区版应该没有这玩意……";
+        if (luckValue == 100)
+            return """
+                   100！100！
+                   隐藏主题 欧皇…… 不对，社区版应该没有这玩意……
+                   """;
 
         return luckValue >= 95 ? "差一点就到100了呢..." :
             luckValue >= 90 ? "好评如潮！" :
@@ -639,14 +652,18 @@ public partial class PageToolsTest
         var start = Paths.GetSpecialPath(Environment.SpecialFolder.StartMenu, @"Programs\" + shortcutName);
         var choice =
             ModMain.MyMsgBox(
-                "这个快捷方式不会自动移除，在删除/移动启动器前请手动移除快捷方式。" + "\r\n" + "\r\n" + desktopName + "位置: " +
-                desktop + "\r\n" + startName + "位置: " + start, "选择快捷方式位置", "取消", desktopName, startName);
+                $"""
+                 这个快捷方式不会自动移除，在删除/移动启动器前请手动移除快捷方式。
+
+                 {desktopName}位置: {desktop}
+                 {startName}位置: {start}
+                 """, "选择快捷方式位置", "取消", desktopName, startName);
         if (choice == 1)
             return;
         var shortcutPath = choice == 2 ? desktop : start;
         var locationName = choice == 2 ? desktopName : startName;
         Files.CreateShortcut(shortcutPath, Basics.ExecutablePath);
-        ModMain.Hint("已在" + locationName + "创建快捷方式", ModMain.HintType.Finish);
+        ModMain.Hint($"已在{locationName}创建快捷方式", ModMain.HintType.Finish);
     }
 
     // 启动计数显示

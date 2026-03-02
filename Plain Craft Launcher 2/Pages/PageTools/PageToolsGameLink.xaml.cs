@@ -548,7 +548,7 @@ public partial class PageToolsGameLink
         // msg += $"{If(info.Cost = ETConnectionType.Local, "本机 ", $"延迟：{info.Ping}ms，丢包率：{info.Loss}%，连接方式：{LobbyTextHandler.GetConnectTypeChinese(info.Cost)}，")}NAT 类型：{LobbyTextHandler.GetNatTypeChinese(info.NatType)}"
         msg += "\r\n";
         msg += "此处数据仅供参考，请以实际游玩体验为准。";
-        msg += "\r\n" + "\r\n";
+        msg += "\r\n\r\n";
         msg += "若想了解 NAT 类型与其如何影响联机体验，请前往界面左侧的常见问题一栏。";
         ModMain.MyMsgBox(msg, $"玩家 {info.Name} 的详细信息");
     }
@@ -935,7 +935,7 @@ public partial class PageToolsGameLink
     // 退出
     private async void BtnFinishExit_Click(object sender, ModBase.RouteEventArgs routeEventArgs)
     {
-        var creatorHint = LobbyService.IsHost ? "\r\n" + "由于你是大厅创建者，退出后此大厅将会自动解散。" : "";
+        var creatorHint = LobbyService.IsHost ? "\r\n由于你是大厅创建者，退出后此大厅将会自动解散。" : "";
         if (ModMain.MyMsgBox($"你确定要退出大厅吗？{creatorHint}", "确认退出", "确定", "取消", IsWarn: true) == 1)
         {
             CurrentSubpage = Subpages.PanSelect;
@@ -953,9 +953,9 @@ public partial class PageToolsGameLink
     // 复制 IP
     private void BtnFinishCopyIp_Click(object sender, ModBase.RouteEventArgs routeEventArgs)
     {
-        var ip = "127.0.0.1:" + LobbyInfoProvider.McForward.LocalPort;
+        var ip = $"127.0.0.1:{LobbyInfoProvider.McForward.LocalPort}";
         ModMain.MyMsgBox(
-            "大厅创建者的游戏地址：" + ip + "\r\n" + "注意：仅推荐在 MC 多人游戏列表不显示大厅广播时使用 IP 连接！通过 IP 连接将可能要求使用正版档案。", "复制 IP",
+            $"大厅创建者的游戏地址：{ip}\r\n注意：仅推荐在 MC 多人游戏列表不显示大厅广播时使用 IP 连接！通过 IP 连接将可能要求使用正版档案。", "复制 IP",
             "复制", "返回", Button1Action: () => ModBase.ClipboardSet(ip));
     }
 

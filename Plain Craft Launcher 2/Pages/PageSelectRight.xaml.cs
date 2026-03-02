@@ -244,14 +244,14 @@ public partial class PageSelectRight
 
                     default:
                     {
-                        throw new ArgumentException("未知的卡片种类（" + (int)Card.Key + "）");
+                        throw new ArgumentException($"未知的卡片种类（{(int)Card.Key}）");
                     }
                 }
 
                 #endregion
 
                 // 建立控件
-                var CardTitle = CardName + (CardName == "收藏夹" ? "" : " (" + filteredInstances.Count + ")");
+                var CardTitle = $"{CardName}{(CardName == "收藏夹" ? "" : $" ({filteredInstances.Count})")}";
                 var NewCard = new MyCard { Title = CardTitle, Margin = new Thickness(0d, 0d, 0d, 15d) };
                 var NewStack = new StackPanel
                 {
@@ -301,15 +301,19 @@ public partial class PageSelectRight
                     if (ShowHidden)
                     {
                         LabEmptyTitle.Text = "无隐藏实例";
-                        LabEmptyContent.Text = "没有实例被隐藏，你可以在实例设置的实例分类选项中隐藏实例。" + "\r\n" +
-                                               "再次按下 F11 即可退出隐藏实例查看模式。";
+                        LabEmptyContent.Text = """
+                                               没有实例被隐藏，你可以在实例设置的实例分类选项中隐藏实例。
+                                               再次按下 F11 即可退出隐藏实例查看模式。
+                                               """;
                         BtnEmptyDownload.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         LabEmptyTitle.Text = "无可用实例";
-                        LabEmptyContent.Text = "未找到任何游戏实例，请先下载一个游戏实例。" + "\r\n" +
-                                               "若有已存在的实例，请在左边的列表中选择添加文件夹，选择 .minecraft 文件夹将其导入。";
+                        LabEmptyContent.Text = """
+                                               未找到任何游戏实例，请先下载一个游戏实例。
+                                               若有已存在的实例，请在左边的列表中选择添加文件夹，选择 .minecraft 文件夹将其导入。
+                                               """;
                         BtnEmptyDownload.Visibility =
                             Config.Preference.Hide.PageDownload && !PageSetupUI.HiddenForceShow
                                 ? Visibility.Collapsed
@@ -337,7 +341,10 @@ public partial class PageSelectRight
                     PanBack.Visibility = Visibility.Collapsed;
                     LabEmptyTitle.Text = "无隐藏实例";
                     LabEmptyContent.Text =
-                        "没有实例被隐藏，你可以在实例设置的实例分类选项中隐藏实例。" + "\r\n" + "再次按下 F11 即可退出隐藏实例查看模式。";
+                        """
+                        没有实例被隐藏，你可以在实例设置的实例分类选项中隐藏实例。
+                        再次按下 F11 即可退出隐藏实例查看模式。
+                        """;
                     BtnEmptyDownload.Visibility = Visibility.Collapsed;
                     PanVerSearchBox.Visibility = Visibility.Collapsed;
                 }
@@ -525,9 +532,11 @@ public partial class PageSelectRight
             var IsHintIndie = instance.State != ModMinecraft.McInstanceState.Error &&
                               (instance.PathIndie ?? "") != (ModMinecraft.McFolderSelected ?? "");
             switch (ModMain.MyMsgBox(
-                        $"你确定要{(IsShiftPressed ? "永久" : "")}删除实例 {instance.Name} 吗？" + (IsHintIndie
-                            ? "\r\n" + "由于该实例开启了版本隔离，删除时该实例对应的存档、资源包、Mod 等文件也将被一并删除！"
-                            : ""), "实例删除确认", Button2: "取消", IsWarn: true))
+                        $"""
+                         你确定要{(IsShiftPressed ? "永久" : "")}删除实例 {instance.Name} 吗？{(IsHintIndie
+                             ? "\r\n由于该实例开启了版本隔离，删除时该实例对应的存档、资源包、Mod 等文件也将被一并删除！"
+                             : "")}
+                         """, "实例删除确认", Button2: "取消", IsWarn: true))
             {
                 case 1:
                 {
@@ -537,13 +546,13 @@ public partial class PageSelectRight
                     if (IsShiftPressed)
                     {
                         ModBase.DeleteDirectory(instance.PathInstance);
-                        ModMain.Hint("实例 " + instance.Name + " 已永久删除！", ModMain.HintType.Finish);
+                        ModMain.Hint($"实例 {instance.Name} 已永久删除！", ModMain.HintType.Finish);
                     }
                     else
                     {
                         FileSystem.DeleteDirectory(instance.PathInstance, UIOption.AllDialogs,
                             RecycleOption.SendToRecycleBin);
-                        ModMain.Hint("实例 " + instance.Name + " 已删除到回收站！", ModMain.HintType.Finish);
+                        ModMain.Hint($"实例 {instance.Name} 已删除到回收站！", ModMain.HintType.Finish);
                     }
 
                     break;
@@ -589,11 +598,11 @@ public partial class PageSelectRight
         }
         catch (OperationCanceledException ex)
         {
-            ModBase.Log(ex, "删除实例 " + instance.Name + " 被主动取消");
+            ModBase.Log(ex, $"删除实例 {instance.Name} 被主动取消");
         }
         catch (Exception ex)
         {
-            ModBase.Log(ex, "删除实例 " + instance.Name + " 失败", ModBase.LogLevel.Msgbox);
+            ModBase.Log(ex, $"删除实例 {instance.Name} 失败", ModBase.LogLevel.Msgbox);
         }
     }
 

@@ -133,7 +133,10 @@ public partial class PageSetupGameManage
         {
             States.Hint.LargeDownloadThread = true;
             ModMain.MyMsgBox(
-                "如果设置过多的下载线程，可能会导致下载时出现非常严重的卡顿。" + "\r\n" + "一般设置 64 线程即可满足大多数下载需求，除非你知道你在干什么，否则不建议设置更多的线程数！",
+                """
+                如果设置过多的下载线程，可能会导致下载时出现非常严重的卡顿。
+                一般设置 64 线程即可满足大多数下载需求，除非你知道你在干什么，否则不建议设置更多的线程数！
+                """,
                 "警告", "我知道了", IsWarn: true);
         }
     }

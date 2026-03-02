@@ -192,7 +192,7 @@ public partial class PageSelectLeft : IRefreshable
 
                 ModMain.FrmSelectLeft.PanList.Children.Add(newItem);
 
-                LogWrapper.Info("[Minecraft] 有效的 Minecraft 文件夹：" + folder.Name + " > " + folder.Location);
+                LogWrapper.Info($"[Minecraft] 有效的 Minecraft 文件夹：{folder.Name} > {folder.Location}");
             }
 
             // 标题文本
@@ -319,7 +319,7 @@ public partial class PageSelectLeft : IRefreshable
     {
         var folders = new List<string>();
         foreach (var folder in ModMinecraft.McFolderList)
-            folders.Add(folder.Name + ">" + folder.Location);
+            folders.Add($"{folder.Name}>{folder.Location}");
         States.Game.Folders = folders.ToArray().Join("|");
         McFolderListUI();
     }
@@ -377,7 +377,7 @@ public partial class PageSelectLeft : IRefreshable
         }
         catch (Exception ex)
         {
-            ModBase.Log(ex, "添加文件夹失败（" + NewFolder + "）", ModBase.LogLevel.Feedback);
+            ModBase.Log(ex, $"添加文件夹失败（{NewFolder}）", ModBase.LogLevel.Feedback);
         }
     }
 
@@ -439,19 +439,19 @@ public partial class PageSelectLeft : IRefreshable
                             return;
                         }
 
-                        Folders[i] = DisplayName + ">" + FolderPath;
+                        Folders[i] = $"{DisplayName}>{FolderPath}";
                         IsReplace = true;
-                        if (ShowHint) ModMain.Hint("文件夹名称已更新为 " + DisplayName + " ！", ModMain.HintType.Finish);
+                        if (ShowHint) ModMain.Hint($"文件夹名称已更新为 {DisplayName} ！", ModMain.HintType.Finish);
                         break;
                     }
                 }
 
-                if (!IsAdded) Folders.Add(DisplayName + ">" + FolderPath);
+                if (!IsAdded) Folders.Add($"{DisplayName}>{FolderPath}");
                 States.Game.Folders = Folders.ToArray().Join("|");
                 States.Game.SelectedFolder = FolderPath.Replace(ModBase.ExePath, "$");
                 ModMinecraft.McFolderListLoader.Start(IsForceRestart: true);
                 if (IsReplace) return;
-                if (ShowHint) ModMain.Hint("文件夹 " + DisplayName + " 已添加！", ModMain.HintType.Finish);
+                if (ShowHint) ModMain.Hint($"文件夹 {DisplayName} 已添加！", ModMain.HintType.Finish);
                 var ModFolder = new DirectoryInfo(FolderPath + @"mods\");
                 if (!(ModFolder.Exists && ModFolder.EnumerateFiles().Count() >= 3)) return;
                 var VersionFolder = new DirectoryInfo(FolderPath + @"versions\");
@@ -506,7 +506,10 @@ public partial class PageSelectLeft : IRefreshable
                 (ModMinecraft.McFolder)((MyListItem)((Popup)((ContextMenu)((MyMenuItem)sender).Parent).Parent)
                     .PlacementTarget).Tag;
             switch (ModMain.MyMsgBox(
-                        "是否需要清理 PCL 在该文件夹中的配置文件？" + "\r\n" + "这包括各个实例的独立设置（如自定义图标、第三方登录配置）等，对游戏本身没有影响。",
+                        """
+                        是否需要清理 PCL 在该文件夹中的配置文件？
+                        这包括各个实例的独立设置（如自定义图标、第三方登录配置）等，对游戏本身没有影响。
+                        """,
                         "配置文件清理", "删除", "保留", "取消"))
             {
                 case 1:
@@ -552,7 +555,7 @@ public partial class PageSelectLeft : IRefreshable
 
             // 保存
             States.Game.Folders = !Folders.Any() ? "" : Folders.ToArray().Join("|");
-            ModMain.Hint(Folder.Type == ModMinecraft.McFolder.Types.Custom ? "文件夹 " + Name + " 已从列表中移除！" : "文件夹名称已复原！",
+            ModMain.Hint(Folder.Type == ModMinecraft.McFolder.Types.Custom ? $"文件夹 {Name} 已从列表中移除！" : "文件夹名称已复原！",
                 ModMain.HintType.Finish);
             ModMinecraft.McFolderListLoader.Start(IsForceRestart: true);
         }
@@ -575,13 +578,22 @@ public partial class PageSelectLeft : IRefreshable
                 ? "清空"
                 : "删除";
         if (ModMain.MyMsgBox(
-                "你确定要" + DeleteText + "这个文件夹吗？" + "\r\n" + "目标文件夹：" + Folder.Location + "\r\n" +
-                "\r\n" + "这会导致该文件夹中的所有存档与其他文件永久丢失，且不可恢复！", "删除警告", "取消", "确认", "取消") != 2)
+                $"""
+                 你确定要{DeleteText}这个文件夹吗？
+                 目标文件夹：{Folder.Location}
+
+                 这会导致该文件夹中的所有存档与其他文件永久丢失，且不可恢复！
+                 """, "删除警告", "取消", "确认", "取消") != 2)
             return;
         if (ModMain.MyMsgBox(
-                "如果你在该文件夹中存放了除 MC 以外的其他文件，这些文件也会被一同删除！" + "\r\n" + "继续删除会导致该文件夹中的所有文件永久丢失，请在仔细确认后再继续！" +
-                "\r\n" + "目标文件夹：" + Folder.Location + "\r\n" + "\r\n" + "这是最后一次警告！",
-                "删除警告", "确认" + DeleteText, "取消", IsWarn: true) != 1)
+                $"""
+                 如果你在该文件夹中存放了除 MC 以外的其他文件，这些文件也会被一同删除！
+                 继续删除会导致该文件夹中的所有文件永久丢失，请在仔细确认后再继续！
+                 目标文件夹：{Folder.Location}
+
+                 这是最后一次警告！
+                 """,
+                "删除警告", $"确认{DeleteText}", "取消", IsWarn: true) != 1)
             return;
         // 移出列表
         var Folders = new List<string>(States.Game.Folders.ToString().Split("|"));
@@ -599,14 +611,14 @@ public partial class PageSelectLeft : IRefreshable
         {
             try
             {
-                ModMain.Hint("正在" + DeleteText + "文件夹 " + Folder.Name + "！");
+                ModMain.Hint($"正在{DeleteText}文件夹 {Folder.Name}！");
                 ModBase.DeleteDirectory(Folder.Location);
                 if (DeleteText == "清空") Directory.CreateDirectory(Folder.Location);
-                ModMain.Hint("已" + DeleteText + "文件夹 " + Folder.Name + "！", ModMain.HintType.Finish);
+                ModMain.Hint($"已{DeleteText}文件夹 {Folder.Name}！", ModMain.HintType.Finish);
             }
             catch (Exception ex)
             {
-                ModBase.Log(ex, DeleteText + "文件夹 " + Folder.Name + " 失败", ModBase.LogLevel.Hint);
+                ModBase.Log(ex, $"{DeleteText}文件夹 {Folder.Name} 失败", ModBase.LogLevel.Hint);
             }
             finally
             {
@@ -671,15 +683,15 @@ public partial class PageSelectLeft : IRefreshable
                         // 名称未修改
                         return;
 
-                    Folders[i] = NewName + ">" + Folder.Location;
+                    Folders[i] = $"{NewName}>{Folder.Location}";
                     break;
                 }
             }
 
             // 如果没有添加过，则添加进去（因为修改了默认项的名称）
             if (!IsAdded)
-                Folders.Add(NewName + ">" + Folder.Location);
-            ModMain.Hint("文件夹名称已更新为 " + NewName + " ！", ModMain.HintType.Finish);
+                Folders.Add($"{NewName}>{Folder.Location}");
+            ModMain.Hint($"文件夹名称已更新为 {NewName} ！", ModMain.HintType.Finish);
             // 保存
             States.Game.Folders = Folders.ToArray().Join("|");
             ModMinecraft.McFolderListLoader.Start(IsForceRestart: true);
@@ -856,8 +868,7 @@ public partial class PageSelectLeft : IRefreshable
 
                 var Direction = SourceIndex < TargetIndex ? "后面" : "前面";
                 ModBase.Log(
-                    "[Control] 文件夹拖拽排序：" + SourceFolder.Name + " -> 位置 " + NewTargetIndex + " (在 " + TargetFolder.Name +
-                    " " + Direction + ")", ModBase.LogLevel.Debug);
+                    $"[Control] 文件夹拖拽排序：{SourceFolder.Name} -> 位置 {NewTargetIndex} (在 {TargetFolder.Name} {Direction})", ModBase.LogLevel.Debug);
             }
         }
 

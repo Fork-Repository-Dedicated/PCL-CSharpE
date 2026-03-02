@@ -108,8 +108,12 @@ public partial class PageSetupFeedback
     {
         var timeSpanText = TimeUtils.GetTimeSpanString(item.Time - DateTime.Now, false);
         switch (ModMain.MyMsgBoxMarkdown(
-                    $"提交者：{item.User}（{timeSpanText}）" + "\r\n" + $"类型：{item.Type}" + "\r\n" +
-                    "\r\n" + $"{item.Content}", $"#{item.ID} {item.Title}", Button2: "查看详情"))
+                    $"""
+                     提交者：{item.User}（{timeSpanText}）
+                     类型：{item.Type}
+
+                     {item.Content}
+                     """, $"#{item.ID} {item.Title}", Button2: "查看详情"))
         {
             case 2:
             {

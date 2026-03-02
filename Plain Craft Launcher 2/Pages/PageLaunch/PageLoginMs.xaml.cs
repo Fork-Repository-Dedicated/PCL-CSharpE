@@ -32,7 +32,7 @@ public partial class PageLoginMs
                 ModLaunch.McLoginMsLoader.Start(ModProfile.GetLoginData(ModLaunch.McLoginType.Ms), true);
                 while (ModLaunch.McLoginMsLoader.State == ModBase.LoadState.Loading)
                 {
-                    ModBase.RunInUi(() => BtnLogin.Text = Math.Round(ModLaunch.McLoginMsLoader.Progress * 100d) + "%");
+                    ModBase.RunInUi(() => BtnLogin.Text = $"{Math.Round(ModLaunch.McLoginMsLoader.Progress * 100d)}%");
                     Thread.Sleep(50);
                 }
 
@@ -61,8 +61,11 @@ public partial class PageLoginMs
                 else if (ex is AuthenticationException && ex.Message.ContainsF("SSL/TLS"))
                 {
                     ModBase.Log(ex,
-                        "正版登录验证失败，请考虑在 [设置 → 其他] 中关闭 [在正版登录时验证 SSL 证书]，然后再试。" + "\r\n" + "\r\n" +
-                        "原始错误信息：", ModBase.LogLevel.Msgbox);
+                        """
+                        正版登录验证失败，请考虑在 [设置 → 其他] 中关闭 [在正版登录时验证 SSL 证书]，然后再试。
+
+                        原始错误信息：
+                        """, ModBase.LogLevel.Msgbox);
                 }
                 else
                 {

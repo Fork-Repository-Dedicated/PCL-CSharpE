@@ -71,7 +71,7 @@ public partial class PageLoginAuth
         BtnBack.IsEnabled = false;
         var LoginData = new ModLaunch.McLoginServer(ModLaunch.McLoginType.Auth)
         {
-            BaseUrl = TextServer.Text.EndsWithF("/") ? TextServer.Text + "authserver" : TextServer.Text + "/authserver",
+            BaseUrl = TextServer.Text.EndsWithF("/") ? $"{TextServer.Text}authserver" : $"{TextServer.Text}/authserver",
             UserName = TextName.Text, Password = TextPass.Password, Description = "Authlib-Injector",
             Type = ModLaunch.McLoginType.Auth
         };
@@ -83,7 +83,7 @@ public partial class PageLoginAuth
                 ModLaunch.McLoginAuthLoader.Start(LoginData, true);
                 while (ModLaunch.McLoginAuthLoader.State == ModBase.LoadState.Loading)
                 {
-                    BtnLogin.Text = Math.Round(ModLaunch.McLoginAuthLoader.Progress * 100d) + "%";
+                    BtnLogin.Text = $"{Math.Round(ModLaunch.McLoginAuthLoader.Progress * 100d)}%";
                     await Task.Delay(50);
                 }
 

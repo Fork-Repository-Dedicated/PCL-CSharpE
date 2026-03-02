@@ -133,7 +133,7 @@ public partial class PageLaunchLeft
                 }
 
             // 确认 Minecraft 版本实例
-            var Selection = Conversions.ToString(States.Game.SelectedInstance);
+            var Selection = States.Game.SelectedInstance;
             var Instance = Selection == "" ? null : new ModMinecraft.McInstance(Selection);
             if (Instance is null || !Instance.PathInstance.StartsWithF(ModMinecraft.McFolderSelected) ||
                 !Instance.Check())
@@ -141,10 +141,10 @@ public partial class PageLaunchLeft
                 // 无效的实例
                 ModBase.Log("[Launch] 当前选择的 Minecraft 实例无效：" + (Instance is null ? "null" : Instance.PathInstance),
                     Instance == null ? ModBase.LogLevel.Normal : ModBase.LogLevel.Debug);
-                if (!(ModMinecraft.McInstanceListLoader.State == ModBase.LoadState.Finished))
+                if (ModMinecraft.McInstanceListLoader.State != ModBase.LoadState.Finished)
                     ModLoader.LoaderFolderRun(ModMinecraft.McInstanceListLoader, ModMinecraft.McFolderSelected,
                         ModLoader.LoaderFolderRunType.ForceRun, 1, @"versions\", true);
-                if (!ModMinecraft.McInstanceList.Any() ||
+                if (ModMinecraft.McInstanceList.Count == 0 ||
                     ModMinecraft.McInstanceList.First().Value[0].Logo.Contains("RedstoneBlock"))
                 {
                     Instance = null;

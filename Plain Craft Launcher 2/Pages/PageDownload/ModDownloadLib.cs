@@ -1493,7 +1493,7 @@ pause";
 
             // 获取下载地址
             var Files = new List<ModNet.NetFile>();
-            if ((int)Info.ForgeType == 1)
+            if (Info.ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.NeoForge)
             {
                 // NeoForge
                 var Neo = (ModDownload.DlNeoForgeListEntry)Info;
@@ -1501,6 +1501,13 @@ pause";
                 Files.Add(new ModNet.NetFile(
                     new[] { Url.Replace("maven.neoforged.net/releases", "bmclapi2.bangbang93.com/maven"), Url }, Target,
                     new ModBase.FileChecker(64 * 1024)));
+            }
+            else if (Info.ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.Cleanroom)
+            {
+                // Cleanroom
+                var Clr = (ModDownload.DlCleanroomListEntry)Info;
+                var Url = Clr.UrlBase + "-installer.jar";
+                Files.Add(new ModNet.NetFile(new[] { Url }, Target, new ModBase.FileChecker(64 * 1024)));
             }
             else
             {
@@ -1534,7 +1541,7 @@ pause";
     }
 
     private static void ForgelikeInjector(string Target, ModLoader.LoaderTask<bool, bool> Task, string McFolder,
-        bool UseJavaWrapper, string ForgeType)
+        bool UseJavaWrapper, ModDownload.DlForgelikeEntry.ForgelikeType ForgeType)
     {
         // 选择 Java
         JavaEntry Java;
@@ -1569,7 +1576,7 @@ pause";
 
         // 添加 Java Wrapper 作为主 Jar
         string Arguments;
-        if (Conversions.ToBoolean(UseJavaWrapper && !(bool)Config.Launch.DisableJlw))
+        if (Conversions.ToBoolean(UseJavaWrapper && !Config.Launch.DisableJlw))
             Arguments =
                 $@"-Doolloo.jlw.tmpdir=""{ModBase.PathPure.TrimEnd('\\')}"" -cp ""{ModBase.PathTemp}Cache\forge_installer.jar;{Target}"" -jar ""{ModLaunch.ExtractJavaWrapper()}"" com.bangbang93.ForgeInstaller ""{McFolder}";
         else
@@ -1589,7 +1596,7 @@ pause";
                 RedirectStandardError = true,
                 RedirectStandardOutput = true
             };
-            var LoaderName = ForgeType;
+            string LoaderName = ModBase.GetStringFromEnum(ForgeType);
             ModBase.Log($"[Download] 开始安装 {LoaderName}：" + Arguments);
             var process = new Process { StartInfo = Info };
             var LastResults = new Queue<string>();
@@ -1792,13 +1799,13 @@ pause";
     /// <summary>
     ///     获取下载某个 Forgelike 实例的加载器列表。
     /// </summary>
-    private static List<ModLoader.LoaderBase> McDownloadForgelikeLoader(string ForgeType, string LoaderVersion,
+    private static List<ModLoader.LoaderBase> McDownloadForgelikeLoader(ModDownload.DlForgelikeEntry.ForgelikeType ForgeType, string LoaderVersion,
         string TargetVersion, string Inherit, ModDownload.DlForgelikeEntry Info = null, string McFolder = null,
         ModLoader.LoaderCombo<string> ClientDownloadLoader = null, string ClientFolder = null)
     {
         // 参数初始化
         McFolder = McFolder ?? ModMinecraft.McFolderSelected;
-        if (ForgeType == "NeoForge" && Info is null)
+        if (ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.NeoForge && Info is null)
         {
             // 需要传入 API Name，但整合包版本可能不以 1.20.1- 开头，所以需要进行特别处理
             if (Inherit == "1.20.1" && !LoaderVersion.StartsWithF("1.20.1-"))
@@ -1807,15 +1814,15 @@ pause";
                 Info = new ModDownload.DlNeoForgeListEntry(LoaderVersion);
         }
 
-        if (ForgeType == "Cleanroom" && Info is null) Info = new ModDownload.DlCleanroomListEntry(LoaderVersion);
-        if (!(ForgeType == "NeoForge") && LoaderVersion.StartsWithF("1.") && LoaderVersion.Contains("-"))
+        if (ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.Cleanroom && Info is null) Info = new ModDownload.DlCleanroomListEntry(LoaderVersion);
+        if (!(ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.NeoForge) && LoaderVersion.StartsWithF("1.") && LoaderVersion.Contains("-"))
         {
             // 类似 1.19.3-41.2.8 格式，优先使用 Version 中要求的版本而非 Inherit（例如 1.19.3 却使用了 1.19 的 Forge）
             Inherit = LoaderVersion.BeforeFirst("-");
             LoaderVersion = LoaderVersion.AfterLast("-");
         }
 
-        var LoaderName = ForgeType;
+        string LoaderName = ModBase.GetStringFromEnum(ForgeType);
         var IsCustomFolder = (McFolder ?? "") != (ModMinecraft.McFolderSelected ?? "");
         var InstallerAddress = ModMain.RequestTaskTempFolder() + "forge_installer.jar";
         var VersionFolder = $@"{McFolder}versions\{TargetVersion}\";
@@ -1900,9 +1907,9 @@ pause";
             { ProgressWeight = 9d });
 
         // 安装（仅在新版安装时需要原版 Jar）
-        if (ForgeType == "NeoForge" || Conversions.ToDouble(LoaderVersion.BeforeFirst(".")) >= 20d)
+        if (ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.NeoForge || Conversions.ToDouble(LoaderVersion.BeforeFirst(".")) >= 20d)
         {
-            ModBase.Log($"[Download] 检测为{(ForgeType == "Forge" ? "新版 Forge" : " " + ForgeType)}：" + LoaderVersion);
+            ModBase.Log($"[Download] 检测为{(ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.Forge ? "新版 Forge" : " " + ForgeType)}：" + LoaderVersion);
             List<ModMinecraft.McLibToken> Libs = null;
             Loaders.Add(new ModLoader.LoaderTask<string, List<ModNet.NetFile>>($"分析 {LoaderName} 支持库文件", Task =>
             {
@@ -1970,7 +1977,7 @@ pause";
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"获取{(ForgeType == "Forge" ? "新版 Forge" : " " + ForgeType)} 支持库列表失败", ex);
+                    throw new Exception($"获取{(ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.Forge ? "新版 Forge" : " " + ForgeType)} 支持库列表失败", ex);
                 }
                 finally
                 {
@@ -2044,7 +2051,7 @@ pause";
                 Show = false
             });
             Loaders.Add(new ModLoader.LoaderTask<bool, bool>(
-                ForgeType == "Forge" ? "安装 Forge（方式 A）" : "安装 " + ForgeType, Task =>
+                ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.Forge ? "安装 Forge（方式 A）" : "安装 " + ForgeType, Task =>
                 {
                     var Installer = new ZipArchive(new FileStream(InstallerAddress, FileMode.Open));
                     try
@@ -2150,7 +2157,7 @@ pause";
         {
             ModBase.Log("[Download] 检测为非新版 Forge：" + LoaderVersion);
             Loaders.Add(new ModLoader.LoaderTask<List<ModNet.NetFile>, bool>(
-                $"安装 {(ForgeType == "Forge" ? "Forge（方式 B）" : ForgeType)}", Task =>
+                $"安装 {(ForgeType == ModDownload.DlForgelikeEntry.ForgelikeType.Forge ? "Forge（方式 B）" : ForgeType)}", Task =>
                 {
                     ZipArchive Installer = null;
                     try
@@ -3890,7 +3897,7 @@ pause";
         // Forge
         if (Request.ForgeVersion is not null)
             LoaderList.Add(new ModLoader.LoaderCombo<string>("下载 Forge " + Request.ForgeVersion,
-                McDownloadForgelikeLoader("Forge", Request.ForgeVersion, "forge-" + Request.ForgeVersion,
+                McDownloadForgelikeLoader(ModDownload.DlForgelikeEntry.ForgelikeType.Forge, Request.ForgeVersion, "forge-" + Request.ForgeVersion,
                     Request.MinecraftName, Request.ForgeEntry, TempMcFolder, ClientLoader,
                     Request.TargetInstanceFolder))
             {
@@ -3901,7 +3908,7 @@ pause";
         // NeoForge
         if (Request.NeoForgeVersion is not null)
             LoaderList.Add(new ModLoader.LoaderCombo<string>("下载 NeoForge " + Request.NeoForgeVersion,
-                McDownloadForgelikeLoader("NeoForge", Request.NeoForgeVersion, "neoforge-" + Request.NeoForgeVersion,
+                McDownloadForgelikeLoader(ModDownload.DlForgelikeEntry.ForgelikeType.NeoForge, Request.NeoForgeVersion, "neoforge-" + Request.NeoForgeVersion,
                     Request.MinecraftName, Request.NeoForgeEntry, TempMcFolder, ClientLoader,
                     Request.TargetInstanceFolder))
             {
@@ -3911,7 +3918,7 @@ pause";
         // Cleanroom
         if (Request.CleanroomVersion is not null)
             LoaderList.Add(new ModLoader.LoaderCombo<string>("下载 Cleanroom " + Request.CleanroomVersion,
-                McDownloadForgelikeLoader("Cleanroom", Request.CleanroomVersion,
+                McDownloadForgelikeLoader(ModDownload.DlForgelikeEntry.ForgelikeType.Cleanroom, Request.CleanroomVersion,
                     "cleanroom-" + Request.CleanroomVersion, Request.MinecraftName, Request.CleanroomEntry,
                     TempMcFolder, ClientLoader, Request.TargetInstanceFolder))
             {

@@ -437,10 +437,10 @@ public static class ModMinecraft
     {
         private McInstanceInfo _info;
         private string _inheritInstanceName;
-        private JObject _JsonObject;
-        private string _JsonText;
+        private JObject _jsonObject;
+        private string _jsonText;
         private JObject _jsonVersion;
-        private string _Name;
+        private string _name;
 
         /// <summary>
         ///     显示的描述文本。
@@ -495,7 +495,7 @@ public static class ModMinecraft
         {
             get
             {
-                if (ModBase.Setup.IsUnset("VersionArgumentIndieV2", this))
+                if (Config.Instance.IndieV2Config.IsDefault(PathInstance))
                 {
                     if (!IsLoaded)
                         Load();
@@ -504,14 +504,10 @@ public static class ModMinecraft
                     bool ShouldBeIndie()
                     {
                         // 从老的实例独立设置中迁移：-1 未决定，0 使用全局设置，1 手动开启，2 手动关闭
-                        if (!ModBase.Setup.IsUnset("VersionArgumentIndie", this) && Conversions.ToBoolean(
-                                Operators.ConditionalCompareObjectGreater(
-                                    ModBase.Setup.Get("VersionArgumentIndie", this), 0, false)))
+                        if (!Config.Instance.IndieV1Config.IsDefault(PathInstance) && Config.Instance.IndieV1[PathInstance] > 0)
                         {
                             ModBase.Log($"[Minecraft] 版本隔离初始化（{Name}）：从老的实例独立设置中迁移");
-                            return Conversions.ToBoolean(
-                                Operators.ConditionalCompareObjectEqual(ModBase.Setup.Get("VersionArgumentIndie", this),
-                                    1, false));
+                            return Config.Instance.IndieV1[PathInstance] == 1;
                         }
 
                         // 若实例文件夹下包含 mods 或 saves 文件夹，则自动开启版本隔离
@@ -529,41 +525,21 @@ public static class ModMinecraft
                                         State != McInstanceState.Snapshot;
                         ModBase.Log(
                             $"[Minecraft] 版本隔离初始化（{Name}）：从全局默认设置中（{Config.Launch.IndieSolutionV2}）判断，State {ModBase.GetStringFromEnum(State)}，IsRelease {IsRelease}，Modable {Modable}");
-                        switch (Config.Launch.IndieSolutionV2)
+                        
+                        return Config.Launch.IndieSolutionV2 switch
                         {
-                            case var @case when Operators.ConditionalCompareObjectEqual(@case, 0, false): // 关闭
-                            {
-                                return false;
-                            }
-                            case var case1
-                                when Operators.ConditionalCompareObjectEqual(case1, 1, false): // 仅隔离可安装 Mod 的实例
-                            {
-                                return Info.HasLabyMod || Modable;
-                            }
-                            case var case2 when Operators.ConditionalCompareObjectEqual(case2, 2, false): // 仅隔离非正式版
-                            {
-                                return !IsRelease;
-                            }
-                            case var case3
-                                when Operators.ConditionalCompareObjectEqual(case3, 3, false): // 隔离非正式版与可安装 Mod 的实例
-                            {
-                                return Info.HasLabyMod || Modable || !IsRelease; // 隔离所有实例
-                            }
-
-                            default:
-                            {
-                                return true;
-                            }
-                        }
+                            0 => false, // 关闭
+                            1 => Info.HasLabyMod || Modable, // 仅隔离可安装 Mod 的实例
+                            2 => !IsRelease, // 仅隔离非正式版
+                            3 => Info.HasLabyMod || Modable || !IsRelease, // 隔离非正式版与可安装 Mod 的实例
+                            _ => true // 隔离所有实例
+                        };
                     }
-
-                    ;
-                    Config.Instance.IndieV2[this] = ShouldBeIndie();
+                    
+                    Config.Instance.IndieV2[PathInstance] = ShouldBeIndie();
                 }
 
-                return Conversions.ToBoolean(ModBase.Setup.Get("VersionArgumentIndieV2", this))
-                    ? PathInstance
-                    : McFolderSelected;
+                return Config.Instance.IndieV2[PathInstance] ? PathInstance : McFolderSelected;
             }
         }
 
@@ -574,9 +550,9 @@ public static class ModMinecraft
         {
             get
             {
-                if (_Name is null && !string.IsNullOrEmpty(PathInstance))
-                    _Name = ModBase.GetFolderNameFromPath(PathInstance);
-                return _Name;
+                if (_name is null && !string.IsNullOrEmpty(PathInstance))
+                    _name = ModBase.GetFolderNameFromPath(PathInstance);
+                return _name;
             }
         }
 
@@ -829,7 +805,7 @@ public static class ModMinecraft
                 }
 
                 ;
-                if (_JsonText is null)
+                if (_jsonText is null)
                 {
                     var JsonPath = PathInstance + Name + ".json";
                     if (!File.Exists(JsonPath))
@@ -847,29 +823,29 @@ public static class ModMinecraft
                         }
                     }
 
-                    _JsonText = ModBase.ReadFile(JsonPath);
+                    _jsonText = ModBase.ReadFile(JsonPath);
                     // 如果 ReadFile 失败会返回空字符串；这可能是由于文件被临时占用，故延时后重试
-                    if (!FastJsonCheck(_JsonText))
+                    if (!FastJsonCheck(_jsonText))
                     {
                         if (ModBase.RunInUi())
                         {
                             ModBase.Log("[Minecraft] 实例 JSON 文件为空或有误，由于代码在主线程运行，将不再进行重试", ModBase.LogLevel.Debug);
-                            ModBase.GetJson(_JsonText); // 触发异常
+                            ModBase.GetJson(_jsonText); // 触发异常
                         }
                         else
                         {
                             ModBase.Log($"[Minecraft] 实例 JSON 文件为空或有误，将在 2s 后重试读取（{JsonPath}）", ModBase.LogLevel.Debug);
                             Thread.Sleep(2000);
-                            _JsonText = ModBase.ReadFile(JsonPath);
-                            if (!FastJsonCheck(_JsonText))
-                                ModBase.GetJson(_JsonText);
+                            _jsonText = ModBase.ReadFile(JsonPath);
+                            if (!FastJsonCheck(_jsonText))
+                                ModBase.GetJson(_jsonText);
                         } // 触发异常
                     }
                 }
 
-                return _JsonText;
+                return _jsonText;
             }
-            set => _JsonText = value;
+            set => _jsonText = value;
         }
 
         /// <summary>
@@ -880,21 +856,21 @@ public static class ModMinecraft
         {
             get
             {
-                if (_JsonObject is null)
+                if (_jsonObject is null)
                 {
                     var Text = JsonText; // 触发 JsonText 的 Get 事件
                     try
                     {
-                        _JsonObject = (JObject)ModBase.GetJson(Text);
+                        _jsonObject = (JObject)ModBase.GetJson(Text);
                         // 转换 HMCL 关键项
-                        if (_JsonObject.ContainsKey("patches") && !_JsonObject.ContainsKey("time"))
+                        if (_jsonObject.ContainsKey("patches") && !_jsonObject.ContainsKey("time"))
                         {
                             IsHmclFormatJson = true;
                             // 合并 JSON
                             // Dim HasOptiFine As Boolean = False, HasForge As Boolean = False
                             JObject CurrentObject = null;
                             var SubjsonList = new List<JObject>();
-                            foreach (JObject Subjson in _JsonObject["patches"])
+                            foreach (JObject Subjson in _jsonObject["patches"])
                                 SubjsonList.Add(Subjson);
                             SubjsonList.Sort((left, right) =>
                                 ModBase.Val((left["priority"] ?? "0").ToString()) <
@@ -917,11 +893,11 @@ public static class ModMinecraft
                                 }
                             }
 
-                            _JsonObject = CurrentObject;
+                            _jsonObject = CurrentObject;
                             // 修改附加项
-                            _JsonObject["id"] = Name;
-                            if (_JsonObject.ContainsKey("inheritsFrom"))
-                                _JsonObject.Remove("inheritsFrom");
+                            _jsonObject["id"] = Name;
+                            if (_jsonObject.ContainsKey("inheritsFrom"))
+                                _jsonObject.Remove("inheritsFrom");
                         }
 
                         // 与继承实例合并
@@ -930,9 +906,9 @@ public static class ModMinecraft
                         {
                             try
                             {
-                                inheritInstanceName = _JsonObject["inheritsFrom"] is null
+                                inheritInstanceName = _jsonObject["inheritsFrom"] is null
                                     ? ""
-                                    : _JsonObject["inheritsFrom"].ToString();
+                                    : _jsonObject["inheritsFrom"].ToString();
                                 if (Conversions.ToBoolean(
                                         Operators.ConditionalCompareObjectEqual(inheritInstanceName, Name, false)))
                                 {
@@ -955,8 +931,8 @@ public static class ModMinecraft
                                             Operators.ConcatenateObject("版本依赖项出现嵌套：", inheritInstanceName)));
                                     inheritInstanceName = inheritInstance.InheritInstanceName;
                                     // 合并
-                                    inheritInstance.JsonObject.Merge(_JsonObject);
-                                    _JsonObject = inheritInstance.JsonObject;
+                                    inheritInstance.JsonObject.Merge(_jsonObject);
+                                    _jsonObject = inheritInstance.JsonObject;
                                     goto Recheck;
                                 }
                             }
@@ -972,9 +948,9 @@ public static class ModMinecraft
                     }
                 }
 
-                return _JsonObject;
+                return _jsonObject;
             }
-            set => _JsonObject = value;
+            set => _jsonObject = value;
         }
 
         /// <summary>
@@ -1470,7 +1446,7 @@ public static class ModMinecraft
             return instance is not null && (PathInstance ?? "") == (instance.PathInstance ?? "");
         }
 
-        public static bool operator ==(McInstance a, McInstance b)
+        public static bool operator ==(McInstance? a, McInstance? b)
         {
             if (a is null && b is null)
                 return true;

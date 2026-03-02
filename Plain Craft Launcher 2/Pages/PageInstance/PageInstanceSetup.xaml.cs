@@ -250,18 +250,9 @@ public partial class PageInstanceSetup
         else
             SliderRamCustom.MaxValue = (int)Math.Round(Math.Floor((RamTotal - 16d) / 2d) + 33d);
         // 设置文本
-        LabRamGame.Text = Conversions.ToString(Operators.ConcatenateObject(
-            Operators.ConcatenateObject(RamGame == Math.Floor(RamGame) ? RamGame + ".0" : RamGame, " GB"),
-            RamGame != RamGameActual
-                ? Operators.ConcatenateObject(
-                    Operators.ConcatenateObject(" (可用 ",
-                        RamGameActual == Math.Floor(RamGameActual) ? RamGameActual + ".0" : RamGameActual), " GB)")
-                : ""));
-        LabRamUsed.Text =
-            Conversions.ToString(Operators.ConcatenateObject(RamUsed == Math.Floor(RamUsed) ? RamUsed + ".0" : RamUsed,
-                " GB"));
-        LabRamTotal.Text = Conversions.ToString(Operators.ConcatenateObject(
-            Operators.ConcatenateObject(" / ", RamTotal == Math.Floor(RamTotal) ? RamTotal + ".0" : RamTotal), " GB"));
+        LabRamGame.Text = $"{(RamGame == Math.Floor(RamGame) ? $"{RamGame}.0" : RamGame)} GB{(RamGame != RamGameActual ? $" (可用 {(RamGameActual == Math.Floor(RamGameActual) ? $"{RamGameActual}.0" : RamGameActual)} GB)" : "")}";
+        LabRamUsed.Text = $"{(RamUsed == Math.Floor(RamUsed) ? $"{RamUsed}.0" : RamUsed)} GB";
+        LabRamTotal.Text = $" / {(RamTotal == Math.Floor(RamTotal) ? $"{RamTotal}.0" : RamTotal)} GB";
         LabRamWarn.Visibility =
             RamGame == 1d && !ModJava.IsGameSet64BitJava(PageInstanceLeft.Instance) && !ModBase.Is32BitSystem &&
             ModJava.Javas.ExistAnyJava()
@@ -560,12 +551,12 @@ public partial class PageInstanceSetup
         {
             if (TextServerAuthServer.Text.EndsWithF("/"))
             {
-                TextServerAuthServer.Text = TextServerAuthServer.Text + "api/yggdrasil";
+                TextServerAuthServer.Text = $"{TextServerAuthServer.Text}api/yggdrasil";
                 ModMain.Hint("已自动格式化验证服务器地址！");
             }
             else
             {
-                TextServerAuthServer.Text = TextServerAuthServer.Text + "/api/yggdrasil";
+                TextServerAuthServer.Text = $"{TextServerAuthServer.Text}/api/yggdrasil";
                 ModMain.Hint("已自动格式化验证服务器地址！");
             }
         }
@@ -647,8 +638,12 @@ public partial class PageInstanceSetup
     {
         if (!string.IsNullOrEmpty(TextServerAuthServer.Text) &&
             TextServerAuthServer.Text != "https://littleskin.cn/api/yggdrasil" && ModMain.MyMsgBox(
-                "即将把第三方登录设置覆盖为 LittleSkin 登录。" + "\r\n" + "除非你是服主，或者服主要求你这样做，否则请不要继续。" + "\r\n" +
-                "\r\n" + "是否确实需要覆盖当前设置？", "设置覆盖确认", "继续", "取消") == 2)
+                """
+                即将把第三方登录设置覆盖为 LittleSkin 登录。
+                除非你是服主，或者服主要求你这样做，否则请不要继续。
+
+                是否确实需要覆盖当前设置？
+                """, "设置覆盖确认", "继续", "取消") == 2)
             return;
         TextServerAuthServer.Text = "https://littleskin.cn/api/yggdrasil";
         TextServerAuthRegister.Text = "https://littleskin.cn/auth/register";
@@ -943,8 +938,11 @@ public partial class PageInstanceSetup
         if (IsReverting)
             return;
         if (ModMain.MyMsgBox(
-                "调整版本隔离后，你可能得把游戏存档、Mod 等文件手动迁移到新的游戏文件夹中。" + "\r\n" + "如果修改后发现存档消失，把这项设置改回来就能恢复。" +
-                "\r\n" + "如果你不会迁移存档，不建议修改这项设置！", "警告", "我知道我在做什么", "取消", IsWarn: true) == 2)
+                """
+                调整版本隔离后，你可能得把游戏存档、Mod 等文件手动迁移到新的游戏文件夹中。
+                如果修改后发现存档消失，把这项设置改回来就能恢复。
+                如果你不会迁移存档，不建议修改这项设置！
+                """, "警告", "我知道我在做什么", "取消", IsWarn: true) == 2)
         {
             IsReverting = true;
             ComboArgumentIndieV2.SelectedItem = e.RemovedItems[0];
@@ -980,7 +978,10 @@ public partial class PageInstanceSetup
             return;
         if (Conversions.ToBoolean(!(bool)States.Hint.Renderer && ComboAdvanceRenderer.SelectedIndex != 0))
         {
-            if (ModMain.MyMsgBox("修改此项会严重影响游戏的稳定性与性能。如果你不知道你在做什么，不要修改此选项！" + "\r\n" + "你确定要继续修改吗？", "警告",
+            if (ModMain.MyMsgBox("""
+                                 修改此项会严重影响游戏的稳定性与性能。如果你不知道你在做什么，不要修改此选项！
+                                 你确定要继续修改吗？
+                                 """, "警告",
                     "我知道我在做什么", "取消", IsWarn: true) == 2)
             {
                 ComboAdvanceRenderer.SelectedItem = ((SelectionChangedEventArgs)e).RemovedItems[0];
@@ -1006,8 +1007,10 @@ public partial class PageInstanceSetup
         if (CheckUseDebugLog4j2Config.Checked.GetValueOrDefault() && !States.Hint.DebugLog4j2Config)
         {
             if (ModMain.MyMsgBox(
-                    "本选项会修改游戏日志级别修改为最低，大量日志输出会消耗大量磁盘空间并可能影响游戏性能。这也可能带来一定安全风险。如果你不知道你在做什么，不要修改此选项！" + "\r\n" +
-                    "你确定要继续修改吗？", "警告", "我知道我在做什么", "取消", IsWarn: true) == 2)
+                    """
+                    本选项会修改游戏日志级别修改为最低，大量日志输出会消耗大量磁盘空间并可能影响游戏性能。这也可能带来一定安全风险。如果你不知道你在做什么，不要修改此选项！
+                    你确定要继续修改吗？
+                    """, "警告", "我知道我在做什么", "取消", IsWarn: true) == 2)
             {
                 sender.Checked = false;
             }

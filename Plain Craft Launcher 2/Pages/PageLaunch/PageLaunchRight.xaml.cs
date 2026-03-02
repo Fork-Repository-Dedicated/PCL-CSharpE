@@ -422,8 +422,7 @@ public partial class PageLaunchRight : IRefreshable
                 while (Content.Contains("xmlns"))
                     Content = Content.RegexReplace("xmlns[^\"']*(\"|')[^\"']*(\"|')", "").Replace("xmlns", "");
                 Content =
-                    "<StackPanel xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:sys=\"clr-namespace:System;assembly=System.Runtime\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:local=\"clr-namespace:PCL;assembly=Plain Craft Launcher 2\">" +
-                    Content + "</StackPanel>";
+                    $"<StackPanel xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:sys=\"clr-namespace:System;assembly=System.Runtime\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:local=\"clr-namespace:PCL;assembly=Plain Craft Launcher 2\">{Content}</StackPanel>";
                 ModBase.Log($"[Page] 实例化：加载主页 UI 开始，最终内容长度：{Content.Count()}");
                 PanCustom.Children.Add((UIElement)ModBase.GetObjectFromXML(Content));
             }
@@ -431,11 +430,11 @@ public partial class PageLaunchRight : IRefreshable
             {
                 if (ModBase.ModeDebug)
                 {
-                    ModBase.Log(ex, "加载失败的主页内容：" + "\r\n" + Content);
+                    ModBase.Log(ex, $"加载失败的主页内容：\r\n{Content}");
                     if (ModMain.MyMsgBox(
                             ex is UnauthorizedAccessException
                                 ? ex.Message
-                                : $"主页内容编写有误，请根据下列错误信息进行检查：{"\r\n"}{ex}", "加载主页界面失败", "重试", "取消") ==
+                                : $"主页内容编写有误，请根据下列错误信息进行检查：\r\n{ex}", "加载主页界面失败", "重试", "取消") ==
                         1) goto Refresh; // 防止 SyncLock 死锁
                 }
                 else

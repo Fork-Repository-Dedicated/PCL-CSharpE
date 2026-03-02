@@ -45,17 +45,23 @@ public partial class MyMsgLogin
         if (Data["verification_uri_complete"] is not null)
         {
             Website = (string)Data["verification_uri_complete"];
-            LabCaption.Text = "登录网页将自动开启，授权码将自动填充。" + "\r\n" + "\r\n" +
-                              "如果网络环境不佳，网页可能一直加载不出来，届时请使用 VPN 并重试。" + "\r\n" +
-                              $"如果没有自动填充，请在页面内粘贴此授权码 {UserCode} （将自动复制）" + "\r\n" +
-                              $"你也可以用其他设备打开 {Website} 并输入授权码。";
+            LabCaption.Text = $"""
+                                登录网页将自动开启，授权码将自动填充。
+
+                                如果网络环境不佳，网页可能一直加载不出来，届时请使用 VPN 并重试。
+                                如果没有自动填充，请在页面内粘贴此授权码 {UserCode} （将自动复制）
+                                你也可以用其他设备打开 {Website} 并输入授权码。
+                                """;
         }
         else
         {
             Website = (string)Data["verification_uri"];
-            LabCaption.Text = $"登录网页将自动开启，请在网页中输入授权码 {UserCode}（将自动复制）。" + "\r\n" + "\r\n" +
-                              "如果网络环境不佳，网页可能一直加载不出来，届时请使用 VPN 并重试。" + "\r\n" +
-                              $"你也可以用其他设备打开 {Website} 并输入上述授权码。";
+            LabCaption.Text = $"""
+                                登录网页将自动开启，请在网页中输入授权码 {UserCode}（将自动复制）。
+
+                                如果网络环境不佳，网页可能一直加载不出来，届时请使用 VPN 并重试。
+                                你也可以用其他设备打开 {Website} 并输入上述授权码。
+                                """;
         }
 
         // 设置 UI
@@ -81,9 +87,7 @@ public partial class MyMsgLogin
             {
                 var Result = ModNet.NetRequestOnce("https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
                     "POST",
-                    "grant_type=urn:ietf:params:oauth:grant-type:device_code" + "&" + "client_id=" +
-                    ModSecret.OAuthClientId + "&" + "device_code=" + DeviceCode + "&" +
-                    "scope=XboxLive.signin%20offline_access", "application/x-www-form-urlencoded",
+                    $"grant_type=urn:ietf:params:oauth:grant-type:device_code&client_id={ModSecret.OAuthClientId}&device_code={DeviceCode}&scope=XboxLive.signin%20offline_access", "application/x-www-form-urlencoded",
                     5000 + UnknownFailureCount * 5000, MakeLog: false);
                 // 获取结果
                 var ResultJson = (JObject)ModBase.GetJson(Result);
@@ -210,7 +214,7 @@ public partial class MyMsgLogin
                         new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.Weak))
                 }, "MyMsgBox " + Uuid);
             // 记录日志
-            ModBase.Log("[Control] 正版验证弹窗：" + LabTitle.Text + "\r\n" + LabCaption.Text);
+            ModBase.Log($"[Control] 正版验证弹窗：{LabTitle.Text}\r\n{LabCaption.Text}");
         }
         catch (Exception ex)
         {

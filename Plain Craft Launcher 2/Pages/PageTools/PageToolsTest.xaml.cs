@@ -4,7 +4,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,7 +22,7 @@ namespace PCL;
 
 public partial class PageToolsTest
 {
-    private static object IsMemoryOptimizing;
+    private static volatile bool _isMemoryOptimizing;
     private Bitmap CurrentSkinBitmap;
     private Bitmap GeneratedHeadBitmap;
 
@@ -291,189 +290,77 @@ public partial class PageToolsTest
         }, "Rubbish Clear");
     }
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
-    private static extern nint GetCurrentProcess();
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-    private static extern bool CloseHandle(nint handle);
-
-    [DllImport("advapi32.dll", CharSet = CharSet.Auto)]
-    private static extern bool OpenProcessToken(HandleRef ProcessHandle, int DesiredAccess, out nint TokenHandle);
-
-    [DllImport("advapi32.dll", CharSet = CharSet.Auto)]
-    private static extern bool LookupPrivilegeValue([MarshalAs(UnmanagedType.LPTStr)] string lpSystemName,
-        [MarshalAs(UnmanagedType.LPTStr)] string lpName, out LUID lpLuid);
-
-    [DllImport("advapi32.dll", CharSet = CharSet.Auto)]
-    private static extern bool AdjustTokenPrivileges(HandleRef TokenHandle, bool DisableAllPrivileges,
-        TokenPrivileges NewState, int BufferLength, nint PreviousState, nint ReturnLength);
-
-    [DllImport("ntdll.dll", CharSet = CharSet.Ansi)]
-    private static extern uint NtSetSystemInformation(int SystemInformationClass, nint SystemInformation,
-        int SystemInformationLength);
-
-    public static void MemoryOptimize(bool ShowHint)
+    public static void MemoryOptimize(bool showHint)
     {
-        if (Conversions.ToBoolean(IsMemoryOptimizing))
+        if (_isMemoryOptimizing)
         {
-            if (ShowHint) ModMain.Hint("内存优化尚未结束，请稍等！");
+            if (showHint) ModMain.Hint("内存优化尚未结束，请稍等！");
+            return;
         }
-        else
+
+        _isMemoryOptimizing = true;
+        long delta;
+        try
         {
-            IsMemoryOptimizing = true;
-            long num;
             if (ProcessInterop.IsAdmin())
             {
-                num = (long)KernelInterop.GetAvailablePhysicalMemoryBytes();
+                var before = (long)KernelInterop.GetAvailablePhysicalMemoryBytes();
                 try
                 {
-                    MemoryOptimizeInternal(ShowHint);
+                    MemoryOptimizeInternal(showHint);
                 }
                 catch (Exception ex)
                 {
-                    ModBase.Log(ex, "内存优化失败", ShowHint ? ModBase.LogLevel.Hint : ModBase.LogLevel.Debug);
+                    ModBase.Log(ex, "内存优化失败", showHint ? ModBase.LogLevel.Hint : ModBase.LogLevel.Debug);
                     return;
                 }
-                finally
-                {
-                    IsMemoryOptimizing = false;
-                }
 
-                num = Convert.ToInt64(decimal.Subtract(new decimal(KernelInterop.GetAvailablePhysicalMemoryBytes()),
-                    new decimal(num)));
+                delta = (long)KernelInterop.GetAvailablePhysicalMemoryBytes() - before;
             }
             else
             {
                 ModBase.Log("[Test] 没有管理员权限，将以命令行方式进行内存优化");
                 try
                 {
-                    num = ProcessInterop.StartAsAdmin("--memory").ExitCode * 1024L;
+                    delta = ProcessInterop.StartAsAdmin("--memory").ExitCode * 1024L;
                 }
-                catch (Exception ex2)
+                catch (Exception ex)
                 {
-                    ModBase.Log(ex2, "命令行形式内存优化失败");
-                    if (ShowHint)
+                    ModBase.Log(ex, "命令行形式内存优化失败");
+                    if (showHint)
                         ModMain.Hint(
                             string.Concat("获取管理员权限失败，请尝试右键 PCL，选择 ", Conversions.ToString(ModBase.vbLQ), "以管理员身份运行",
                                 Conversions.ToString(ModBase.vbRQ), "！"), ModMain.HintType.Critical);
                     return;
                 }
-                finally
-                {
-                    IsMemoryOptimizing = false;
-                }
 
-                if (num < 0L) return;
+                if (delta < 0L) return;
             }
+        }
+        finally
+        {
+            _isMemoryOptimizing = false;
+        }
 
-            var MemAfter = ModBase.GetString((long)KernelInterop.GetAvailablePhysicalMemoryBytes());
-            ModBase.Log(string.Format("[Test] 内存优化完成，可用内存改变量：{0}，大致剩余内存：{1}", ModBase.GetString(num), MemAfter));
-            if (num > 0L)
-            {
-                if (ShowHint)
-                    ModMain.Hint(
-                        string.Format("内存优化完成，可用内存增加了 {0}，目前剩余内存 {1}！",
-                            ModBase.GetString((long)Math.Round(Math.Round(num * 0.8d))), MemAfter),
-                        ModMain.HintType.Finish);
-            }
-            else if (ShowHint)
-            {
-                ModMain.Hint(string.Format("内存优化完成，已经优化到了最佳状态，目前剩余内存 {0}！", MemAfter));
-            }
+        var memAfter = ModBase.GetString((long)KernelInterop.GetAvailablePhysicalMemoryBytes());
+        ModBase.Log($"[Test] 内存优化完成，可用内存改变量：{ModBase.GetString(delta)}，大致剩余内存：{memAfter}");
+        if (delta > 0L)
+        {
+            if (showHint)
+                ModMain.Hint(
+                    $"内存优化完成，可用内存增加了 {ModBase.GetString((long)Math.Round(delta * 0.8d))}，目前剩余内存 {memAfter}！",
+                    ModMain.HintType.Finish);
+        }
+        else if (showHint)
+        {
+            ModMain.Hint($"内存优化完成，已经优化到了最佳状态，目前剩余内存 {memAfter}！");
         }
     }
 
-    public static void MemoryOptimizeInternal(bool ShowHint)
+    public static void MemoryOptimizeInternal(bool showHint)
     {
-        if (!ProcessInterop.IsAdmin())
-            throw new Exception("""
-                                内存优化功能需要管理员权限！
-                                如果需要自动以管理员身份启动 PCL，可以右键 PCL，打开 属性 → 兼容性 → 以管理员身份运行此程序。
-                                """);
-        ModBase.Log("[Test] 获取内存优化权限");
-
-        // 提权部分
-        try
-        {
-            var processId = GetCurrentProcess();
-            LUID luid1 = default;
-            LUID luid2 = default;
-            nint hToken = 0;
-            if (OpenProcessToken(new HandleRef(null, processId), 32, out hToken))
-            {
-                string arglpSystemName = null;
-                var arglpName = "SeProfileSingleProcessPrivilege";
-                LookupPrivilegeValue(arglpSystemName, arglpName, out luid1);
-                string arglpSystemName1 = null;
-                var arglpName1 = "SeIncreaseQuotaPrivilege";
-                LookupPrivilegeValue(arglpSystemName1, arglpName1, out luid2);
-
-                var tokenPrivileges1 = new TokenPrivileges();
-                tokenPrivileges1.Luid = luid1;
-                tokenPrivileges1.Attributes = 2;
-                var tokenPrivileges2 = new TokenPrivileges();
-                tokenPrivileges2.Luid = luid2;
-                tokenPrivileges2.Attributes = 2;
-
-                AdjustTokenPrivileges(new HandleRef(null, hToken), false, tokenPrivileges1, 0, nint.Zero, nint.Zero);
-                AdjustTokenPrivileges(new HandleRef(null, hToken), false, tokenPrivileges2, 0, nint.Zero, nint.Zero);
-
-                CloseHandle(hToken);
-            }
-        }
-        catch (Exception)
-        {
-            throw new Exception(string.Format("获取内存优化权限失败（错误代码：{0}）", Marshal.GetLastWin32Error()));
-        }
-
-        if (ShowHint) ModMain.Hint("正在进行内存优化……");
-
-        // 内存优化部分
-        var NowType = "None";
-        try
-        {
-            int info;
-            var scfi = default(SYSTEM_FILECACHE_INFORMATION);
-            var combineInfoEx = default(MEMORY_COMBINE_INFORMATION_EX);
-            GCHandle _gcHandle;
-
-            NowType = "MemoryEmptyWorkingSets";
-            info = 2;
-            _gcHandle = GCHandle.Alloc(info, GCHandleType.Pinned);
-            NtSetSystemInformation(80, _gcHandle.AddrOfPinnedObject(), Marshal.SizeOf(info));
-            _gcHandle.Free();
-            NowType = "SystemFileCacheInformation";
-            scfi.MaximumWorkingSet = uint.MaxValue;
-            scfi.MinimumWorkingSet = uint.MaxValue;
-            _gcHandle = GCHandle.Alloc(scfi, GCHandleType.Pinned);
-            NtSetSystemInformation(81, _gcHandle.AddrOfPinnedObject(), Marshal.SizeOf(scfi));
-            _gcHandle.Free();
-            NowType = "MemoryFlushModifiedList";
-            info = 3;
-            _gcHandle = GCHandle.Alloc(info, GCHandleType.Pinned);
-            NtSetSystemInformation(80, _gcHandle.AddrOfPinnedObject(), Marshal.SizeOf(info));
-            _gcHandle.Free();
-            NowType = "MemoryPurgeStandbyList";
-            info = 4;
-            _gcHandle = GCHandle.Alloc(info, GCHandleType.Pinned);
-            NtSetSystemInformation(80, _gcHandle.AddrOfPinnedObject(), Marshal.SizeOf(info));
-            _gcHandle.Free();
-            NowType = "MemoryPurgeLowPriorityStandbyList";
-            info = 5;
-            _gcHandle = GCHandle.Alloc(info, GCHandleType.Pinned);
-            NtSetSystemInformation(80, _gcHandle.AddrOfPinnedObject(), Marshal.SizeOf(info));
-            _gcHandle.Free();
-            NowType = "SystemRegistryReconciliationInformation";
-            NtSetSystemInformation(155, new nint(default(int)), 0);
-            NowType = "SystemCombinePhysicalMemoryInformation";
-            _gcHandle = GCHandle.Alloc(combineInfoEx, GCHandleType.Pinned);
-            NtSetSystemInformation(130, _gcHandle.AddrOfPinnedObject(), Marshal.SizeOf(combineInfoEx));
-            _gcHandle.Free();
-        }
-        catch (Exception)
-        {
-            throw new Exception(string.Format("内存优化操作 {0} 失败（错误代码：{1}）", NowType));
-        }
+        if (showHint) ModMain.Hint("正在进行内存优化……");
+        MemoryOptimizer.Execute();
     }
 
     public static string GetRandomCave()
@@ -964,39 +851,4 @@ public partial class PageToolsTest
         TextDownloadFolder_ValidateChanged(sender, e);
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    private class TokenPrivileges
-    {
-        public int PrivilegeCount = 1;
-        public LUID Luid;
-        public int Attributes;
-    }
-
-    private struct LUID
-    {
-        public int LowPart;
-        public int HighPart;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct SYSTEM_FILECACHE_INFORMATION
-    {
-        public nuint CurrentSize;
-        public nuint PeakSize;
-        public uint PageFaultCount;
-        public nuint MinimumWorkingSet;
-        public nuint MaximumWorkingSet;
-        public nuint CurrentSizeIncludingTransitionInPages;
-        public nuint PeakSizeIncludingTransitionInPages;
-        public uint TransitionRePurposeCount;
-        public uint Flags;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MEMORY_COMBINE_INFORMATION_EX
-    {
-        public nint Handle;
-        public nuint PagesCombined;
-        public uint Flags;
-    }
 }
